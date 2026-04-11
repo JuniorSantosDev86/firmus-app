@@ -88,7 +88,15 @@ export function ServicesManager() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const nextServices = upsertService(formValues, editingServiceId ?? undefined);
+    const name = formValues.name.trim();
+    if (name.length === 0) {
+      return;
+    }
+
+    const nextServices = upsertService(
+      { ...formValues, name },
+      editingServiceId ?? undefined
+    );
     setServices(nextServices);
     setSaveState("saved");
 
@@ -174,8 +182,6 @@ export function ServicesManager() {
               id="name"
               name="name"
               required
-              pattern=".*\\S.*"
-              title="Name cannot be empty."
               value={formValues.name}
               onChange={(event) => updateField("name", event.target.value)}
               className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"

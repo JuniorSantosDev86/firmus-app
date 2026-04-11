@@ -67,7 +67,17 @@ export function BusinessProfileForm() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const next = writeBusinessProfile(formValues);
+    const businessName = formValues.businessName.trim();
+    const professionalName = formValues.professionalName.trim();
+    if (businessName.length === 0 || professionalName.length === 0) {
+      return;
+    }
+
+    const next = writeBusinessProfile({
+      ...formValues,
+      businessName,
+      professionalName,
+    });
     setProfile(next);
     setFormValues(mapProfileToInput(next));
     setSaveState("saved");
@@ -142,8 +152,6 @@ export function BusinessProfileForm() {
               id="businessName"
               name="businessName"
               required
-              pattern=".*\\S.*"
-              title="Business name cannot be empty."
               value={formValues.businessName}
               onChange={(event) =>
                 updateField("businessName", event.target.value)
@@ -160,8 +168,6 @@ export function BusinessProfileForm() {
               id="professionalName"
               name="professionalName"
               required
-              pattern=".*\\S.*"
-              title="Professional name cannot be empty."
               value={formValues.professionalName}
               onChange={(event) =>
                 updateField("professionalName", event.target.value)

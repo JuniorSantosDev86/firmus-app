@@ -70,7 +70,15 @@ export function ClientsManager() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const nextClients = upsertClient(formValues, editingClientId ?? undefined);
+    const name = formValues.name.trim();
+    if (name.length === 0) {
+      return;
+    }
+
+    const nextClients = upsertClient(
+      { ...formValues, name },
+      editingClientId ?? undefined
+    );
     setClients(nextClients);
     setSaveState("saved");
 
@@ -152,8 +160,6 @@ export function ClientsManager() {
               id="name"
               name="name"
               required
-              pattern=".*\\S.*"
-              title="Name cannot be empty."
               value={formValues.name}
               onChange={(event) => updateField("name", event.target.value)}
               className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
