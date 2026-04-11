@@ -483,6 +483,137 @@ Validated items:
 ### Final QA decision
 **Approved with minor reservation**
 
+## Block 4 — Day 1 / Hour 4 / Clients Slice
+
+**Block name:** Clients Minimal Implementation  
+**Status:** Approved  
+**Date:** 2026-04-11  
+**Objective:** Implement the Clients entity as the next real product slice, allowing the user to view, create, edit, and persist clients in a minimal and disciplined way.
+
+### Expected scope
+- Create a Clients route
+- Create a minimal Clients manager flow
+- Show empty state when no clients exist
+- Allow client creation
+- Allow client editing
+- Show the current clients list
+- Persist clients locally in the simplest correct way for this stage
+- Reuse the existing `Client` domain type
+
+### Out of scope
+- Authentication
+- Database
+- Prisma
+- Supabase
+- Clerk
+- API routes
+- Server actions
+- Services
+- Quotes
+- Charges
+- Timeline logic
+- Search
+- Filters
+- Pagination
+- Validation libraries
+- State management libraries
+- Dashboards
+- Automations
+- AI
+- Testing setup
+- Docker
+- CI/CD
+
+### Acceptance criteria
+- [x] A Clients route exists
+- [x] Clients can be viewed
+- [x] Clients can be created
+- [x] Clients can be edited
+- [x] Empty state is present when no clients exist
+- [x] The implementation uses the `Client` domain type coherently
+- [x] Local persistence works correctly for this stage
+- [x] No out-of-scope features were added
+- [x] The app still runs locally
+- [x] `npm run lint` passed
+- [x] `npm run build` passed
+- [x] The project is meaningfully more product-like than before
+- [x] The next blocks can build on this implementation cleanly
+
+### Validation summary
+
+#### 1. Product slice implementation
+**Status:** Passed
+
+Validated items:
+- Added `app/clients/page.tsx`
+- Added `components/clients-manager.tsx`
+- Added `lib/client-storage.ts`
+- Added homepage navigation entry to `/clients`
+
+#### 2. Scope discipline
+**Status:** Passed
+
+Validated items:
+- No auth added
+- No DB added
+- No Prisma added
+- No API routes added
+- No extra entities implemented
+- No fake progress screens added
+- No unnecessary architectural expansion introduced
+
+#### 3. Persistence strategy
+**Status:** Passed
+
+Validated items:
+- Persistence implemented through a lightweight `localStorage` helper
+- Persistence is typed against the `Client` domain model
+- Normalization and null-handling are present
+- Solution is appropriate for this stage
+- Easy to replace later with real backend persistence
+
+#### 4. Domain coherence
+**Status:** Passed
+
+Validated items:
+- Clients implementation reuses the domain foundation
+- Structure remains aligned with `lib/domain/client.ts`
+- The slice follows the same implementation pattern used by Business Profile
+
+#### 5. Technical validation
+**Status:** Passed
+
+Validated items:
+- `npm run lint` passed
+- `npm run build` passed
+- App remained stable after the new slice was added
+
+#### 6. Continuity for next block
+**Status:** Passed
+
+Validated items:
+- The project now contains a second real internal product flow
+- Future entity blocks can reuse the same page + component + storage pattern
+- Client data is now available for later quote and charge flows
+
+### Evidence
+- New route created: `/clients`
+- New manager component created
+- New local persistence helper created
+- Homepage updated with a Clients entry link
+- Successful execution of:
+  - `npm run lint`
+  - `npm run build`
+
+### Final QA decision
+**Approved**
+
+### Notes
+- The implementation is correct for this stage and respects the intended scope.
+- The slice is minimal, coherent, and useful.
+- The project is now ready to move to the next entity-oriented implementation block.
+
+
 ### Notes
 - The block successfully achieved its purpose: establishing the initial technical foundation of the project.
 - The current state is stable enough to continue safely into the next execution block.

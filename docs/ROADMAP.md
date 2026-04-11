@@ -170,20 +170,17 @@ Includes:
 ---
 
 ### Block 4 — Clients
-**Status:** Pending  
-**Objective:** Create the first real operational entity of the product.
+**Status:** Completed  
+**Objective:** Create the first real operational client entity flow.
 
-**Expected scope:**
-- client CRUD
-- minimal fields
-- lightweight organization
-- simple searchability
+**Delivered:**
+- Created a dedicated Clients route
+- Added a focused list + create/edit manager
+- Added lightweight local persistence through `localStorage`
+- Reused the `Client` domain type
+- Added a homepage entry link to the feature
 
-**Acceptance criteria:**
-- client can be created
-- client can be edited
-- client can be listed
-- client detail screen is possible in the next block
+**Validation status:** Approved
 
 ---
 

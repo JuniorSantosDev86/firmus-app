@@ -11,14 +11,20 @@ export default function Home() {
           The operational copilot for service providers.
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
-          Business Profile is now available.
+          Business Profile and Clients are now available.
         </p>
-        <div className="mt-8">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/business-profile"
             className="inline-flex h-9 items-center justify-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Open Business Profile
+          </Link>
+          <Link
+            href="/clients"
+            className="inline-flex h-9 items-center justify-center rounded-lg border border-input bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+          >
+            Open Clients
           </Link>
         </div>
       </section>
