@@ -741,6 +741,159 @@ Validated items:
 - The project is now ready to move into the quote-oriented block.
 ---
 
+## Block 6 — Day 1 / Hour 6 / Quote Engine Slice
+
+**Block name:** Quote Engine Minimal Implementation  
+**Status:** Approved  
+**Date:** 2026-04-11  
+**Objective:** Implement the first multi-entity product flow by allowing the user to create, edit, view, and persist quotes linked to clients and composed of quote items with optional service reuse.
+
+### Expected scope
+- Create a Quotes route
+- Create a minimal Quotes manager flow
+- Show empty state when no quotes exist
+- Allow quote creation
+- Allow quote editing
+- Link a quote to a client
+- Add and edit quote items
+- Optionally reuse an existing service inside quote items
+- Calculate subtotal, discount, and total correctly
+- Persist quotes locally in the simplest correct way for this stage
+- Reuse the existing Quote, QuoteItem, Client, and Service domain types
+
+### Out of scope
+- Authentication
+- Database
+- Prisma
+- Supabase
+- Clerk
+- API routes
+- Server actions
+- PDF generation
+- Public quote page
+- Quote approval flow
+- Charges
+- Timeline integration
+- Reminders
+- Templates
+- Search
+- Filters
+- Pagination
+- Validation libraries
+- State management libraries
+- Dashboards
+- Automations
+- AI
+- Testing setup
+- Docker
+- CI/CD
+
+### Acceptance criteria
+- [x] A Quotes route exists
+- [x] Quotes can be viewed
+- [x] Quotes can be created
+- [x] Quotes can be edited
+- [x] Empty state is present when no quotes exist
+- [x] A quote can be linked to a client
+- [x] Quote items can be added and edited
+- [x] Optional service reuse works coherently
+- [x] Subtotal, discount, and total are calculated correctly
+- [x] The implementation uses the Quote domain type coherently
+- [x] Local persistence works correctly for this stage
+- [x] No out-of-scope features were added
+- [x] The app still runs locally
+- [x] `npm run lint` passed
+- [x] `npm run build` passed
+- [x] The project is meaningfully more product-like than before
+- [x] The next blocks can build on this implementation cleanly
+
+### Validation summary
+
+#### 1. Product slice implementation
+**Status:** Passed
+
+Validated items:
+- Added `app/quotes/page.tsx`
+- Added `components/quotes-manager.tsx`
+- Added `lib/quote-storage.ts`
+- Added homepage navigation entry to `/quotes`
+
+#### 2. Scope discipline
+**Status:** Passed
+
+Validated items:
+- No auth added
+- No DB added
+- No Prisma added
+- No API routes added
+- No approval/public quote flow added
+- No charges or timeline logic added
+- No unnecessary architectural expansion introduced
+
+#### 3. Persistence strategy
+**Status:** Passed
+
+Validated items:
+- Persistence implemented through a lightweight `localStorage` helper
+- Persistence uses normalized `{ quotes, items }` storage
+- Quote and quote items are linked deterministically
+- Read path normalizes and sanitizes stored data
+- Solution is appropriate for this stage
+- Easy to replace later with real backend persistence
+
+#### 4. Calculation integrity
+**Status:** Passed
+
+Validated items:
+- Canonical money values are stored in cents
+- Item line totals are calculated from quantity and unit price
+- Subtotal is calculated from item totals
+- Discount is clamped to subtotal
+- Total is derived correctly from subtotal minus discount
+
+#### 5. Domain coherence
+**Status:** Passed
+
+Validated items:
+- Quotes implementation reuses the domain foundation
+- Structure remains aligned with `lib/domain/quote.ts`
+- Clients and Services are reused as inputs instead of duplicating data models
+- The slice preserves coherence across the existing entity flows
+
+#### 6. Technical validation
+**Status:** Passed
+
+Validated items:
+- `npm run lint` passed
+- `npm run build` passed
+- App remained stable after the new slice was added
+
+#### 7. Continuity for next block
+**Status:** Passed
+
+Validated items:
+- The project now contains the first complete multi-entity workflow
+- Future charges and timeline flows can build on stable quote data
+- The system now has enough complexity to justify formal flow testing from this point onward
+
+### Evidence
+- New route created: `/quotes`
+- New manager component created
+- New local persistence helper created
+- Homepage updated with a Quotes entry link
+- Successful execution of:
+  - `npm run lint`
+  - `npm run build`
+
+### Final QA decision
+**Approved**
+
+### Notes
+- This is the first block where formal functional test scenarios should start being documented consistently.
+- The implementation is minimal, coherent, and appropriate for this stage.
+
+
+
 
 
 ## QA Template for Future Blocks

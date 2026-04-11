@@ -199,21 +199,19 @@ Includes:
 ---
 
 ### Block 6 — Quote Engine
-**Status:** Pending  
+**Status:** Completed  
 **Objective:** Implement the quote creation flow.
 
-**Expected scope:**
-- create quote
-- add quote items
-- attach quote to client
-- define status
-- calculate totals
+**Delivered:**
+- Created a dedicated Quotes route
+- Added a focused list + create/edit manager
+- Added lightweight local persistence through `localStorage`
+- Reused the `Quote`, `QuoteItem`, `Client`, and `Service` domain types
+- Implemented quote item handling with optional service reuse
+- Implemented canonical quote calculations in cents
+- Added a homepage entry link to the feature
 
-**Acceptance criteria:**
-- quote structure works end to end
-- quote statuses are valid
-- quote total calculation is correct
-
+**Validation status:** Approved
 ---
 
 ### Block 7 — Timeline Events
