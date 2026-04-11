@@ -137,6 +137,131 @@ Validated items:
 ### Final QA decision
 **Approved**
 
+## Block 3 — Day 1 / Hour 3 / Business Profile Slice
+
+**Block name:** Business Profile Minimal Implementation  
+**Status:** Approved with minor reservation  
+**Date:** 2026-04-11  
+**Objective:** Implement the first real product slice by allowing the user to view, create, edit, and persist the Business Profile in a minimal and disciplined way.
+
+### Expected scope
+- Create a Business Profile route
+- Create a minimal Business Profile form
+- Allow create/edit behavior
+- Persist data locally in the simplest correct way for this stage
+- Reuse the existing `BusinessProfile` domain type
+- Keep the app shell coherent and minimal
+
+### Out of scope
+- Authentication
+- Database
+- Prisma
+- Supabase
+- Clerk
+- API routes
+- Server actions
+- Clients
+- Services
+- Quotes
+- Charges
+- Timeline flows
+- Upload systems
+- Validation libraries
+- State management libraries
+- Dashboards
+- Automations
+- AI
+- Testing setup
+- Docker
+- CI/CD
+
+### Acceptance criteria
+- [x] A Business Profile route exists
+- [x] The Business Profile can be viewed
+- [x] The Business Profile can be created or edited
+- [x] The profile fields match the intended scope
+- [x] The implementation uses the domain foundation coherently
+- [x] No out-of-scope features were added
+- [x] The app still runs locally
+- [x] `npm run lint` passed
+- [x] `npm run build` passed
+- [x] The project is meaningfully more product-like than before
+- [x] The next blocks can build on this implementation cleanly
+
+### Validation summary
+
+#### 1. Product slice implementation
+**Status:** Passed
+
+Validated items:
+- Added `app/business-profile/page.tsx`
+- Added `components/business-profile-form.tsx`
+- Added `lib/business-profile-storage.ts`
+- Added a homepage entry link to the Business Profile area
+
+#### 2. Scope discipline
+**Status:** Passed
+
+Validated items:
+- No auth added
+- No DB added
+- No Prisma added
+- No API routes added
+- No extra entities implemented
+- No fake progress screens added
+- No unnecessary architectural expansion introduced
+
+#### 3. Persistence strategy
+**Status:** Passed
+
+Validated items:
+- Persistence implemented through a lightweight `localStorage` helper
+- Persistence is typed against the `BusinessProfile` domain model
+- Solution is appropriate for this stage
+- Easy to replace later with real backend persistence
+
+#### 4. Domain coherence
+**Status:** Passed
+
+Validated items:
+- Business Profile implementation reuses the domain foundation
+- Structure remains aligned with the `lib/domain` spine
+- The slice establishes a useful pattern for future entities
+
+#### 5. Technical validation
+**Status:** Passed
+
+Validated items:
+- `npm run lint` passed
+- `npm run build` passed
+- App remained stable after the new slice was added
+
+#### 6. Continuity for next block
+**Status:** Passed
+
+Validated items:
+- The project now contains the first real internal product flow
+- Future entity blocks can follow the same implementation pattern
+- Business identity data can be reused by later flows such as quotes and public outputs
+
+### Evidence
+- New route created: `/business-profile`
+- New form component created
+- New local persistence helper created
+- Homepage updated with feature entry link
+- Successful execution of:
+  - `npm run lint`
+  - `npm run build`
+
+### Final QA decision
+**Approved with minor reservation**
+
+### Notes
+- The implementation is correct for this stage and respects the intended scope.
+- Minor reservation: the pasted diff history included intermediate form refactors, so the final file should be visually reviewed once in the editor to ensure there is no leftover duplicate code fragment.
+- This does not block progress because the technical validation already passed.
+
+
 ### Notes
 - This block correctly established the first product-oriented structural layer of the codebase.
 - The result is intentionally lightweight and appropriate for this stage.

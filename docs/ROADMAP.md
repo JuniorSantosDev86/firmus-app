@@ -155,21 +155,17 @@ Includes:
 **Validation status:** Approved
 
 ### Block 3 — Business Profile
-**Status:** Pending  
+**Status:** Completed  
 **Objective:** Implement the business identity layer.
 
-**Expected scope:**
-- business name
-- professional name
-- short description
-- city
-- WhatsApp
-- logo placeholder
+**Delivered:**
+- Created a dedicated Business Profile route
+- Added a focused create/edit form
+- Added lightweight local persistence through `localStorage`
+- Reused the `BusinessProfile` domain type
+- Added a homepage entry link to the feature
 
-**Acceptance criteria:**
-- business profile can be created and updated
-- profile data is reusable by future public outputs
-- scope remains minimal
+**Validation status:** Approved with minor reservation
 
 ---
 
