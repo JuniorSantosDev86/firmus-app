@@ -608,18 +608,140 @@ Validated items:
 ### Final QA decision
 **Approved**
 
+## Block 5 — Day 1 / Hour 5 / Services Slice
+
+**Block name:** Services Minimal Implementation  
+**Status:** Approved  
+**Date:** 2026-04-11  
+**Objective:** Implement the Services entity as the next real product slice, allowing the user to view, create, edit, and persist services in a minimal and disciplined way.
+
+### Expected scope
+- Create a Services route
+- Create a minimal Services manager flow
+- Show empty state when no services exist
+- Allow service creation
+- Allow service editing
+- Show the current services list
+- Persist services locally in the simplest correct way for this stage
+- Reuse the existing `Service` domain type
+
+### Out of scope
+- Authentication
+- Database
+- Prisma
+- Supabase
+- Clerk
+- API routes
+- Server actions
+- Quotes
+- Charges
+- Timeline logic
+- Categories
+- Tags
+- Search
+- Filters
+- Pagination
+- Validation libraries
+- State management libraries
+- Dashboards
+- Automations
+- AI
+- Testing setup
+- Docker
+- CI/CD
+
+### Acceptance criteria
+- [x] A Services route exists
+- [x] Services can be viewed
+- [x] Services can be created
+- [x] Services can be edited
+- [x] Empty state is present when no services exist
+- [x] The implementation uses the `Service` domain type coherently
+- [x] Local persistence works correctly for this stage
+- [x] No out-of-scope features were added
+- [x] The app still runs locally
+- [x] `npm run lint` passed
+- [x] `npm run build` passed
+- [x] The project is meaningfully more product-like than before
+- [x] The next blocks can build on this implementation cleanly
+
+### Validation summary
+
+#### 1. Product slice implementation
+**Status:** Passed
+
+Validated items:
+- Added `app/services/page.tsx`
+- Added `components/services-manager.tsx`
+- Added `lib/service-storage.ts`
+- Added homepage navigation entry to `/services`
+
+#### 2. Scope discipline
+**Status:** Passed
+
+Validated items:
+- No auth added
+- No DB added
+- No Prisma added
+- No API routes added
+- No extra entity flows implemented
+- No fake progress screens added
+- No unnecessary architectural expansion introduced
+
+#### 3. Persistence strategy
+**Status:** Passed
+
+Validated items:
+- Persistence implemented through a lightweight `localStorage` helper
+- Persistence is typed against the `Service` domain model
+- Canonical storage uses `basePriceInCents`
+- Price input is converted from user-friendly input to domain-safe integer cents
+- Solution is appropriate for this stage
+- Easy to replace later with real backend persistence
+
+#### 4. Domain coherence
+**Status:** Passed
+
+Validated items:
+- Services implementation reuses the domain foundation
+- Structure remains aligned with `lib/domain/service.ts`
+- The slice follows the same implementation pattern used by Business Profile and Clients
+
+#### 5. Technical validation
+**Status:** Passed
+
+Validated items:
+- `npm run lint` passed
+- `npm run build` passed
+- App remained stable after the new slice was added
+
+#### 6. Continuity for next block
+**Status:** Passed
+
+Validated items:
+- The project now contains a third real internal product flow
+- Future quote implementation can reuse the persisted services list
+- Canonical price storage reduces ambiguity for future quote totals
+
+### Evidence
+- New route created: `/services`
+- New manager component created
+- New local persistence helper created
+- Homepage updated with a Services entry link
+- Successful execution of:
+  - `npm run lint`
+  - `npm run build`
+
+### Final QA decision
+**Approved**
+
 ### Notes
 - The implementation is correct for this stage and respects the intended scope.
 - The slice is minimal, coherent, and useful.
-- The project is now ready to move to the next entity-oriented implementation block.
-
-
-### Notes
-- The block successfully achieved its purpose: establishing the initial technical foundation of the project.
-- The current state is stable enough to continue safely into the next execution block.
-- Recommendation: proceed to the second half of Hour 1 while maintaining tight scope control.
-
+- The project is now ready to move into the quote-oriented block.
 ---
+
+
 
 ## QA Template for Future Blocks
 

@@ -185,20 +185,17 @@ Includes:
 ---
 
 ### Block 5 — Services
-**Status:** Pending  
+**Status:** Completed  
 **Objective:** Structure the service catalog in a lightweight way.
 
-**Expected scope:**
-- service CRUD
-- base price
-- short description
-- estimated delivery time
-- active/inactive status
+**Delivered:**
+- Created a dedicated Services route
+- Added a focused list + create/edit manager
+- Added lightweight local persistence through `localStorage`
+- Reused the `Service` domain type
+- Added a homepage entry link to the feature
 
-**Acceptance criteria:**
-- services can be managed
-- services are ready to be reused inside quotes
-
+**Validation status:** Approved
 ---
 
 ### Block 6 — Quote Engine
