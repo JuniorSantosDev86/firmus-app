@@ -20,6 +20,128 @@ Its purpose is not to replace future automated testing, but to document build-st
 **Date:** 2026-04-11  
 **Objective:** Normalize the initial scaffold, remove leftover template noise, and stabilize the base app shell for future domain work.
 
+## Block 2 — Day 1 / Hour 2 / Core Domain Foundation
+
+**Block name:** Core Domain Typing Spine  
+**Status:** Approved  
+**Date:** 2026-04-11  
+**Objective:** Establish the first clear domain foundation of the product through lightweight entity typing, without implementing business flows or feature logic.
+
+### Expected scope
+- Define the core product concepts at the code structure level
+- Introduce lightweight domain typing for the central entities
+- Create a minimal structural spine for future implementation blocks
+- Keep the app shell intact
+- Preserve strict scope discipline
+
+### Out of scope
+- Authentication
+- Database
+- Prisma
+- Supabase
+- Clerk
+- API routes
+- Server actions
+- CRUD flows
+- Forms
+- Business logic
+- Dashboards with real data
+- State management
+- Automations
+- AI
+- Payment integrations
+- Public-facing quote flows
+- Bio link features
+- Testing setup
+- Docker
+- CI/CD
+
+### Acceptance criteria
+- [x] Core product concepts represented in code structure
+- [x] Domain naming is coherent
+- [x] Lightweight entity typing added without behavior
+- [x] No out-of-scope features introduced
+- [x] App still runs locally
+- [x] `npm run lint` passed
+- [x] `npm run build` passed
+- [x] `npm run dev` booted successfully
+- [x] Project is easier to continue in the next blocks
+- [x] Structural ambiguity reduced
+
+### Validation summary
+
+#### 1. Domain structure
+**Status:** Passed
+
+Validated items:
+- Added a dedicated `lib/domain` structure
+- Introduced central domain files:
+  - `business-profile.ts`
+  - `client.ts`
+  - `service.ts`
+  - `quote.ts`
+  - `charge.ts`
+  - `timeline-event.ts`
+  - `common.ts`
+  - `index.ts`
+- Domain concepts now exist as first-class structures in the codebase
+
+#### 2. Scope discipline
+**Status:** Passed
+
+Validated items:
+- No CRUD flows added
+- No forms added
+- No database added
+- No API routes added
+- No feature behavior added
+- No speculative enterprise architecture added
+
+#### 3. Domain typing quality
+**Status:** Passed
+
+Validated items:
+- Files contain lightweight types and interfaces
+- `common.ts` defines reusable primitive foundations
+- `quote.ts` correctly introduces `Quote` and `QuoteItem`
+- `charge.ts` correctly models charge status and quote relation
+- `timeline-event.ts` is generic enough for future reuse
+- `index.ts` provides a clean export surface
+
+#### 4. Technical validation
+**Status:** Passed
+
+Validated items:
+- `npm run lint` passed
+- `npm run build` passed
+- `npm run dev` booted successfully
+- App remained stable after structural changes
+
+#### 5. Continuity for next block
+**Status:** Passed
+
+Validated items:
+- The codebase now has a clearer product spine
+- Future implementation of profile, clients, services, quotes, charges, and timelines is less ambiguous
+- The next blocks can focus on implementation rather than structural guessing
+
+### Evidence
+- New `lib/domain` structure created
+- Local validation completed successfully:
+  - `npm run lint`
+  - `npm run build`
+  - `npm run dev`
+- Minimal shell preserved
+- Only one minor homepage wording adjustment added
+
+### Final QA decision
+**Approved**
+
+### Notes
+- This block correctly established the first product-oriented structural layer of the codebase.
+- The result is intentionally lightweight and appropriate for this stage.
+- The project is now ready to move from structural preparation toward the first implementation-oriented domain blocks.
+
 ### Expected scope
 - Review the current scaffold state
 - Remove obvious starter-template leftovers

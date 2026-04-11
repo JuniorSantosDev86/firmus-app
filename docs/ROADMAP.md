@@ -134,13 +134,13 @@ Includes:
 
 ---
 
-### Block 2 — Core Data Modeling
-**Status:** Pending  
-**Objective:** Establish the project’s central data structure.
+### Block 2 — Core Domain Foundation
+**Status:** Completed  
+**Objective:** Establish the project’s central domain structure.
 
-**Expected scope:**
-- define the core product entities conceptually
-- prepare technical direction for:
+**Delivered:**
+- Created a dedicated `lib/domain` module
+- Added lightweight entity typing for:
   - business profile
   - clients
   - services
@@ -148,15 +148,11 @@ Includes:
   - quote items
   - charges
   - timeline events
-- document relationships before implementation
+- Added common shared domain primitives
+- Added a central export surface through `lib/domain/index.ts`
+- Preserved strict scope discipline with no business flow implementation
 
-**Acceptance criteria:**
-- core entities clearly defined
-- relationships coherent
-- no unnecessary complexity
-- ready for implementation in future blocks
-
----
+**Validation status:** Approved
 
 ### Block 3 — Business Profile
 **Status:** Pending  

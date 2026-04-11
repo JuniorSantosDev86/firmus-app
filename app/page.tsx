@@ -9,7 +9,7 @@ export default function Home() {
           The operational copilot for service providers.
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
-          Foundation setup in progress.
+          Core domain foundation in progress.
         </p>
       </section>
     </main>
