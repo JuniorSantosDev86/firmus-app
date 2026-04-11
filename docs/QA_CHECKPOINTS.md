@@ -13,6 +13,107 @@ Its purpose is not to replace future automated testing, but to document build-st
 **Date:** 2026-04-11  
 **Objective:** Validate that the minimum technical foundation of the project was created correctly and is ready for continuation without rework.
 
+## Block 1B — Day 1 / Hour 1 / Second Half Hour
+
+**Block name:** Foundation Normalization and Shell Stabilization  
+**Status:** Approved  
+**Date:** 2026-04-11  
+**Objective:** Normalize the initial scaffold, remove leftover template noise, and stabilize the base app shell for future domain work.
+
+### Expected scope
+- Review the current scaffold state
+- Remove obvious starter-template leftovers
+- Normalize the root shell structure
+- Improve base consistency without adding features
+- Keep the codebase ready for the next block
+
+### Out of scope
+- Authentication
+- Database
+- Prisma
+- Supabase
+- Clerk
+- API routes
+- Server actions
+- Domain entities
+- CRUD flows
+- Business logic
+- Real dashboard
+- Complex layouts
+- State management
+- Testing setup
+- Docker
+- CI/CD
+
+### Acceptance criteria
+- [x] Current scaffold normalized
+- [x] Root shell remains minimal and correct
+- [x] Clear scaffold leftovers removed
+- [x] Structure cleaner than before
+- [x] No out-of-scope features added
+- [x] Project still runs locally
+- [x] Codebase is easier to continue
+- [x] Next block can start without structural confusion
+
+### Validation summary
+
+#### 1. Scaffold cleanup
+**Status:** Passed
+
+Validated items:
+- Removed unused starter public assets
+- Removed unnecessary scaffold residue files
+- Replaced generic starter README with project-specific README
+
+#### 2. Shell consistency
+**Status:** Passed
+
+Validated items:
+- `app/layout.tsx` kept minimal and coherent
+- `app/page.tsx` kept aligned with the intended placeholder shell
+- Base shell remains clean and stable
+
+#### 3. Repository hygiene
+**Status:** Passed
+
+Validated items:
+- `.codex` added to ignore rules
+- Working tree hygiene improved
+- Foundation is now cleaner for future commits
+
+#### 4. Scope compliance
+**Status:** Passed
+
+Validated items:
+- No auth added
+- No database added
+- No business entities added
+- No fake progress pages added
+- No unnecessary architectural expansion introduced
+
+#### 5. Continuity for next block
+**Status:** Passed
+
+Validated items:
+- Foundation is calmer and easier to reason about
+- Documentation entry point is clearer
+- Next technical block can start without shell cleanup debt
+
+### Evidence
+- `npm run lint` passed
+- `npm run build` passed
+- `npm run dev` booted successfully
+- Starter residue removed
+- README normalized
+- `.gitignore` improved
+
+### Final QA decision
+**Approved**
+
+### Notes
+- This block successfully completed its intended role: cleaning and stabilizing the second half of Hour 1.
+- The project is now ready to enter the first real domain-oriented technical block.
+
 ### Expected scope
 - Create the initial project scaffold
 - Configure Next.js
