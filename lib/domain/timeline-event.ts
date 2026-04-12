@@ -3,6 +3,6 @@ export interface TimelineEvent {
   type: string;
   timestamp: number;
   entityId: string;
-  entityType: "client" | "service" | "quote";
+  entityType: "client" | "service" | "quote" | "charge";
   metadata?: Record<string, unknown>;
 }

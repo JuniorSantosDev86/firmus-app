@@ -11,7 +11,7 @@ export default function Home() {
           The operational copilot for service providers.
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
-          Business Profile, Clients, Services, and Quotes are now available.
+          Business Profile, Clients, Services, Quotes, and Charges are now available.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link
@@ -37,6 +37,12 @@ export default function Home() {
             className="inline-flex h-9 items-center justify-center rounded-lg border border-input bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted"
           >
             Open Quotes
+          </Link>
+          <Link
+            href="/charges"
+            className="inline-flex h-9 items-center justify-center rounded-lg border border-input bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+          >
+            Open Charges
           </Link>
         </div>
       </section>

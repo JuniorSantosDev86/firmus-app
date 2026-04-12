@@ -1137,6 +1137,185 @@ Validated items:
 * The implementation is intentionally minimal and correct for the current stage.
 * This is a critical enabling layer for timeline rendering, reminders, summaries, and automation.
 
+## Block 8 — Day 2 / Charges Slice
+
+**Block name:** Charges Minimal Implementation  
+**Status:** Approved  
+**Date:** 2026-04-12  
+**Objective:** Implement the Charges entity as the next real financial product slice, allowing the user to create, edit, persist, and track charges linked to clients, with optional quote relation and timeline integration.
+
+### Expected scope
+- Create a Charges route
+- Create a minimal Charges manager flow
+- Show empty state when no charges exist
+- Allow charge creation
+- Allow charge editing
+- Allow marking a charge as paid
+- Link a charge to a client
+- Optionally link a charge to a quote
+- Persist charges locally in the simplest correct way for this stage
+- Reuse the existing `Charge` domain type
+- Integrate timeline events for charge creation and payment transitions
+- Derive overdue status at runtime without persisting it
+
+### Out of scope
+- Authentication
+- Database
+- Prisma
+- Supabase
+- Clerk
+- API routes
+- Server actions
+- Payment systems
+- Installments
+- Interest or fees
+- Bank integrations
+- Financial dashboards
+- Search
+- Filters
+- Pagination
+- Validation libraries
+- State management libraries
+- Automations
+- AI
+- Testing architecture expansion
+- Docker
+- CI/CD
+
+### Acceptance criteria
+- [x] A Charges route exists
+- [x] Charges can be viewed
+- [x] Charges can be created
+- [x] Charges can be edited
+- [x] Empty state is present when no charges exist
+- [x] A charge must be linked to a client
+- [x] A charge can optionally be linked to a quote
+- [x] Charge values are stored canonically in cents
+- [x] Charges persist correctly after reload
+- [x] Mark as paid flow works correctly
+- [x] Overdue is derived at runtime and not persisted
+- [x] Timeline events are generated for:
+  - `charge_created`
+  - `charge_paid`
+- [x] No duplicate events are generated on neutral edits
+- [x] No out-of-scope features were added
+- [x] The app still runs locally
+- [x] `npm run lint` passed
+- [x] `npm run build` passed
+- [x] Existing Cypress suite continued passing
+- [x] The project is meaningfully more product-like than before
+- [x] The next blocks can build on this implementation cleanly
+
+### Validation summary
+
+#### 1. Product slice implementation
+**Status:** Passed
+
+Validated items:
+- Added `app/charges/page.tsx`
+- Added `components/charges-manager.tsx`
+- Added `lib/charge-storage.ts`
+- Added `lib/charge-status.ts`
+- Added homepage navigation entry to `/charges`
+
+#### 2. Scope discipline
+**Status:** Passed
+
+Validated items:
+- No auth added
+- No DB added
+- No Prisma added
+- No API routes added
+- No payment system added
+- No installment or fee logic added
+- No dashboard or analytics added
+- No unnecessary architectural expansion introduced
+
+#### 3. Persistence and domain integrity
+**Status:** Passed
+
+Validated items:
+- Persistence implemented through a lightweight `localStorage` helper
+- Persistence uses canonical `amountInCents`
+- Charge storage safely parses invalid data without crashing
+- Charge status persistence is limited to:
+  - `pending`
+  - `paid`
+- `overdue` is correctly derived at runtime and not stored
+- `createdAt` remains stable on edit
+- `updatedAt` changes on update
+- Charges are ordered by `updatedAt` descending
+
+#### 4. Timeline integration
+**Status:** Passed
+
+Validated items:
+- `charge_created` event generated on successful charge creation
+- `charge_paid` event generated on valid pending → paid transition
+- Neutral edits do not generate duplicate timeline events
+- Existing timeline behavior remained stable
+
+#### 5. Manual functional validation
+**Status:** Passed
+
+Validated items:
+- Charges page opens correctly
+- Empty state is shown when no charges exist
+- Charges correctly require at least one client
+- A charge can be created and persisted
+- A charge can be edited without duplicating itself
+- A charge can optionally link to a quote
+- Mark as paid action works correctly
+- Overdue charge displays correctly in UI
+- Overdue charge remains persisted as `pending`
+- Timeline events reflect charge lifecycle correctly
+- Charges persist after reload
+
+#### 6. Technical validation
+**Status:** Passed
+
+Validated items:
+- `npm run lint` passed
+- `npm run build` passed
+- Existing Cypress suite remained passing
+- No regression observed in previous implemented flows
+
+#### 7. Continuity for next block
+**Status:** Passed
+
+Validated items:
+- The project now contains a real financial intent layer
+- Financial Overview can now be derived from existing charge data
+- Client-centered financial continuity is now possible
+- Future reminders and automation can build on due dates and charge events
+
+### Evidence
+- New route created: `/charges`
+- New manager component created
+- New local persistence helper created
+- New derived charge status helper created
+- Homepage updated with a Charges entry link
+- Manual validation completed for:
+  - create
+  - edit
+  - paid transition
+  - overdue derivation
+  - persistence
+  - timeline integration
+- Successful execution of:
+  - `npm run lint`
+  - `npm run build`
+- Existing Cypress suite continued passing
+
+### Final QA decision
+**Approved**
+
+### Notes
+- This block established the first real financial intent layer of the system.
+- The implementation is intentionally minimal and correct for the current stage.
+- The derived overdue strategy is especially important because it preserves a cleaner domain model and avoids unnecessary persisted state.
+- The project is now ready to move into Block 9 — Financial Overview.
+
 
 ## QA Template for Future Blocks
 

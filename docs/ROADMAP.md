@@ -249,20 +249,22 @@ Includes:
 **Validation status:** Approved
 
 ### Block 8 — Charges
-**Status:** Pending  
+**Status:** Completed  
 **Objective:** Implement the charge registration flow.
 
-**Expected scope:**
-- create charge
-- attach to client
-- optional relation to quote
-- define due date
-- define status
+**Delivered:**
+- Created a dedicated Charges route
+- Added a focused list + create/edit manager
+- Added lightweight local persistence through `localStorage`
+- Reused the `Charge` domain type
+- Implemented derived overdue status logic without persisting `overdue`
+- Implemented charge payment transition flow
+- Integrated timeline event emission for:
+  - `charge_created`
+  - `charge_paid`
+- Added a homepage entry link to the feature
 
-**Acceptance criteria:**
-- charges can be created and tracked
-- statuses work properly
-- flow supports future reminders and summaries
+**Validation status:** Approved
 
 ---
 
@@ -417,10 +419,9 @@ Expanded MVP ready for structured beta.
 
 # Current Status
 
-**Current active block:** Block 8 
+**Current active block:** Block 9  
 **Current phase:** Phase 1 — Core Transactional Foundation  
 **Overall project status:** In progress
-
 ---
 
 # Notes

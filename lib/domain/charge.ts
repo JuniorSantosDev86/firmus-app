@@ -5,14 +5,13 @@ import type {
   TimestampedEntity,
 } from "@/lib/domain/common";
 
-export type ChargeStatus = "pending" | "paid" | "overdue" | "canceled";
+export type ChargeStatus = "pending" | "paid";
 
 export interface Charge extends TimestampedEntity {
   id: EntityId;
   clientId: EntityId;
-  quoteId: EntityId | null;
+  quoteId?: EntityId;
   status: ChargeStatus;
   amountInCents: CurrencyInCents;
   dueDate: ISODate;
-  paidAt: ISODate | null;
 }
