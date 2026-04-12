@@ -1316,6 +1316,175 @@ Validated items:
 - The derived overdue strategy is especially important because it preserves a cleaner domain model and avoids unnecessary persisted state.
 - The project is now ready to move into Block 9 — Financial Overview.
 
+## Block 9 — Day 2 / Financial Overview Slice
+
+**Block name:** Financial Overview Minimal Implementation  
+**Status:** Approved  
+**Date:** 2026-04-12  
+**Objective:** Implement the first simple operational financial dashboard by deriving a minimal overview from existing charge data.
+
+### Expected scope
+- Create a Financial Overview route
+- Create a minimal overview summary UI
+- Derive all overview values from existing charges
+- Show exactly these metrics:
+  - available today
+  - receivable in 7 days
+  - overdue amount
+- Reuse the existing derived overdue logic from the Charges slice
+- Keep the implementation derived-only, with no persistence of overview totals
+
+### Out of scope
+- Authentication
+- Database
+- Prisma
+- Supabase
+- Clerk
+- API routes
+- Server actions
+- Charts
+- Graphs
+- Financial tables
+- Detailed reports
+- Filters
+- Search
+- Pagination
+- Export features
+- Trend analytics
+- Reminder logic
+- New domain entities
+- New storage layer
+- State management libraries
+- Automations
+- AI
+- Testing architecture expansion
+- Docker
+- CI/CD
+
+### Acceptance criteria
+- [x] A Financial Overview route exists
+- [x] The page opens correctly
+- [x] The UI shows exactly three metrics:
+  - available today
+  - receivable in 7 days
+  - overdue amount
+- [x] All values are derived from existing charges at runtime
+- [x] No new persistence layer was introduced
+- [x] No new domain model was introduced unnecessarily
+- [x] Paid charges are excluded from active receivable totals
+- [x] Available today includes due-today and overdue pending charges
+- [x] Receivable in 7 days includes only upcoming pending charges in the next 7 days
+- [x] Overdue amount includes only charges resolved as overdue
+- [x] Overdue logic remains consistent with the Charges slice
+- [x] No out-of-scope dashboard complexity was added
+- [x] The app still runs locally
+- [x] `npm run lint` passed
+- [x] `npm run build` passed
+- [x] Existing Cypress suite continued passing
+- [x] The next blocks can build on this implementation cleanly
+
+### Validation summary
+
+#### 1. Product slice implementation
+**Status:** Passed
+
+Validated items:
+- Added `app/financial-overview/page.tsx`
+- Added a minimal overview summary component
+- Added a homepage navigation entry to `/financial-overview`
+- Kept the UI limited to the three required financial metrics
+
+#### 2. Scope discipline
+**Status:** Passed
+
+Validated items:
+- No charts added
+- No graphs added
+- No tables added
+- No filters or search added
+- No analytics expansion introduced
+- No new persistence layer introduced
+- No unnecessary architectural expansion introduced
+
+#### 3. Calculation integrity
+**Status:** Passed
+
+Validated items:
+- Overview values are computed from charges at runtime
+- Existing charge status resolution was reused
+- Available today correctly includes:
+  - due-today pending charges
+  - overdue pending charges
+- Receivable in 7 days correctly includes only:
+  - upcoming pending charges within the next 7 days
+- Overdue amount correctly includes only charges resolved as overdue
+- Paid charges are excluded from active receivable metrics
+
+#### 4. Persistence discipline
+**Status:** Passed
+
+Validated items:
+- No new localStorage key was created for the overview
+- No derived totals were persisted
+- Existing Charges storage remained the only source of truth
+
+#### 5. Manual functional validation
+**Status:** Passed
+
+Validated items:
+- Overview page opens correctly
+- Empty state with zeroed values works safely when no charges exist
+- Controlled charge scenarios produced the expected financial totals
+- Changes in Charges are reflected in the Financial Overview
+- Marking overdue charges as paid updates the overview correctly
+- Existing core slices remained stable
+
+#### 6. Technical validation
+**Status:** Passed
+
+Validated items:
+- `npm run lint` passed
+- `npm run build` passed
+- Existing Cypress suite remained passing
+- No regression observed in previous implemented flows
+
+#### 7. Continuity for next block
+**Status:** Passed
+
+Validated items:
+- The project now has its first readable financial snapshot
+- Client-centered continuity in Block 10 can build on:
+  - charges
+  - quotes
+  - timeline events
+  - financial overview logic
+- Assisted operations can later reuse these derived financial signals
+
+### Evidence
+- New route created: `/financial-overview`
+- Minimal overview UI created
+- Homepage updated with a Financial Overview entry link
+- Manual validation completed for:
+  - route access
+  - zero-data behavior
+  - runtime-derived totals
+  - overdue consistency
+  - paid charge exclusion
+  - cross-check with Charges
+- Successful execution of:
+  - `npm run lint`
+  - `npm run build`
+- Existing Cypress suite continued passing
+
+### Final QA decision
+**Approved**
+
+### Notes
+- This block established the first readable operational financial snapshot of the system.
+- The implementation is intentionally derived-only and correct for the current stage.
+- No financial aggregates were persisted, which preserves cleaner architecture and avoids duplicated state.
+- The project is now ready to move into Block 10 — Client Detail and Consolidated Timeline.
+
 
 ## QA Template for Future Blocks
 

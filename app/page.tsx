@@ -44,6 +44,12 @@ export default function Home() {
           >
             Open Charges
           </Link>
+          <Link
+            href="/financial-overview"
+            className="inline-flex h-9 items-center justify-center rounded-lg border border-input bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+          >
+            Open Financial Overview
+          </Link>
         </div>
       </section>
     </main>

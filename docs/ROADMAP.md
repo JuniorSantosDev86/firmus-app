@@ -269,18 +269,22 @@ Includes:
 ---
 
 ### Block 9 — Financial Overview
-**Status:** Pending  
+**Status:** Completed  
 **Objective:** Create the first simple operational dashboard.
 
-**Expected scope:**
-- available today
-- receivable in 7 days
-- overdue amount
+**Delivered:**
+- Created a dedicated Financial Overview route
+- Added a minimal overview summary UI
+- Implemented runtime-derived financial calculations from existing charges
+- Reused the existing derived overdue logic from the Charges slice
+- Added overview metrics for:
+  - available today
+  - receivable in 7 days
+  - overdue amount
+- Preserved a derived-only approach with no new persistence layer
+- Added a homepage entry link to the feature
 
-**Acceptance criteria:**
-- financial summary is simple and readable
-- no ERP-style complexity
-- values reflect stored data correctly
+**Validation status:** Approved
 
 ---
 
@@ -419,10 +423,9 @@ Expanded MVP ready for structured beta.
 
 # Current Status
 
-**Current active block:** Block 9  
+**Current active block:** Block 10  
 **Current phase:** Phase 1 — Core Transactional Foundation  
 **Overall project status:** In progress
----
 
 # Notes
 
