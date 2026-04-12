@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { readClients } from "@/lib/client-storage";
@@ -125,14 +125,30 @@ function getQuoteItems(quote: Quote, items: QuoteItem[]): QuoteItem[] {
 }
 
 export function QuotesManager() {
-  const [clients] = useState<Client[]>(() => readClients());
-  const [services] = useState<Service[]>(() => readServices());
-  const [store, setStore] = useState(() => readQuoteStore());
+  const [clients, setClients] = useState<Client[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
+  const [store, setStore] = useState<{ quotes: Quote[]; items: QuoteItem[] }>(() => ({
+    quotes: [],
+    items: [],
+  }));
   const [editingQuoteId, setEditingQuoteId] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [formValues, setFormValues] = useState<QuoteFormValues>(() =>
-    getInitialFormValues(readClients())
+    getInitialFormValues([])
   );
+
+  useEffect(() => {
+    const storedClients = readClients();
+    const storedServices = readServices();
+    const storedQuotes = readQuoteStore();
+
+    queueMicrotask(() => {
+      setClients(storedClients);
+      setServices(storedServices);
+      setStore(storedQuotes);
+      setFormValues(getInitialFormValues(storedClients));
+    });
+  }, []);
 
   const hasClients = clients.length > 0;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import type { Client } from "@/lib/domain";
@@ -35,10 +35,17 @@ function displayValue(value: string | null): string {
 }
 
 export function ClientsManager() {
-  const [clients, setClients] = useState<Client[]>(() => getInitialClients());
+  const [clients, setClients] = useState<Client[]>([]);
   const [editingClientId, setEditingClientId] = useState<string | null>(null);
   const [formValues, setFormValues] = useState<ClientInput>({ ...INITIAL_VALUES });
   const [saveState, setSaveState] = useState<SaveState>("idle");
+
+  useEffect(() => {
+    const initialClients = getInitialClients();
+    queueMicrotask(() => {
+      setClients(initialClients);
+    });
+  }, []);
 
   const selectedClient =
     editingClientId === null

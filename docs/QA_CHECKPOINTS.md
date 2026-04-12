@@ -889,10 +889,122 @@ Validated items:
 **Approved**
 
 ### Notes
-- This is the first block where formal functional test scenarios should start being documented consistently.
-- The implementation is minimal, coherent, and appropriate for this stage.
+- Manual functional validation for the Quote Engine slice was completed successfully.
+- This is the first block with a validated multi-entity product flow.
+- The project is now ready to move into the next implementation block with stronger confidence.
 
+### Manual functional test results
+- [x] Quotes page opens correctly
+- [x] Empty state is shown when no quotes exist
+- [x] A quote can be created and linked to a client
+- [x] Line totals are calculated correctly
+- [x] Service reuse works correctly
+- [x] Subtotal is calculated correctly
+- [x] Discount is applied correctly
+- [x] Discount is clamped correctly
+- [x] Quote saves successfully
+- [x] Quote persists after reload
+- [x] Existing quote can be edited
+- [x] Quote/item linkage remains consistent
+- [x] Quotes still work without services
+- [x] Quotes fail gracefully without clients
 
+## Block 6T — Day 2 / Cypress Baseline for Core Flows
+
+**Block name:** Cypress E2E Baseline for Core Product Flows  
+**Status:** Approved  
+**Date:** 2026-04-12  
+**Objective:** Establish the first automated end-to-end regression layer for the current implemented Firmus slices.
+
+### Expected scope
+- Install and configure Cypress
+- Create a minimal E2E suite for the current product state
+- Cover the implemented slices:
+  - Home
+  - Business Profile
+  - Clients
+  - Services
+  - Quotes
+- Ensure tests run successfully against the local app
+
+### Out of scope
+- Component tests
+- API tests
+- Visual regression tooling
+- CI integration
+- Coverage tooling
+- Playwright
+- Reporter expansion
+- Testing architecture beyond the current E2E need
+
+### Acceptance criteria
+- [x] Cypress is installed and configured
+- [x] Home E2E test exists and passes
+- [x] Business Profile E2E test exists and passes
+- [x] Clients E2E test exists and passes
+- [x] Services E2E test exists and passes
+- [x] Quotes E2E test exists and passes
+- [x] The suite runs successfully in headless mode
+- [x] No exception-suppression hack was used as a workaround
+- [x] The project is now protected by a first regression layer
+
+### Validation summary
+
+#### 1. Cypress setup
+**Status:** Passed
+
+Validated items:
+- Cypress installed successfully
+- E2E structure created and usable
+- Test suite runs against the local Next.js app
+
+#### 2. Test coverage
+**Status:** Passed
+
+Validated items:
+- Home smoke flow covered
+- Business Profile create/edit/persist flow covered
+- Clients empty state + create/edit/persist flow covered
+- Services empty state + create/edit/persist flow covered
+- Quotes multi-entity flow covered, including:
+  - client linkage
+  - manual item entry
+  - service reuse
+  - subtotal
+  - discount
+  - total
+  - persistence after reload
+
+#### 3. Stability correction
+**Status:** Passed
+
+Validated items:
+- Hydration mismatch issues were corrected
+- Quotes spec assertion was corrected to match implemented UI behavior
+- E2E suite became stable without masking application errors
+
+#### 4. Execution result
+**Status:** Passed
+
+Validated items:
+- `npx cypress run` executed successfully
+- All 5 specs passed
+- Total result: 5 passing, 0 failing
+
+### Evidence
+- Successful Cypress run:
+  - `business-profile.cy.ts` passed
+  - `clients.cy.ts` passed
+  - `home.cy.ts` passed
+  - `quotes.cy.ts` passed
+  - `services.cy.ts` passed
+
+### Final QA decision
+**Approved**
+
+### Notes
+- This block established the first real automated regression protection layer of the project.
+- From this point onward, future slices should be validated both manually when needed and through incremental E2E coverage.
 
 
 

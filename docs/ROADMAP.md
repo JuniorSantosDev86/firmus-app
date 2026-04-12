@@ -214,6 +214,23 @@ Includes:
 **Validation status:** Approved
 ---
 
+### Block 6T — Cypress Baseline for Core Flows
+**Status:** Completed  
+**Objective:** Establish the first automated E2E regression layer for the current implemented slices.
+
+**Delivered:**
+- Installed and configured Cypress
+- Added E2E coverage for:
+  - Home
+  - Business Profile
+  - Clients
+  - Services
+  - Quotes
+- Corrected hydration-related instability affecting test execution
+- Validated the suite successfully in headless mode
+
+**Validation status:** Approved
+
 ### Block 7 — Timeline Events
 **Status:** Pending  
 **Objective:** Introduce event-driven product memory.

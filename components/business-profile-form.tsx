@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import type { BusinessProfile } from "@/lib/domain";
@@ -41,16 +41,23 @@ function displayValue(value: string | null): string {
 }
 
 export function BusinessProfileForm() {
-  const [profile, setProfile] = useState<BusinessProfile | null>(() =>
-    getInitialProfile()
-  );
-  const [formValues, setFormValues] = useState<BusinessProfileInput>(() => {
-    const existingProfile = getInitialProfile();
-    return existingProfile
-      ? mapProfileToInput(existingProfile)
-      : { ...INITIAL_VALUES };
+  const [profile, setProfile] = useState<BusinessProfile | null>(null);
+  const [formValues, setFormValues] = useState<BusinessProfileInput>({
+    ...INITIAL_VALUES,
   });
   const [saveState, setSaveState] = useState<SaveState>("idle");
+
+  useEffect(() => {
+    const existingProfile = getInitialProfile();
+    if (!existingProfile) {
+      return;
+    }
+
+    queueMicrotask(() => {
+      setProfile(existingProfile);
+      setFormValues(mapProfileToInput(existingProfile));
+    });
+  }, []);
 
   const hasProfile = profile !== null;
 

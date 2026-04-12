@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import type { Service } from "@/lib/domain";
@@ -53,10 +53,17 @@ function displayDeliveryDays(value: number | null): string {
 }
 
 export function ServicesManager() {
-  const [services, setServices] = useState<Service[]>(() => getInitialServices());
+  const [services, setServices] = useState<Service[]>([]);
   const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
   const [formValues, setFormValues] = useState<ServiceInput>({ ...INITIAL_VALUES });
   const [saveState, setSaveState] = useState<SaveState>("idle");
+
+  useEffect(() => {
+    const initialServices = getInitialServices();
+    queueMicrotask(() => {
+      setServices(initialServices);
+    });
+  }, []);
 
   const selectedService =
     editingServiceId === null
