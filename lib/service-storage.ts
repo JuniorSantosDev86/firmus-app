@@ -1,4 +1,5 @@
 import type { Service } from "@/lib/domain";
+import { createTimelineEvent } from "@/lib/services/timeline";
 
 const STORAGE_KEY = "firmus.services";
 
@@ -169,6 +170,9 @@ export function readServices(): Service[] {
 export function upsertService(input: ServiceInput, serviceId?: string): Service[] {
   const now = new Date().toISOString();
   const existing = readServices();
+  const isUpdate =
+    typeof serviceId === "string" &&
+    existing.some((service) => service.id === serviceId);
   const name = input.name.trim();
 
   if (name.length === 0) {
@@ -201,6 +205,13 @@ export function upsertService(input: ServiceInput, serviceId?: string): Service[
 
   const normalized = next.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
   saveServices(normalized);
+  if (!isUpdate) {
+    createTimelineEvent({
+      type: "service_created",
+      entityType: "service",
+      entityId: nextService.id,
+    });
+  }
 
   return normalized;
 }

@@ -1,4 +1,5 @@
 import type { Quote, QuoteItem, QuoteStatus } from "@/lib/domain";
+import { createTimelineEvent } from "@/lib/services/timeline";
 
 const STORAGE_KEY = "firmus.quotes";
 
@@ -334,6 +335,7 @@ export function upsertQuote(input: QuoteInput, quoteId?: string): QuoteStore {
   const existingQuote = quoteId
     ? existing.quotes.find((quote) => quote.id === quoteId) ?? null
     : null;
+  const isUpdate = existingQuote !== null;
   const quoteIdentifier = existingQuote?.id ?? quoteId ?? generateId("quote");
   const now = new Date().toISOString();
 
@@ -409,6 +411,13 @@ export function upsertQuote(input: QuoteInput, quoteId?: string): QuoteStore {
   };
 
   saveQuoteStore(normalized);
+  if (!isUpdate) {
+    createTimelineEvent({
+      type: "quote_created",
+      entityType: "quote",
+      entityId: nextQuote.id,
+    });
+  }
 
   return normalized;
 }

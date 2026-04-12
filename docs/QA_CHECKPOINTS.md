@@ -1006,6 +1006,136 @@ Validated items:
 - This block established the first real automated regression protection layer of the project.
 - From this point onward, future slices should be validated both manually when needed and through incremental E2E coverage.
 
+## Block 7 — Day 2 / Timeline Events Foundation
+
+**Block name:** Timeline Events Minimal Implementation
+**Status:** Approved
+**Date:** 2026-04-12
+**Objective:** Introduce an append-only event system to capture core product actions and establish the foundation for future timeline, automation, and summary features.
+
+### Expected scope
+
+* Create a TimelineEvent domain model
+* Implement append-only event persistence using localStorage
+* Create a minimal event creation service
+* Integrate event creation into:
+
+  * client creation
+  * service creation
+  * quote creation
+* Ensure events are only created on creation flows (not updates)
+* Keep implementation lightweight and deterministic
+
+### Out of scope
+
+* Timeline UI
+* Timeline page
+* Event filtering
+* Event sorting
+* Event analytics
+* Automation logic
+* Reminders
+* AI features
+* Dashboard integration
+* API layer
+* Database
+* State management libraries
+* CI/CD integration
+
+### Acceptance criteria
+
+* [x] TimelineEvent domain model implemented with normalized structure
+* [x] Events are stored in localStorage under a dedicated key
+* [x] Event storage is append-only
+* [x] Client creation generates a timeline event
+* [x] Service creation generates a timeline event
+* [x] Quote creation generates a timeline event
+* [x] No events are generated on update flows
+* [x] Events persist after reload
+* [x] Event order is preserved
+* [x] No UI dependency introduced
+* [x] No regression in existing flows
+* [x] `npm run lint` passed
+* [x] `npm run build` passed
+
+### Validation summary
+
+#### 1. Event system structure
+
+**Status:** Passed
+
+Validated items:
+
+* Created `lib/domain/timeline-event.ts` with normalized event structure
+* Created `lib/storage/timeline-events.ts` with safe parsing and append-only logic
+* Created `lib/services/timeline.ts` for event creation orchestration
+* Storage key defined as `firmus.timelineEvents`
+
+#### 2. Functional validation
+
+**Status:** Passed
+
+Validated items:
+
+* Creating a client generates a `client_created` event
+* Creating a service generates a `service_created` event
+* Creating a quote generates a `quote_created` event
+* Events contain:
+
+  * id
+  * type
+  * timestamp
+  * entityId
+  * entityType
+* Events persist correctly after reload
+* Event list grows without overwriting previous entries
+
+#### 3. Scope compliance
+
+**Status:** Passed
+
+Validated items:
+
+* No timeline UI created
+* No filtering or sorting logic added
+* No analytics introduced
+* No automation logic introduced
+* No architectural over-expansion
+
+#### 4. Continuity for next block
+
+**Status:** Passed
+
+Validated items:
+
+* The system now captures product actions as structured events
+* Timeline rendering (Block 10) can be implemented without refactoring
+* Future automation (Blocks 11+) can rely on event history
+* The product now has a consistent behavioral memory layer
+
+### Evidence
+
+* LocalStorage key `firmus.timelineEvents` populated with:
+
+  * `client_created`
+  * `service_created`
+  * `quote_created`
+* Manual validation via DevTools Application tab
+* Successful execution of:
+
+  * `npm run lint`
+  * `npm run build`
+* No regression observed in existing flows
+
+### Final QA decision
+
+**Approved**
+
+### Notes
+
+* This block establishes the first event-driven foundation of the system.
+* The implementation is intentionally minimal and correct for the current stage.
+* This is a critical enabling layer for timeline rendering, reminders, summaries, and automation.
 
 
 ## QA Template for Future Blocks

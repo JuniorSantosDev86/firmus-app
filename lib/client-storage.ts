@@ -1,4 +1,5 @@
 import type { Client } from "@/lib/domain";
+import { createTimelineEvent } from "@/lib/services/timeline";
 
 const STORAGE_KEY = "firmus.clients";
 
@@ -104,6 +105,9 @@ export function readClients(): Client[] {
 export function upsertClient(input: ClientInput, clientId?: string): Client[] {
   const now = new Date().toISOString();
   const existing = readClients();
+  const isUpdate =
+    typeof clientId === "string" &&
+    existing.some((client) => client.id === clientId);
   const name = input.name.trim();
   if (name.length === 0) {
     return existing;
@@ -135,6 +139,13 @@ export function upsertClient(input: ClientInput, clientId?: string): Client[] {
 
   const normalized = next.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
   saveClients(normalized);
+  if (!isUpdate) {
+    createTimelineEvent({
+      type: "client_created",
+      entityType: "client",
+      entityId: nextClient.id,
+    });
+  }
 
   return normalized;
 }

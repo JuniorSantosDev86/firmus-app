@@ -232,19 +232,21 @@ Includes:
 **Validation status:** Approved
 
 ### Block 7 — Timeline Events
-**Status:** Pending  
+**Status:** Completed  
 **Objective:** Introduce event-driven product memory.
 
-**Expected scope:**
-- store important actions as timeline events
-- support future automation and summaries
-- begin event-driven structure early
+**Delivered:**
+- Implemented TimelineEvent domain model (normalized structure)
+- Implemented append-only event storage using localStorage
+- Created timeline event service layer
+- Integrated event creation into:
+  - client creation
+  - service creation
+  - quote creation
+- Ensured no event creation on update flows
+- Preserved existing flows without regression
 
-**Acceptance criteria:**
-- core actions generate events
-- events can be rendered in a client timeline later
-
----
+**Validation status:** Approved
 
 ### Block 8 — Charges
 **Status:** Pending  
@@ -415,7 +417,7 @@ Expanded MVP ready for structured beta.
 
 # Current Status
 
-**Current active block:** Block 1B  
+**Current active block:** Block 8 
 **Current phase:** Phase 1 — Core Transactional Foundation  
 **Overall project status:** In progress
 
