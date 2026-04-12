@@ -4,8 +4,8 @@ import Link from "next/link";
 import { ServicesManager } from "@/components/services-manager";
 
 export const metadata: Metadata = {
-  title: "Services",
-  description: "Manage your services with a simple and reliable flow.",
+  title: "Serviços",
+  description: "Gerencie seus serviços com um fluxo simples e confiável.",
 };
 
 export default function ServicesPage() {
@@ -17,14 +17,15 @@ export default function ServicesPage() {
             href="/"
             className="text-sm text-muted-foreground underline-offset-4 hover:underline"
           >
-            Back to home
+            Voltar para o início
           </Link>
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              Services
+              Serviços
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Define the services you offer so upcoming quotes can reuse them.
+              Defina os serviços que você oferece para reaproveitá-los nos próximos
+              orçamentos.
             </p>
           </div>
         </header>

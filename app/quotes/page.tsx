@@ -4,8 +4,8 @@ import Link from "next/link";
 import { QuotesManager } from "@/components/quotes-manager";
 
 export const metadata: Metadata = {
-  title: "Quotes",
-  description: "Create and manage quotes with linked clients and item totals.",
+  title: "Orçamentos",
+  description: "Crie e gerencie orçamentos com clientes vinculados e total por itens.",
 };
 
 export default function QuotesPage() {
@@ -17,14 +17,15 @@ export default function QuotesPage() {
             href="/"
             className="text-sm text-muted-foreground underline-offset-4 hover:underline"
           >
-            Back to home
+            Voltar para o início
           </Link>
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              Quotes
+              Orçamentos
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Build quotes with clients, reusable services, and clear totals.
+              Monte orçamentos com clientes, serviços reaproveitáveis e totais
+              claros.
             </p>
           </div>
         </header>

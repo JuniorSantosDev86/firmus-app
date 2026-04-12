@@ -9,10 +9,15 @@ Cypress.Commands.add("clearFirmusStorage", () => {
   });
 });
 
+Cypress.Commands.add("getByTestId", (testId: string) => {
+  return cy.get(`[data-testid="${testId}"]`);
+});
+
 declare global {
   namespace Cypress {
     interface Chainable {
       clearFirmusStorage(): Chainable<void>;
+      getByTestId(testId: string): Chainable<JQuery<HTMLElement>>;
     }
   }
 }

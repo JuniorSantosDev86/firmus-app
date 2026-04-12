@@ -215,3 +215,15 @@ export function upsertService(input: ServiceInput, serviceId?: string): Service[
 
   return normalized;
 }
+
+export function deleteService(serviceId: string): Service[] {
+  const existing = readServices();
+  const next = existing.filter((service) => service.id !== serviceId);
+
+  if (next.length === existing.length) {
+    return existing;
+  }
+
+  saveServices(next);
+  return next;
+}

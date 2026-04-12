@@ -180,3 +180,15 @@ export function upsertCharge(input: ChargeInput, chargeId?: string): Charge[] {
 
   return normalized;
 }
+
+export function deleteCharge(chargeId: string): Charge[] {
+  const existing = getCharges();
+  const next = existing.filter((charge) => charge.id !== chargeId);
+
+  if (next.length === existing.length) {
+    return existing;
+  }
+
+  saveCharges(next);
+  return next;
+}

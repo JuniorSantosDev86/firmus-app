@@ -1485,6 +1485,99 @@ Validated items:
 - No financial aggregates were persisted, which preserves cleaner architecture and avoids duplicated state.
 - The project is now ready to move into Block 10 — Client Detail and Consolidated Timeline.
 
+## Block 10T — UI Translation and Light Branding Pass
+
+**Block name:** UI Translation and Light Branding Stabilization  
+**Status:** Approved  
+**Date:** 2026-04-12  
+**Objective:** Translate the current Firmus UI to pt-BR and apply a light brand pass with the provided logo and favicon assets, without changing product behavior or architecture.
+
+### Expected scope
+- Translate current user-facing UI copy to pt-BR
+- Normalize visible labels, buttons, empty states, and page descriptions
+- Apply the provided Firmus logo assets in the homepage
+- Activate the provided favicon
+- Preserve the current layout and product behavior
+
+### Out of scope
+- Full i18n system
+- Language switcher
+- New branding assets
+- Layout redesign
+- Theme system
+- Domain model changes
+- Persistence changes
+- Routing changes
+- Product behavior changes
+
+### Acceptance criteria
+- [x] User-facing UI is translated to pt-BR
+- [x] Homepage branding is applied with existing assets
+- [x] Favicon is active and correctly resolved
+- [x] No redesign was introduced
+- [x] No unrelated architecture changes were introduced
+- [x] `npm run lint` passed
+- [x] `npm run build` passed
+
+### Validation summary
+
+#### 1. Copy normalization
+**Status:** Passed
+
+Validated items:
+- User-facing labels translated to Portuguese
+- Buttons translated to Portuguese
+- Empty states translated to Portuguese
+- Metadata titles and descriptions translated where applicable
+- Status labels normalized in UI presentation
+
+#### 2. Branding insertion
+**Status:** Passed
+
+Validated items:
+- Firmus logo applied in homepage hero area
+- Branding kept lightweight and proportional
+- No excessive logo repetition introduced
+
+#### 3. Favicon handling
+**Status:** Passed
+
+Validated items:
+- Canonical favicon strategy normalized
+- App favicon resolved correctly after cleanup and refresh
+
+#### 4. Technical validation
+**Status:** Passed
+
+Validated items:
+- `npm run lint` passed
+- `npm run build` passed
+- No regression observed in the product flows after translation/branding
+
+### Evidence
+- Homepage updated with Firmus logo assets
+- UI copy normalized to pt-BR
+- Favicon updated and validated
+- Successful execution of:
+  - `npm run lint`
+  - `npm run build`
+
+### Final QA decision
+**Approved**
+
+### Notes
+- This was a controlled transition step after Block 10.
+- The implementation intentionally avoided a full i18n system.
+- The product now has a more coherent local-language presentation without architectural expansion.
+
+
+### Notes
+- This patch closed an important operational gap by enabling deletion in the current tools.
+- It also restored automated confidence after the Portuguese UI transition and the evolution of core flows.
+- The project is now ready to continue with the next roadmap step on a healthier operational and testing base.
+
+
+
 
 ## QA Template for Future Blocks
 

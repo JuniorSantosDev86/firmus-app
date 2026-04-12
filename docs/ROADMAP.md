@@ -288,22 +288,103 @@ Includes:
 
 ---
 
-### Block 10 — Client Detail and Consolidated Timeline
-**Status:** Pending  
-**Objective:** Create the first useful client-centered view.
+## Block 10U — Safe Deletion Actions and Cypress Stabilization
 
-**Expected scope:**
-- client information
-- related quotes
-- related charges
-- timeline rendering
-- internal notes if necessary
+**Block name:** Safe Deletion Layer and Cypress Recovery  
+**Status:** Approved  
+**Date:** 2026-04-12  
+**Objective:** Introduce safe deletion actions for the current core tools and restore Cypress coverage to the current validated Portuguese UI and behavior.
 
-**Acceptance criteria:**
-- client view is coherent
-- timeline creates continuity
-- foundation is ready for assisted operations
+### Expected scope
+- Add deletion actions for:
+  - clients
+  - services
+  - quotes
+  - charges
+- Apply entity-specific deletion rules safely
+- Recover Cypress coverage after translation and UI evolution
+- Stabilize selectors where necessary with minimal test-oriented hooks
 
+### Out of scope
+- Soft delete
+- Archive mode
+- Undo history
+- Timeline deletion
+- Delete-related timeline events
+- Modal systems
+- Product redesign
+- Architecture refactor
+- New testing libraries
+
+### Acceptance criteria
+- [x] Delete actions exist for clients, services, quotes, and charges
+- [x] Deletion requires confirmation
+- [x] Services can be deleted safely
+- [x] Quotes can be deleted safely
+- [x] Charges can be deleted safely
+- [x] Clients with related quotes or charges cannot be deleted
+- [x] Clients without related data can be deleted
+- [x] No unintended cascade behavior was introduced
+- [x] Timeline architecture remained unchanged
+- [x] Cypress suite was updated to the current Portuguese UI
+- [x] The remaining Quotes spec was corrected and now passes
+- [x] `npm run lint` passed
+- [x] Cypress suite is green again in the local validated project flow
+
+### Validation summary
+
+#### 1. Safe deletion behavior
+**Status:** Passed
+
+Validated items:
+- Services deletion implemented safely
+- Quotes deletion implemented with quote-owned item cleanup
+- Charges deletion implemented safely
+- Client deletion guarded against linked quotes or charges
+- Confirmation step required before deletion
+
+#### 2. Scope discipline
+**Status:** Passed
+
+Validated items:
+- No soft delete introduced
+- No archive mode introduced
+- No timeline deletion introduced
+- No forced delete for clients introduced
+- No unrelated architecture changes introduced
+
+#### 3. Cypress stabilization
+**Status:** Passed
+
+Validated items:
+- Existing specs updated to the current Portuguese UI
+- Selector strategy improved with minimal `data-testid` hooks
+- Quotes spec corrected to align with the current DOM structure
+- Core flows remain meaningfully covered
+
+#### 4. Technical validation
+**Status:** Passed
+
+Validated items:
+- `npm run lint` passed
+- Local Cypress validation returned to passing state after spec corrections
+
+### Evidence
+- Delete buttons added to core managers
+- Client deletion guard validated
+- Quotes spec corrected after UI evolution
+- Cypress suite stabilized again for the current app state
+- Successful execution of:
+  - `npm run lint`
+  - local Cypress validation
+
+### Final QA decision
+**Approved**
+
+### Notes
+- This patch closed an important operational gap by enabling deletion in the current tools.
+- It also restored automated confidence after the Portuguese UI transition and the evolution of core flows.
+- The project is now ready to continue with the next roadmap step on a healthier operational and testing base.
 ---
 
 ## Phase 2 — Assisted Operations
@@ -423,9 +504,10 @@ Expanded MVP ready for structured beta.
 
 # Current Status
 
-**Current active block:** Block 10  
-**Current phase:** Phase 1 — Core Transactional Foundation  
+**Current active block:** Post-Block 10 stabilization completed  
+**Current phase:** Transition between Phase 1 — Core Transactional Foundation and Phase 2 — Assisted Operations  
 **Overall project status:** In progress
+
 
 # Notes
 
@@ -433,3 +515,4 @@ Expanded MVP ready for structured beta.
 - Each block should only be marked as completed after QA validation.
 - Scope discipline is mandatory.
 - The product must evolve in layers, not through uncontrolled feature accumulation.
+- After Block 10, the project completed a controlled UI translation/branding pass and a safe deletion + Cypress stabilization pass before continuing.

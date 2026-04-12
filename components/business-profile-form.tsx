@@ -95,11 +95,11 @@ export function BusinessProfileForm() {
       <section className="rounded-2xl border border-border bg-card p-6">
         <div className="mb-5">
           <h2 className="text-lg font-semibold tracking-tight text-foreground">
-            Current profile
+            Perfil atual
           </h2>
           {!hasProfile ? (
             <p className="mt-2 text-sm text-muted-foreground">
-              No business profile saved yet.
+              Nenhum perfil da empresa salvo ainda.
             </p>
           ) : null}
         </div>
@@ -107,19 +107,19 @@ export function BusinessProfileForm() {
         {hasProfile ? (
           <dl className="grid gap-3 text-sm sm:grid-cols-2">
             <div>
-              <dt className="text-muted-foreground">Business name</dt>
+              <dt className="text-muted-foreground">Nome da empresa</dt>
               <dd className="mt-1 font-medium text-foreground">
                 {displayValue(profile.businessName)}
               </dd>
             </div>
             <div>
-              <dt className="text-muted-foreground">Professional name</dt>
+              <dt className="text-muted-foreground">Nome profissional</dt>
               <dd className="mt-1 font-medium text-foreground">
                 {displayValue(profile.professionalName)}
               </dd>
             </div>
             <div>
-              <dt className="text-muted-foreground">City</dt>
+              <dt className="text-muted-foreground">Cidade</dt>
               <dd className="mt-1 font-medium text-foreground">
                 {displayValue(profile.city)}
               </dd>
@@ -131,13 +131,13 @@ export function BusinessProfileForm() {
               </dd>
             </div>
             <div className="sm:col-span-2">
-              <dt className="text-muted-foreground">Short description</dt>
+              <dt className="text-muted-foreground">Descrição curta</dt>
               <dd className="mt-1 font-medium text-foreground">
                 {displayValue(profile.shortDescription)}
               </dd>
             </div>
             <div className="sm:col-span-2">
-              <dt className="text-muted-foreground">Logo URL</dt>
+              <dt className="text-muted-foreground">URL do logo</dt>
               <dd className="mt-1 font-medium text-foreground">
                 {displayValue(profile.logoUrl)}
               </dd>
@@ -148,12 +148,12 @@ export function BusinessProfileForm() {
 
       <section className="rounded-2xl border border-border bg-card p-6">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
-          {hasProfile ? "Edit business profile" : "Create business profile"}
+          {hasProfile ? "Editar perfil da empresa" : "Criar perfil da empresa"}
         </h2>
         <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
           <div className="grid gap-2">
             <label htmlFor="businessName" className="text-sm font-medium">
-              Business name
+              Nome da empresa
             </label>
             <input
               id="businessName"
@@ -169,7 +169,7 @@ export function BusinessProfileForm() {
 
           <div className="grid gap-2">
             <label htmlFor="professionalName" className="text-sm font-medium">
-              Professional name
+              Nome profissional
             </label>
             <input
               id="professionalName"
@@ -185,7 +185,7 @@ export function BusinessProfileForm() {
 
           <div className="grid gap-2">
             <label htmlFor="shortDescription" className="text-sm font-medium">
-              Short description
+              Descrição curta
             </label>
             <textarea
               id="shortDescription"
@@ -202,7 +202,7 @@ export function BusinessProfileForm() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
               <label htmlFor="city" className="text-sm font-medium">
-                City
+                Cidade
               </label>
               <input
                 id="city"
@@ -231,7 +231,7 @@ export function BusinessProfileForm() {
 
           <div className="grid gap-2">
             <label htmlFor="logoUrl" className="text-sm font-medium">
-              Logo URL (placeholder)
+              URL do logo (temporário)
             </label>
             <input
               id="logoUrl"
@@ -243,9 +243,9 @@ export function BusinessProfileForm() {
           </div>
 
           <div className="flex items-center gap-3 pt-2">
-            <Button type="submit">Save profile</Button>
+            <Button type="submit">Salvar perfil</Button>
             {saveState === "saved" ? (
-              <p className="text-sm text-muted-foreground">Saved.</p>
+              <p className="text-sm text-muted-foreground">Salvo.</p>
             ) : null}
           </div>
         </form>

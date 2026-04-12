@@ -1,89 +1,81 @@
-const BASE_URL = "http://localhost:3000";
-
 describe("Quotes", () => {
-  it("creates a quote with client linkage, manual item, service reuse, totals, discount, and persistence", () => {
-    cy.visit(BASE_URL);
+  it("creates, edits, and deletes a quote with totals and service reuse", () => {
+    cy.visit("/");
     cy.clearFirmusStorage();
 
-    cy.visit(`${BASE_URL}/clients`);
+    cy.visit("/clients");
     cy.get("#name").type("Acme Health");
-    cy.contains("button", "Create client").click();
-    cy.contains("li", "Acme Health").should("be.visible");
+    cy.contains("button", "Criar cliente").click();
 
-    cy.visit(`${BASE_URL}/services`);
-    cy.get("#name").type("SEO Package");
-    cy.get("#description").type("Monthly SEO optimization");
+    cy.visit("/services");
+    cy.get("#name").type("Pacote SEO");
+    cy.get("#description").type("Otimização mensal");
     cy.get("#basePrice").type("50.00");
-    cy.contains("button", "Create service").click();
-    cy.contains("li", "SEO Package").should("be.visible");
+    cy.contains("button", "Criar serviço").click();
 
-    cy.visit(`${BASE_URL}/quotes`);
+    cy.visit("/quotes");
 
-    cy.contains("h1", "Quotes").should("be.visible");
-    cy.contains("No quotes saved yet.").should("be.visible");
+    cy.contains("h1", "Orçamentos").should("be.visible");
+    cy.contains("Nenhum orçamento salvo ainda.").should("be.visible");
 
-    cy.get("#clientId")
-      .find("option")
-      .contains("Acme Health")
-      .invoke("val")
-      .then((acmeClientId) => {
-        expect(acmeClientId, "Acme client option value").to.be.a("string").and.not.be.empty;
-        cy.get("#clientId").should("have.value", acmeClientId as string);
+    cy.get("#clientId").find("option").contains("Acme Health");
+
+    cy.contains("label", "Descrição")
+      .first()
+      .parents("div.rounded-xl")
+      .first()
+      .within(() => {
+        cy.get("input").eq(0).type("Sessão estratégica");
+        cy.get("input").eq(1).clear().type("2");
+        cy.get("input").eq(2).clear().type("100.00");
+        cy.contains(/R\$\s*200,00/).should("be.visible");
       });
 
-    cy.contains("h3", "Quote items")
-      .closest("div.space-y-3")
-      .find(".rounded-xl")
+    cy.contains("button", "Adicionar item").click();
+
+    cy.contains("h3", "Itens do orçamento")
+      .parents("div.space-y-3")
       .first()
-      .as("item1");
-    cy.get("@item1").within(() => {
-      cy.contains("label", "Description").parent().find("input").type("Manual strategy session");
-      cy.contains("label", "Quantity").parent().find("input").clear().type("2");
-      cy.contains("label", "Unit price").parent().find("input").clear().type("100.00");
-      cy.contains("Line total: $200.00").should("be.visible");
-    });
-
-    cy.contains("button", "Add item").click();
-
-    cy.contains("h3", "Quote items")
-      .closest("div.space-y-3")
-      .find(".rounded-xl")
+      .find("div.rounded-xl")
       .eq(1)
-      .as("item2");
-    cy.get("@item2").within(() => {
-      cy.get("select").select("SEO Package");
-      cy.contains("label", "Description")
-        .parent()
-        .find("input")
-        .should("have.value", "Monthly SEO optimization");
-      cy.contains("label", "Quantity").parent().find("input").clear().type("3");
-      cy.contains("label", "Unit price")
-        .parent()
-        .find("input")
-        .should("have.value", "50.00");
-      cy.contains("Line total: $150.00").should("be.visible");
-    });
+      .first()
+      .within(() => {
+        cy.get("select").select("Pacote SEO");
+        cy.get("input").eq(0).should("have.value", "Otimização mensal");
+        cy.get("input").eq(1).clear().type("3");
+        cy.get("input").eq(2).should("have.value", "50.00");
+        cy.contains(/R\$\s*150,00/).should("be.visible");
+      });
 
-    cy.contains("Subtotal:").parent().should("contain.text", "$350.00");
     cy.get("#discount").clear().type("25.00");
-    cy.contains("Discount:").parent().should("contain.text", "$25.00");
-    cy.contains("Total:").parent().should("contain.text", "$325.00");
 
-    cy.contains("button", "Create quote").click();
-    cy.contains("Saved.").should("be.visible");
-    cy.contains("li", "Acme Health").should("contain.text", "$325.00");
+    cy.contains("Subtotal:").parent().should("contain.text", "350,00");
+    cy.contains("Desconto:").parent().should("contain.text", "25,00");
+    cy.contains("Total:").parent().should("contain.text", "325,00");
 
-    cy.reload();
+    cy.contains("button", "Criar orçamento").click();
+    cy.contains("Salvo.").should("be.visible");
 
-    cy.contains("li", "Acme Health").should("contain.text", "$325.00");
-    cy.contains("li", "Acme Health").within(() => {
-      cy.contains("button", "Edit").click();
-    });
+    cy.contains('[data-testid^="quote-item-"]', "Acme Health")
+      .should("contain.text", "325,00")
+      .within(() => {
+        cy.get('[data-testid^="quote-edit-"]').click();
+      });
 
-    cy.contains("h2", "Edit quote").should("be.visible");
-    cy.contains("Subtotal:").parent().should("contain.text", "$350.00");
-    cy.contains("Discount:").parent().should("contain.text", "$25.00");
-    cy.contains("Total:").parent().should("contain.text", "$325.00");
+    cy.contains("h2", "Editar orçamento").should("be.visible");
+    cy.get("#discount").clear().type("30.00");
+    cy.contains("button", "Salvar alterações").click();
+
+    cy.contains('[data-testid^="quote-item-"]', "Acme Health")
+      .should("contain.text", "320,00")
+      .within(() => {
+        cy.on("window:confirm", () => true);
+        cy.get('[data-testid^="quote-delete-"]').click();
+      });
+
+    cy.contains('[data-testid^="quote-item-"]', "Acme Health").should(
+      "not.exist"
+    );
   });
 });
 

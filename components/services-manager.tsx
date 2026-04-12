@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { Service } from "@/lib/domain";
 import {
+  deleteService,
   readServices,
   upsertService,
   type ServiceInput,
@@ -25,7 +26,7 @@ function getInitialServices(): Service[] {
 }
 
 function formatPriceFromCents(value: number): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("pt-BR", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(value / 100);
@@ -46,10 +47,10 @@ function mapServiceToInput(service: Service): ServiceInput {
 
 function displayDeliveryDays(value: number | null): string {
   if (value === null) {
-    return "No estimate";
+    return "Sem estimativa";
   }
 
-  return `${value} day${value === 1 ? "" : "s"}`;
+  return `${value} dia${value === 1 ? "" : "s"}`;
 }
 
 export function ServicesManager() {
@@ -120,55 +121,84 @@ export function ServicesManager() {
     setFormValues({ ...INITIAL_VALUES });
   }
 
+  function handleDelete(service: Service) {
+    const confirmed = window.confirm("Confirmar exclusão deste serviço?");
+    if (!confirmed) {
+      return;
+    }
+
+    const nextServices = deleteService(service.id);
+    setServices(nextServices);
+
+    if (editingServiceId === service.id) {
+      setEditingServiceId(null);
+      setFormValues({ ...INITIAL_VALUES });
+      setSaveState("idle");
+    }
+  }
+
   return (
     <div className="space-y-6">
       <section className="rounded-2xl border border-border bg-card p-6">
         <div className="mb-5 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-foreground">
-              Current services
+              Serviços atuais
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
               {services.length === 0
-                ? "No services saved yet."
-                : `${services.length} service${services.length === 1 ? "" : "s"} registered.`}
+                ? "Nenhum serviço salvo ainda."
+                : `${services.length} serviço${services.length === 1 ? "" : "s"} cadastrado${services.length === 1 ? "" : "s"}.`}
             </p>
           </div>
           {editingServiceId !== null ? (
             <Button type="button" variant="outline" onClick={handleCreateMode}>
-              Create new
+              Criar novo
             </Button>
           ) : null}
         </div>
 
         {services.length === 0 ? (
           <p className="rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
-            Add your first service to build quotes with a clear and reusable base.
+            Adicione seu primeiro serviço para montar orçamentos com uma base clara e reaproveitável.
           </p>
         ) : (
           <ul className="space-y-3">
             {services.map((service) => (
               <li
                 key={service.id}
+                data-testid={`service-item-${service.id}`}
                 className="rounded-xl border border-border bg-background px-4 py-3"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="font-medium text-foreground">{service.name}</p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      Base price {formatPriceFromCents(service.basePriceInCents)} • {" "}
+                      Preço base {formatPriceFromCents(service.basePriceInCents)} • {" "}
                       {displayDeliveryDays(service.estimatedDeliveryDays)} • {" "}
-                      {service.isActive ? "Active" : "Inactive"}
+                      {service.isActive ? "Ativo" : "Inativo"}
                     </p>
                   </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleEdit(service)}
-                  >
-                    Edit
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      data-testid={`service-edit-${service.id}`}
+                      onClick={() => handleEdit(service)}
+                    >
+                      Editar
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      data-testid={`service-delete-${service.id}`}
+                      onClick={() => handleDelete(service)}
+                    >
+                      Excluir
+                    </Button>
+                  </div>
                 </div>
               </li>
             ))}
@@ -178,12 +208,12 @@ export function ServicesManager() {
 
       <section className="rounded-2xl border border-border bg-card p-6">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
-          {selectedService ? "Edit service" : "Create service"}
+          {selectedService ? "Editar serviço" : "Criar serviço"}
         </h2>
         <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
           <div className="grid gap-2">
             <label htmlFor="name" className="text-sm font-medium">
-              Name
+              Nome
             </label>
             <input
               id="name"
@@ -197,7 +227,7 @@ export function ServicesManager() {
 
           <div className="grid gap-2">
             <label htmlFor="description" className="text-sm font-medium">
-              Description
+              Descrição
             </label>
             <textarea
               id="description"
@@ -212,7 +242,7 @@ export function ServicesManager() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
               <label htmlFor="basePrice" className="text-sm font-medium">
-                Base price
+                Preço base
               </label>
               <input
                 id="basePrice"
@@ -228,7 +258,7 @@ export function ServicesManager() {
 
             <div className="grid gap-2">
               <label htmlFor="estimatedDeliveryDays" className="text-sm font-medium">
-                Estimated delivery (days)
+                Prazo estimado (dias)
               </label>
               <input
                 id="estimatedDeliveryDays"
@@ -236,7 +266,7 @@ export function ServicesManager() {
                 type="number"
                 min={0}
                 step={1}
-                placeholder="Optional"
+                placeholder="Opcional"
                 value={formValues.estimatedDeliveryDays}
                 onChange={(event) =>
                   updateField("estimatedDeliveryDays", event.target.value)
@@ -253,20 +283,20 @@ export function ServicesManager() {
               onChange={(event) => updateField("isActive", event.target.checked)}
               className="size-4 rounded border border-input"
             />
-            Service is active
+            Serviço ativo
           </label>
 
           <div className="flex items-center gap-3 pt-2">
             <Button type="submit">
-              {selectedService ? "Save changes" : "Create service"}
+              {selectedService ? "Salvar alterações" : "Criar serviço"}
             </Button>
             {selectedService ? (
               <Button type="button" variant="outline" onClick={handleCreateMode}>
-                Cancel edit
+                Cancelar edição
               </Button>
             ) : null}
             {saveState === "saved" ? (
-              <p className="text-sm text-muted-foreground">Saved.</p>
+              <p className="text-sm text-muted-foreground">Salvo.</p>
             ) : null}
           </div>
         </form>

@@ -1,4 +1,6 @@
 import type { Client } from "@/lib/domain";
+import { getCharges } from "@/lib/charge-storage";
+import { readQuoteStore } from "@/lib/quote-storage";
 import { createTimelineEvent } from "@/lib/services/timeline";
 
 const STORAGE_KEY = "firmus.clients";
@@ -10,6 +12,10 @@ export type ClientInput = {
   city: string;
   notes: string;
 };
+
+export type DeleteClientResult =
+  | { ok: true; clients: Client[] }
+  | { ok: false; reason: "has_related_data"; clients: Client[] };
 
 function asNullableString(value: unknown): string | null {
   if (typeof value !== "string") {
@@ -148,4 +154,35 @@ export function upsertClient(input: ClientInput, clientId?: string): Client[] {
   }
 
   return normalized;
+}
+
+export function deleteClient(clientId: string): DeleteClientResult {
+  const existing = readClients();
+  const quotes = readQuoteStore().quotes;
+  const charges = getCharges();
+
+  const hasRelatedQuotes = quotes.some((quote) => quote.clientId === clientId);
+  const hasRelatedCharges = charges.some((charge) => charge.clientId === clientId);
+
+  if (hasRelatedQuotes || hasRelatedCharges) {
+    return {
+      ok: false,
+      reason: "has_related_data",
+      clients: existing,
+    };
+  }
+
+  const next = existing.filter((client) => client.id !== clientId);
+  if (next.length === existing.length) {
+    return {
+      ok: true,
+      clients: existing,
+    };
+  }
+
+  saveClients(next);
+  return {
+    ok: true,
+    clients: next,
+  };
 }

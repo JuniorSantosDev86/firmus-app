@@ -15,9 +15,9 @@ const EMPTY_OVERVIEW: FinancialOverview = {
 };
 
 function formatMoneyFromCents(value: number): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("pt-BR", {
     style: "currency",
-    currency: "USD",
+    currency: "BRL",
   }).format(value / 100);
 }
 
@@ -36,33 +36,42 @@ export function FinancialOverviewSummary() {
   return (
     <section className="rounded-2xl border border-border bg-card p-6">
       <div className="grid gap-3 sm:grid-cols-3">
-        <article className="rounded-xl border border-border bg-background px-4 py-4">
-          <p className="text-sm text-muted-foreground">Available today</p>
+        <article
+          data-testid="overview-available-today"
+          className="rounded-xl border border-border bg-background px-4 py-4"
+        >
+          <p className="text-sm text-muted-foreground">Disponível hoje</p>
           <p className="mt-2 text-xl font-semibold text-foreground">
             {formatMoneyFromCents(overview.availableTodayInCents)}
           </p>
           <p className="mt-2 text-xs text-muted-foreground">
-            Pending charges due today or already overdue.
+            Cobranças pendentes que vencem hoje ou já estão em atraso.
           </p>
         </article>
 
-        <article className="rounded-xl border border-border bg-background px-4 py-4">
-          <p className="text-sm text-muted-foreground">Receivable in 7 days</p>
+        <article
+          data-testid="overview-receivable-7-days"
+          className="rounded-xl border border-border bg-background px-4 py-4"
+        >
+          <p className="text-sm text-muted-foreground">A receber em 7 dias</p>
           <p className="mt-2 text-xl font-semibold text-foreground">
             {formatMoneyFromCents(overview.receivableIn7DaysInCents)}
           </p>
           <p className="mt-2 text-xs text-muted-foreground">
-            Pending charges due from tomorrow to the next 7 days.
+            Cobranças pendentes com vencimento de amanhã até os próximos 7 dias.
           </p>
         </article>
 
-        <article className="rounded-xl border border-border bg-background px-4 py-4">
-          <p className="text-sm text-muted-foreground">Overdue amount</p>
+        <article
+          data-testid="overview-overdue"
+          className="rounded-xl border border-border bg-background px-4 py-4"
+        >
+          <p className="text-sm text-muted-foreground">Valor em atraso</p>
           <p className="mt-2 text-xl font-semibold text-foreground">
             {formatMoneyFromCents(overview.overdueAmountInCents)}
           </p>
           <p className="mt-2 text-xs text-muted-foreground">
-            Charges currently resolved as overdue.
+            Cobranças atualmente classificadas como em atraso.
           </p>
         </article>
       </div>

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     default: "Firmus",
     template: "%s | Firmus",
   },
-  description: "The operational copilot for service providers.",
+  description: "O copiloto operacional para prestadores de serviços.",
 };
 
 export default function RootLayout({
@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="pt-BR" className="h-full antialiased">
       <body className="min-h-full bg-background font-sans text-foreground">
         {children}
       </body>

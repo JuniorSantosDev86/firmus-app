@@ -4,8 +4,8 @@ import Link from "next/link";
 import { BusinessProfileForm } from "@/components/business-profile-form";
 
 export const metadata: Metadata = {
-  title: "Business Profile",
-  description: "Manage your business identity details.",
+  title: "Perfil da empresa",
+  description: "Gerencie os dados de identidade da sua empresa.",
 };
 
 export default function BusinessProfilePage() {
@@ -17,15 +17,15 @@ export default function BusinessProfilePage() {
             href="/"
             className="text-sm text-muted-foreground underline-offset-4 hover:underline"
           >
-            Back to home
+            Voltar para o início
           </Link>
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              Business Profile
+              Perfil da empresa
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Keep your business identity up to date for future client and
-              quote flows.
+              Mantenha os dados da sua empresa atualizados para os próximos fluxos
+              de clientes e orçamentos.
             </p>
           </div>
         </header>

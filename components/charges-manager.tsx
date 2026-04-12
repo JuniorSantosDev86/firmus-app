@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { getChargeStatus } from "@/lib/charge-status";
 import {
+  deleteCharge,
   getCharges,
   upsertCharge,
   type ChargeInput,
@@ -31,9 +32,9 @@ function getTodayDate(): string {
 }
 
 function formatMoneyFromCents(value: number): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("pt-BR", {
     style: "currency",
-    currency: "USD",
+    currency: "BRL",
   }).format(value / 100);
 }
 
@@ -70,7 +71,13 @@ function parseMoneyInputToCents(value: string): number {
 }
 
 function getClientName(clients: Client[], clientId: string): string {
-  return clients.find((client) => client.id === clientId)?.name ?? "Unknown client";
+  return clients.find((client) => client.id === clientId)?.name ?? "Cliente desconhecido";
+}
+
+function getChargeStatusLabel(status: "pending" | "paid" | "overdue"): string {
+  if (status === "pending") return "Pendente";
+  if (status === "paid") return "Pago";
+  return "Em atraso";
 }
 
 function getDefaultFormValues(clients: Client[]): ChargeFormValues {
@@ -215,30 +222,46 @@ export function ChargesManager() {
     }
   }
 
+  function handleDelete(charge: Charge) {
+    const confirmed = window.confirm("Confirmar exclusão desta cobrança?");
+    if (!confirmed) {
+      return;
+    }
+
+    const nextCharges = deleteCharge(charge.id);
+    setCharges(nextCharges);
+
+    if (editingChargeId === charge.id) {
+      setEditingChargeId(null);
+      setFormValues(getDefaultFormValues(clients));
+      setSaveState("idle");
+    }
+  }
+
   return (
     <div className="space-y-6">
       <section className="rounded-2xl border border-border bg-card p-6">
         <div className="mb-5 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-foreground">
-              Current charges
+              Cobranças atuais
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
               {charges.length === 0
-                ? "No charges saved yet."
-                : `${charges.length} charge${charges.length === 1 ? "" : "s"} registered.`}
+                ? "Nenhuma cobrança salva ainda."
+                : `${charges.length} cobrança${charges.length === 1 ? "" : "s"} cadastrada${charges.length === 1 ? "" : "s"}.`}
             </p>
           </div>
           {editingChargeId !== null ? (
             <Button type="button" variant="outline" onClick={handleCreateMode}>
-              Create new
+              Criar novo
             </Button>
           ) : null}
         </div>
 
         {charges.length === 0 ? (
           <p className="rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
-            Create your first charge to track expected client payments.
+            Crie sua primeira cobrança para acompanhar os pagamentos esperados dos clientes.
           </p>
         ) : (
           <ul className="space-y-3">
@@ -247,6 +270,7 @@ export function ChargesManager() {
               return (
                 <li
                   key={charge.id}
+                  data-testid={`charge-item-${charge.id}`}
                   className="rounded-xl border border-border bg-background px-4 py-3"
                 >
                   <div className="flex items-start justify-between gap-4">
@@ -255,11 +279,11 @@ export function ChargesManager() {
                         {getClientName(clients, charge.clientId)}
                       </p>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        {formatMoneyFromCents(charge.amountInCents)} • {resolvedStatus}
+                        {formatMoneyFromCents(charge.amountInCents)} • {getChargeStatusLabel(resolvedStatus)}
                       </p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        Due {charge.dueDate.slice(0, 10)}
-                        {charge.quoteId ? ` • Quote linked` : ""}
+                        Vence em {charge.dueDate.slice(0, 10)}
+                        {charge.quoteId ? " • Orçamento vinculado" : ""}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -268,18 +292,29 @@ export function ChargesManager() {
                           type="button"
                           variant="outline"
                           size="sm"
+                          data-testid={`charge-mark-paid-${charge.id}`}
                           onClick={() => handleMarkAsPaid(charge)}
                         >
-                          Mark as paid
+                          Marcar como pago
                         </Button>
                       ) : null}
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
+                        data-testid={`charge-edit-${charge.id}`}
                         onClick={() => handleEdit(charge)}
                       >
-                        Edit
+                        Editar
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        data-testid={`charge-delete-${charge.id}`}
+                        onClick={() => handleDelete(charge)}
+                      >
+                        Excluir
                       </Button>
                     </div>
                   </div>
@@ -292,14 +327,14 @@ export function ChargesManager() {
 
       <section className="rounded-2xl border border-border bg-card p-6">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
-          {editingChargeId ? "Edit charge" : "Create charge"}
+          {editingChargeId ? "Editar cobrança" : "Criar cobrança"}
         </h2>
 
         {!hasClients ? (
           <p className="mt-5 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
-            You need at least one client before creating charges.{" "}
+            Você precisa de pelo menos um cliente antes de criar cobranças.{" "}
             <Link href="/clients" className="underline underline-offset-4 hover:no-underline">
-              Open clients
+              Abrir clientes
             </Link>
             .
           </p>
@@ -308,7 +343,7 @@ export function ChargesManager() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="grid gap-2">
                 <label htmlFor="clientId" className="text-sm font-medium">
-                  Client
+                  Cliente
                 </label>
                 <select
                   id="clientId"
@@ -328,7 +363,7 @@ export function ChargesManager() {
 
               <div className="grid gap-2">
                 <label htmlFor="quoteId" className="text-sm font-medium">
-                  Quote (optional)
+                  Orçamento (opcional)
                 </label>
                 <select
                   id="quoteId"
@@ -337,7 +372,7 @@ export function ChargesManager() {
                   onChange={(event) => updateField("quoteId", event.target.value)}
                   className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
                 >
-                  <option value="">No quote</option>
+                  <option value="">Sem orçamento</option>
                   {availableQuotes.map((quote) => (
                     <option key={quote.id} value={quote.id}>
                       {quote.id.slice(0, 8)} • {formatMoneyFromCents(quote.totalInCents)}
@@ -348,7 +383,7 @@ export function ChargesManager() {
 
               <div className="grid gap-2">
                 <label htmlFor="amount" className="text-sm font-medium">
-                  Amount
+                  Valor
                 </label>
                 <input
                   id="amount"
@@ -364,7 +399,7 @@ export function ChargesManager() {
 
               <div className="grid gap-2">
                 <label htmlFor="dueDate" className="text-sm font-medium">
-                  Due date
+                  Data de vencimento
                 </label>
                 <input
                   id="dueDate"
@@ -392,7 +427,7 @@ export function ChargesManager() {
                 >
                   {STATUS_OPTIONS.map((status) => (
                     <option key={status} value={status}>
-                      {status}
+                      {getChargeStatusLabel(status)}
                     </option>
                   ))}
                 </select>
@@ -401,15 +436,15 @@ export function ChargesManager() {
 
             <div className="flex items-center gap-3 pt-1">
               <Button type="submit">
-                {editingChargeId ? "Save changes" : "Create charge"}
+                {editingChargeId ? "Salvar alterações" : "Criar cobrança"}
               </Button>
               {editingChargeId ? (
                 <Button type="button" variant="outline" onClick={handleCreateMode}>
-                  Cancel edit
+                  Cancelar edição
                 </Button>
               ) : null}
               {saveState === "saved" ? (
-                <p className="text-sm text-muted-foreground">Saved.</p>
+                <p className="text-sm text-muted-foreground">Salvo.</p>
               ) : null}
             </div>
           </form>

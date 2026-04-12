@@ -1,46 +1,43 @@
-const BASE_URL = "http://localhost:3000";
-
 describe("Services", () => {
-  it("shows empty state, creates a service, edits it, and persists after reload", () => {
-    cy.visit(BASE_URL);
+  it("creates, edits, and deletes a service", () => {
+    cy.visit("/");
     cy.clearFirmusStorage();
 
-    cy.visit(`${BASE_URL}/services`);
+    cy.visit("/services");
 
-    cy.contains("h1", "Services").should("be.visible");
-    cy.contains("No services saved yet.").should("be.visible");
-    cy.contains("Add your first service to build quotes with a clear and reusable base.").should(
-      "be.visible"
-    );
+    cy.contains("h1", "Serviços").should("be.visible");
+    cy.contains("Nenhum serviço salvo ainda.").should("be.visible");
 
     cy.get("#name").clear().type("Landing Page");
-    cy.get("#description").clear().type("Single-page website delivery.");
+    cy.get("#description").clear().type("Entrega de site one page.");
     cy.get("#basePrice").clear().type("1500.00");
     cy.get("#estimatedDeliveryDays").clear().type("7");
-    cy.contains("button", "Create service").click();
+    cy.contains("button", "Criar serviço").click();
 
-    cy.contains("Saved.").should("be.visible");
-    cy.contains("li", "Landing Page").should("contain.text", "1,500.00");
+    cy.contains('[data-testid^="service-item-"]', "Landing Page")
+      .should("contain.text", "1.500,00")
+      .within(() => {
+        cy.get('[data-testid^="service-edit-"]').click();
+      });
 
-    cy.contains("li", "Landing Page").within(() => {
-      cy.contains("button", "Edit").click();
-    });
-
-    cy.contains("h2", "Edit service").should("be.visible");
+    cy.contains("h2", "Editar serviço").should("be.visible");
     cy.get("#basePrice").clear().type("1700.00");
     cy.get("#estimatedDeliveryDays").clear().type("10");
-    cy.contains("button", "Save changes").click();
+    cy.contains("button", "Salvar alterações").click();
 
     cy.reload();
 
-    cy.contains("li", "Landing Page").should("contain.text", "1,700.00");
-    cy.contains("li", "Landing Page").should("contain.text", "10 days");
+    cy.contains('[data-testid^="service-item-"]', "Landing Page")
+      .should("contain.text", "1.700,00")
+      .and("contain.text", "10 dias")
+      .within(() => {
+        cy.on("window:confirm", () => true);
+        cy.get('[data-testid^="service-delete-"]').click();
+      });
 
-    cy.contains("li", "Landing Page").within(() => {
-      cy.contains("button", "Edit").click();
-    });
-    cy.get("#basePrice").should("have.value", "1700.00");
-    cy.get("#estimatedDeliveryDays").should("have.value", "10");
+    cy.contains('[data-testid^="service-item-"]', "Landing Page").should(
+      "not.exist"
+    );
   });
 });
 

@@ -1,10 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import type { Client } from "@/lib/domain";
-import { readClients, upsertClient, type ClientInput } from "@/lib/client-storage";
+import {
+  deleteClient,
+  readClients,
+  upsertClient,
+  type ClientInput,
+} from "@/lib/client-storage";
 
 const INITIAL_VALUES: ClientInput = {
   name: "",
@@ -39,6 +45,7 @@ export function ClientsManager() {
   const [editingClientId, setEditingClientId] = useState<string | null>(null);
   const [formValues, setFormValues] = useState<ClientInput>({ ...INITIAL_VALUES });
   const [saveState, setSaveState] = useState<SaveState>("idle");
+  const [deleteMessage, setDeleteMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const initialClients = getInitialClients();
@@ -66,12 +73,37 @@ export function ClientsManager() {
     setEditingClientId(null);
     setFormValues({ ...INITIAL_VALUES });
     setSaveState("idle");
+    setDeleteMessage(null);
   }
 
   function handleEdit(client: Client) {
     setEditingClientId(client.id);
     setFormValues(mapClientToInput(client));
     setSaveState("idle");
+    setDeleteMessage(null);
+  }
+
+  function handleDelete(client: Client) {
+    const confirmed = window.confirm("Confirmar exclusão deste cliente?");
+    if (!confirmed) {
+      return;
+    }
+
+    const result = deleteClient(client.id);
+    setClients(result.clients);
+
+    if (!result.ok) {
+      setDeleteMessage(
+        "Este cliente não pode ser excluído porque possui orçamentos ou cobranças vinculados."
+      );
+      return;
+    }
+
+    if (editingClientId === client.id) {
+      setEditingClientId(null);
+      setFormValues({ ...INITIAL_VALUES });
+    }
+    setDeleteMessage("Cliente excluído.");
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -88,6 +120,7 @@ export function ClientsManager() {
     );
     setClients(nextClients);
     setSaveState("saved");
+    setDeleteMessage(null);
 
     if (editingClientId !== null) {
       const savedClient = nextClients.find((client) => client.id === editingClientId);
@@ -106,30 +139,31 @@ export function ClientsManager() {
         <div className="mb-5 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-foreground">
-              Current clients
+              Clientes atuais
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
               {clients.length === 0
-                ? "No clients saved yet."
-                : `${clients.length} client${clients.length === 1 ? "" : "s"} registered.`}
+                ? "Nenhum cliente salvo ainda."
+                : `${clients.length} cliente${clients.length === 1 ? "" : "s"} cadastrado${clients.length === 1 ? "" : "s"}.`}
             </p>
           </div>
           {editingClientId !== null ? (
             <Button type="button" variant="outline" onClick={handleCreateMode}>
-              Create new
+              Criar novo
             </Button>
           ) : null}
         </div>
 
         {clients.length === 0 ? (
           <p className="rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
-            Add your first client to start building quotes and follow-ups.
+            Adicione seu primeiro cliente para começar a criar orçamentos e acompanhar atendimentos.
           </p>
         ) : (
           <ul className="space-y-3">
             {clients.map((client) => (
               <li
                 key={client.id}
+                data-testid={`client-item-${client.id}`}
                 className="rounded-xl border border-border bg-background px-4 py-3"
               >
                 <div className="flex items-start justify-between gap-4">
@@ -139,29 +173,50 @@ export function ClientsManager() {
                       {displayValue(client.city)} • {displayValue(client.whatsapp)}
                     </p>
                   </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleEdit(client)}
-                  >
-                    Edit
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={`/clients/${client.id}`}
+                      className="inline-flex h-7 items-center justify-center rounded-lg border border-input bg-background px-2.5 text-[0.8rem] font-medium text-foreground transition-colors hover:bg-muted"
+                    >
+                      Ver
+                    </Link>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      data-testid={`client-edit-${client.id}`}
+                      onClick={() => handleEdit(client)}
+                    >
+                      Editar
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      data-testid={`client-delete-${client.id}`}
+                      onClick={() => handleDelete(client)}
+                    >
+                      Excluir
+                    </Button>
+                  </div>
                 </div>
               </li>
             ))}
           </ul>
         )}
+        {deleteMessage ? (
+          <p className="mt-4 text-sm text-muted-foreground">{deleteMessage}</p>
+        ) : null}
       </section>
 
       <section className="rounded-2xl border border-border bg-card p-6">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
-          {selectedClient ? "Edit client" : "Create client"}
+          {selectedClient ? "Editar cliente" : "Criar cliente"}
         </h2>
         <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
           <div className="grid gap-2">
             <label htmlFor="name" className="text-sm font-medium">
-              Name
+              Nome
             </label>
             <input
               id="name"
@@ -204,7 +259,7 @@ export function ClientsManager() {
 
           <div className="grid gap-2">
             <label htmlFor="city" className="text-sm font-medium">
-              City
+              Cidade
             </label>
             <input
               id="city"
@@ -217,7 +272,7 @@ export function ClientsManager() {
 
           <div className="grid gap-2">
             <label htmlFor="notes" className="text-sm font-medium">
-              Notes
+              Observações
             </label>
             <textarea
               id="notes"
@@ -231,15 +286,15 @@ export function ClientsManager() {
 
           <div className="flex items-center gap-3 pt-2">
             <Button type="submit">
-              {selectedClient ? "Save changes" : "Create client"}
+              {selectedClient ? "Salvar alterações" : "Criar cliente"}
             </Button>
             {selectedClient ? (
               <Button type="button" variant="outline" onClick={handleCreateMode}>
-                Cancel edit
+                Cancelar edição
               </Button>
             ) : null}
             {saveState === "saved" ? (
-              <p className="text-sm text-muted-foreground">Saved.</p>
+              <p className="text-sm text-muted-foreground">Salvo.</p>
             ) : null}
           </div>
         </form>

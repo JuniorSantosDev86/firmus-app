@@ -4,8 +4,8 @@ import Link from "next/link";
 import { ClientsManager } from "@/components/clients-manager";
 
 export const metadata: Metadata = {
-  title: "Clients",
-  description: "Manage your clients with a simple and reliable flow.",
+  title: "Clientes",
+  description: "Gerencie seus clientes com um fluxo simples e confiável.",
 };
 
 export default function ClientsPage() {
@@ -17,14 +17,15 @@ export default function ClientsPage() {
             href="/"
             className="text-sm text-muted-foreground underline-offset-4 hover:underline"
           >
-            Back to home
+            Voltar para o início
           </Link>
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              Clients
+              Clientes
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Keep your client base organized for upcoming services and quote flows.
+              Mantenha sua base de clientes organizada para os próximos fluxos de
+              serviços e orçamentos.
             </p>
           </div>
         </header>

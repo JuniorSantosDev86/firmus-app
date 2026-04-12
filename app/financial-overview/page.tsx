@@ -4,8 +4,8 @@ import Link from "next/link";
 import { FinancialOverviewSummary } from "@/components/financial-overview-summary";
 
 export const metadata: Metadata = {
-  title: "Financial Overview",
-  description: "Simple operational snapshot of current charge receivables.",
+  title: "Visão financeira",
+  description: "Resumo operacional simples dos recebíveis atuais.",
 };
 
 export default function FinancialOverviewPage() {
@@ -17,14 +17,14 @@ export default function FinancialOverviewPage() {
             href="/"
             className="text-sm text-muted-foreground underline-offset-4 hover:underline"
           >
-            Back to home
+            Voltar para o início
           </Link>
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              Financial Overview
+              Visão financeira
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Quick snapshot of available, upcoming, and overdue receivables.
+              Resumo rápido dos recebíveis disponíveis, próximos e em atraso.
             </p>
           </div>
         </header>

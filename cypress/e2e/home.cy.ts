@@ -1,26 +1,29 @@
-const BASE_URL = "http://localhost:3000";
-
 describe("Home page", () => {
-  it("loads and shows entry links", () => {
-    cy.visit(BASE_URL);
+  it("loads and shows key navigation links in Portuguese", () => {
+    cy.visit("/");
 
-    cy.contains("h1", "Firmus").should("be.visible");
-    cy.contains("The operational copilot for service providers.").should(
+    cy.contains("p", "O copiloto operacional para prestadores de serviços.").should(
       "be.visible"
     );
 
-    cy.contains("a", "Open Business Profile")
+    cy.getByTestId("nav-business-profile")
       .should("be.visible")
       .and("have.attr", "href", "/business-profile");
-    cy.contains("a", "Open Clients")
+    cy.getByTestId("nav-clients")
       .should("be.visible")
       .and("have.attr", "href", "/clients");
-    cy.contains("a", "Open Services")
+    cy.getByTestId("nav-services")
       .should("be.visible")
       .and("have.attr", "href", "/services");
-    cy.contains("a", "Open Quotes")
+    cy.getByTestId("nav-quotes")
       .should("be.visible")
       .and("have.attr", "href", "/quotes");
+    cy.getByTestId("nav-charges")
+      .should("be.visible")
+      .and("have.attr", "href", "/charges");
+    cy.getByTestId("nav-financial-overview")
+      .should("be.visible")
+      .and("have.attr", "href", "/financial-overview");
   });
 });
 

@@ -421,3 +421,20 @@ export function upsertQuote(input: QuoteInput, quoteId?: string): QuoteStore {
 
   return normalized;
 }
+
+export function deleteQuote(quoteId: string): QuoteStore {
+  const existing = readQuoteStore();
+
+  const nextQuotes = existing.quotes.filter((quote) => quote.id !== quoteId);
+  if (nextQuotes.length === existing.quotes.length) {
+    return existing;
+  }
+
+  const nextStore: QuoteStore = {
+    quotes: nextQuotes,
+    items: existing.items.filter((item) => item.quoteId !== quoteId),
+  };
+
+  saveQuoteStore(nextStore);
+  return nextStore;
+}

@@ -9,6 +9,7 @@ import type { Client, Quote, QuoteItem, QuoteStatus, Service } from "@/lib/domai
 import {
   calculateLineTotalInCents,
   calculateQuoteTotals,
+  deleteQuote,
   parseMoneyInputToCents,
   parseQuantityInput,
   readQuoteStore,
@@ -49,9 +50,9 @@ function getTodayDate(): string {
 }
 
 function formatMoneyFromCents(value: number): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("pt-BR", {
     style: "currency",
-    currency: "USD",
+    currency: "BRL",
   }).format(value / 100);
 }
 
@@ -114,7 +115,17 @@ function mapQuoteToFormValues(
 }
 
 function getClientName(clients: Client[], clientId: string): string {
-  return clients.find((client) => client.id === clientId)?.name ?? "Unknown client";
+  return clients.find((client) => client.id === clientId)?.name ?? "Cliente desconhecido";
+}
+
+function getQuoteStatusLabel(status: QuoteStatus): string {
+  if (status === "draft") return "Rascunho";
+  if (status === "sent") return "Enviado";
+  if (status === "approved") return "Aprovado";
+  if (status === "rejected") return "Rejeitado";
+  if (status === "expired") return "Expirado";
+  if (status === "canceled") return "Cancelado";
+  return status;
 }
 
 function getQuoteItems(quote: Quote, items: QuoteItem[]): QuoteItem[] {
@@ -324,30 +335,46 @@ export function QuotesManager() {
     setFormValues(getInitialFormValues(clients));
   }
 
+  function handleDelete(quote: Quote) {
+    const confirmed = window.confirm("Confirmar exclusão deste orçamento?");
+    if (!confirmed) {
+      return;
+    }
+
+    const nextStore = deleteQuote(quote.id);
+    setStore(nextStore);
+
+    if (editingQuoteId === quote.id) {
+      setEditingQuoteId(null);
+      setSaveState("idle");
+      setFormValues(getInitialFormValues(clients));
+    }
+  }
+
   return (
     <div className="space-y-6">
       <section className="rounded-2xl border border-border bg-card p-6">
         <div className="mb-5 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-foreground">
-              Current quotes
+              Orçamentos atuais
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
               {store.quotes.length === 0
-                ? "No quotes saved yet."
-                : `${store.quotes.length} quote${store.quotes.length === 1 ? "" : "s"} registered.`}
+                ? "Nenhum orçamento salvo ainda."
+                : `${store.quotes.length} orçamento${store.quotes.length === 1 ? "" : "s"} cadastrado${store.quotes.length === 1 ? "" : "s"}.`}
             </p>
           </div>
           {editingQuoteId !== null ? (
             <Button type="button" variant="outline" onClick={handleCreateMode}>
-              Create new
+              Criar novo
             </Button>
           ) : null}
         </div>
 
         {store.quotes.length === 0 ? (
           <p className="rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
-            Create your first quote to connect clients, services, and pricing in one flow.
+            Crie seu primeiro orçamento para conectar clientes, serviços e preços em um único fluxo.
           </p>
         ) : (
           <ul className="space-y-3">
@@ -356,6 +383,7 @@ export function QuotesManager() {
               return (
                 <li
                   key={quote.id}
+                  data-testid={`quote-item-${quote.id}`}
                   className="rounded-xl border border-border bg-background px-4 py-3"
                 >
                   <div className="flex items-start justify-between gap-4">
@@ -364,22 +392,36 @@ export function QuotesManager() {
                         {getClientName(clients, quote.clientId)}
                       </p>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        {formatMoneyFromCents(quote.totalInCents)} • {quote.status} • {" "}
-                        {quoteItems.length} item{quoteItems.length === 1 ? "" : "s"}
+                        {formatMoneyFromCents(quote.totalInCents)} • {getQuoteStatusLabel(quote.status)} • {" "}
+                        {quoteItems.length === 1
+                          ? `${quoteItems.length} item`
+                          : `${quoteItems.length} itens`}
                       </p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        Issue date {quote.issueDate}
-                        {quote.validUntil ? ` • Valid until ${quote.validUntil}` : ""}
+                        Emissão {quote.issueDate}
+                        {quote.validUntil ? ` • Válido até ${quote.validUntil}` : ""}
                       </p>
                     </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleEdit(quote)}
-                    >
-                      Edit
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        data-testid={`quote-edit-${quote.id}`}
+                        onClick={() => handleEdit(quote)}
+                      >
+                        Editar
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        data-testid={`quote-delete-${quote.id}`}
+                        onClick={() => handleDelete(quote)}
+                      >
+                        Excluir
+                      </Button>
+                    </div>
                   </div>
                 </li>
               );
@@ -390,14 +432,14 @@ export function QuotesManager() {
 
       <section className="rounded-2xl border border-border bg-card p-6">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
-          {editingQuoteId ? "Edit quote" : "Create quote"}
+          {editingQuoteId ? "Editar orçamento" : "Criar orçamento"}
         </h2>
 
         {!hasClients ? (
           <p className="mt-5 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
-            You need at least one client before creating quotes. {" "}
+            Você precisa de pelo menos um cliente antes de criar orçamentos.{" "}
             <Link href="/clients" className="underline underline-offset-4 hover:no-underline">
-              Open clients
+              Abrir clientes
             </Link>
             .
           </p>
@@ -406,7 +448,7 @@ export function QuotesManager() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="grid gap-2">
                 <label htmlFor="clientId" className="text-sm font-medium">
-                  Client
+                  Cliente
                 </label>
                 <select
                   id="clientId"
@@ -439,7 +481,7 @@ export function QuotesManager() {
                 >
                   {STATUS_OPTIONS.map((status) => (
                     <option key={status} value={status}>
-                      {status}
+                      {getQuoteStatusLabel(status)}
                     </option>
                   ))}
                 </select>
@@ -447,7 +489,7 @@ export function QuotesManager() {
 
               <div className="grid gap-2">
                 <label htmlFor="issueDate" className="text-sm font-medium">
-                  Issue date
+                  Data de emissão
                 </label>
                 <input
                   id="issueDate"
@@ -462,7 +504,7 @@ export function QuotesManager() {
 
               <div className="grid gap-2">
                 <label htmlFor="validUntil" className="text-sm font-medium">
-                  Valid until (optional)
+                  Válido até (opcional)
                 </label>
                 <input
                   id="validUntil"
@@ -477,15 +519,15 @@ export function QuotesManager() {
 
             <div className="space-y-3">
               <div className="flex items-center justify-between gap-3">
-                <h3 className="text-sm font-semibold text-foreground">Quote items</h3>
+                <h3 className="text-sm font-semibold text-foreground">Itens do orçamento</h3>
                 <Button type="button" variant="outline" size="sm" onClick={handleAddItem}>
-                  Add item
+                  Adicionar item
                 </Button>
               </div>
 
               {services.length === 0 ? (
                 <p className="rounded-lg border border-dashed border-border bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
-                  No services available yet. You can still enter item description and price manually.
+                  Nenhum serviço disponível ainda. Você ainda pode preencher descrição e preço manualmente.
                 </p>
               ) : null}
 
@@ -498,7 +540,7 @@ export function QuotesManager() {
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="grid gap-2 sm:col-span-2">
                         <label className="text-xs font-medium text-muted-foreground">
-                          Service (optional)
+                          Serviço (opcional)
                         </label>
                         <select
                           value={item.serviceId}
@@ -507,7 +549,7 @@ export function QuotesManager() {
                           }
                           className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
                         >
-                          <option value="">Manual item</option>
+                          <option value="">Item manual</option>
                           {services.map((service) => (
                             <option key={service.id} value={service.id}>
                               {service.name}
@@ -518,7 +560,7 @@ export function QuotesManager() {
 
                       <div className="grid gap-2 sm:col-span-2">
                         <label className="text-xs font-medium text-muted-foreground">
-                          Description
+                          Descrição
                         </label>
                         <input
                           required
@@ -532,7 +574,7 @@ export function QuotesManager() {
 
                       <div className="grid gap-2">
                         <label className="text-xs font-medium text-muted-foreground">
-                          Quantity
+                          Quantidade
                         </label>
                         <input
                           required
@@ -548,7 +590,7 @@ export function QuotesManager() {
 
                       <div className="grid gap-2">
                         <label className="text-xs font-medium text-muted-foreground">
-                          Unit price
+                          Preço unitário
                         </label>
                         <input
                           required
@@ -565,7 +607,7 @@ export function QuotesManager() {
 
                     <div className="mt-3 flex items-center justify-between">
                       <p className="text-xs text-muted-foreground">
-                        Line total: {formatMoneyFromCents(item.lineTotalInCents)}
+                        Total da linha: {formatMoneyFromCents(item.lineTotalInCents)}
                       </p>
                       <Button
                         type="button"
@@ -574,7 +616,7 @@ export function QuotesManager() {
                         onClick={() => handleRemoveItem(index)}
                         disabled={preparedItems.length <= 1}
                       >
-                        Remove
+                        Remover
                       </Button>
                     </div>
                   </div>
@@ -586,7 +628,7 @@ export function QuotesManager() {
               <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
                 <div className="grid gap-2">
                   <label htmlFor="discount" className="text-sm font-medium">
-                    Discount
+                    Desconto
                   </label>
                   <input
                     id="discount"
@@ -607,7 +649,7 @@ export function QuotesManager() {
                     </dd>
                   </div>
                   <div>
-                    <dt className="inline text-muted-foreground">Discount: </dt>
+                    <dt className="inline text-muted-foreground">Desconto: </dt>
                     <dd className="inline font-medium">
                       {formatMoneyFromCents(totals.discountInCents)}
                     </dd>
@@ -624,15 +666,15 @@ export function QuotesManager() {
 
             <div className="flex items-center gap-3 pt-1">
               <Button type="submit">
-                {editingQuoteId ? "Save changes" : "Create quote"}
+                {editingQuoteId ? "Salvar alterações" : "Criar orçamento"}
               </Button>
               {editingQuoteId ? (
                 <Button type="button" variant="outline" onClick={handleCreateMode}>
-                  Cancel edit
+                  Cancelar edição
                 </Button>
               ) : null}
               {saveState === "saved" ? (
-                <p className="text-sm text-muted-foreground">Saved.</p>
+                <p className="text-sm text-muted-foreground">Salvo.</p>
               ) : null}
             </div>
           </form>

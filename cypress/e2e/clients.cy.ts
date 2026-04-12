@@ -1,45 +1,88 @@
-const BASE_URL = "http://localhost:3000";
-
 describe("Clients", () => {
-  it("shows empty state, creates a client, edits it, and persists after reload", () => {
-    cy.visit(BASE_URL);
+  it("creates, edits, and deletes a client without related data", () => {
+    cy.visit("/");
     cy.clearFirmusStorage();
 
-    cy.visit(`${BASE_URL}/clients`);
+    cy.visit("/clients");
 
-    cy.contains("h1", "Clients").should("be.visible");
-    cy.contains("No clients saved yet.").should("be.visible");
-    cy.contains("Add your first client to start building quotes and follow-ups.").should(
-      "be.visible"
-    );
+    cy.contains("h1", "Clientes").should("be.visible");
+    cy.contains("Nenhum cliente salvo ainda.").should("be.visible");
 
-    cy.get("#name").clear().type("Acme Health");
+    cy.get("#name").clear().type("Cliente Livre");
     cy.get("#whatsapp").clear().type("+55 11 97777-7777");
-    cy.get("#email").clear().type("contact@acme.test");
+    cy.get("#email").clear().type("livre@cliente.test");
     cy.get("#city").clear().type("Sao Paulo");
-    cy.get("#notes").clear().type("Main decision maker: Julia.");
-    cy.contains("button", "Create client").click();
+    cy.get("#notes").clear().type("Sem vínculos.");
+    cy.contains("button", "Criar cliente").click();
 
-    cy.contains("Saved.").should("be.visible");
-    cy.contains("Acme Health").should("be.visible");
+    cy.contains("Salvo.").should("be.visible");
 
-    cy.contains("li", "Acme Health").within(() => {
-      cy.contains("button", "Edit").click();
-    });
+    cy.contains('[data-testid^="client-item-"]', "Cliente Livre")
+      .as("clientItem")
+      .within(() => {
+        cy.get('[data-testid^="client-edit-"]').click();
+      });
 
-    cy.contains("h2", "Edit client").should("be.visible");
+    cy.contains("h2", "Editar cliente").should("be.visible");
     cy.get("#city").clear().type("Campinas");
-    cy.get("#notes").clear().type("Updated contact: Carlos.");
-    cy.contains("button", "Save changes").click();
+    cy.get("#notes").clear().type("Contato atualizado.");
+    cy.contains("button", "Salvar alterações").click();
 
     cy.reload();
 
-    cy.contains("li", "Acme Health").should("contain.text", "Campinas");
-    cy.contains("li", "Acme Health").within(() => {
-      cy.contains("button", "Edit").click();
+    cy.contains('[data-testid^="client-item-"]', "Cliente Livre")
+      .should("contain.text", "Campinas")
+      .within(() => {
+        cy.on("window:confirm", () => true);
+        cy.get('[data-testid^="client-delete-"]').click();
+      });
+
+    cy.contains("Cliente excluído.").should("be.visible");
+    cy.contains('[data-testid^="client-item-"]', "Cliente Livre").should(
+      "not.exist"
+    );
+  });
+
+  it("blocks client deletion when related quotes or charges exist", () => {
+    cy.visit("/");
+    cy.clearFirmusStorage();
+
+    cy.visit("/clients");
+    cy.get("#name").type("Cliente Bloqueado");
+    cy.contains("button", "Criar cliente").click();
+
+    cy.visit("/quotes");
+    cy.get("#clientId").find("option").contains("Cliente Bloqueado");
+    cy.contains("label", "Descrição")
+      .first()
+      .parents("div.rounded-xl")
+      .first()
+      .within(() => {
+        cy.get("input").eq(0).type("Escopo inicial");
+        cy.get("input").eq(1).clear().type("1");
+        cy.get("input").eq(2).clear().type("150.00");
+      });
+    cy.contains("button", "Criar orçamento").click();
+
+    cy.visit("/charges");
+    cy.get("#clientId").find("option").contains("Cliente Bloqueado");
+    cy.get("#amount").clear().type("200.00");
+    cy.get("#dueDate").clear().type("2026-04-12");
+    cy.contains("button", "Criar cobrança").click();
+
+    cy.visit("/clients");
+
+    cy.contains('[data-testid^="client-item-"]', "Cliente Bloqueado").within(() => {
+      cy.on("window:confirm", () => true);
+      cy.get('[data-testid^="client-delete-"]').click();
     });
-    cy.get("#city").should("have.value", "Campinas");
-    cy.get("#notes").should("have.value", "Updated contact: Carlos.");
+
+    cy.contains(
+      "Este cliente não pode ser excluído porque possui orçamentos ou cobranças vinculados."
+    ).should("be.visible");
+    cy.contains('[data-testid^="client-item-"]', "Cliente Bloqueado").should(
+      "exist"
+    );
   });
 });
 

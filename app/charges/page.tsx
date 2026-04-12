@@ -4,8 +4,8 @@ import Link from "next/link";
 import { ChargesManager } from "@/components/charges-manager";
 
 export const metadata: Metadata = {
-  title: "Charges",
-  description: "Create and manage charges linked to clients and optional quotes.",
+  title: "Cobranças",
+  description: "Crie e gerencie cobranças vinculadas a clientes e orçamentos opcionais.",
 };
 
 export default function ChargesPage() {
@@ -17,14 +17,14 @@ export default function ChargesPage() {
             href="/"
             className="text-sm text-muted-foreground underline-offset-4 hover:underline"
           >
-            Back to home
+            Voltar para o início
           </Link>
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              Charges
+              Cobranças
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Register expected amounts from clients with due dates and status.
+              Registre valores esperados de clientes com vencimento e status.
             </p>
           </div>
         </header>
