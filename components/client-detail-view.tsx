@@ -59,6 +59,14 @@ function getTimelineLabel(type: string): string {
     return "Cobrança marcada como paga";
   }
 
+  if (type === "reminder_created") {
+    return "Lembrete criado";
+  }
+
+  if (type === "reminder_completed") {
+    return "Lembrete concluído";
+  }
+
   return type.replaceAll("_", " ");
 }
 
@@ -84,6 +92,7 @@ function getEntityTypeLabel(type: string): string {
   if (type === "service") return "Serviço";
   if (type === "quote") return "Orçamento";
   if (type === "charge") return "Cobrança";
+  if (type === "reminder") return "Lembrete";
   return type;
 }
 

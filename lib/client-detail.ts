@@ -11,6 +11,18 @@ export type ClientDetailSnapshot = {
   timelineEvents: TimelineEvent[];
 };
 
+function getMetadataString(
+  event: TimelineEvent,
+  key: "clientId" | "chargeId"
+): string | null {
+  if (!event.metadata) {
+    return null;
+  }
+
+  const value = event.metadata[key];
+  return typeof value === "string" && value.length > 0 ? value : null;
+}
+
 export function buildClientDetailSnapshot(
   clientId: string,
   clients: Client[],
@@ -45,6 +57,16 @@ export function buildClientDetailSnapshot(
 
       if (event.entityType === "charge") {
         return chargeIds.has(event.entityId);
+      }
+
+      if (event.entityType === "reminder") {
+        const relatedClientId = getMetadataString(event, "clientId");
+        if (relatedClientId === client.id) {
+          return true;
+        }
+
+        const relatedChargeId = getMetadataString(event, "chargeId");
+        return relatedChargeId !== null && chargeIds.has(relatedChargeId);
       }
 
       return false;

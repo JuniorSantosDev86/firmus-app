@@ -6,6 +6,8 @@ const eventTypeLabel: Record<string, string> = {
   quote_created: "Orçamento criado",
   charge_created: "Cobrança criada",
   charge_paid: "Cobrança marcada como paga",
+  reminder_created: "Lembrete criado",
+  reminder_completed: "Lembrete concluído",
 };
 
 function formatEventTimestamp(timestamp: number): string {

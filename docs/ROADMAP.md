@@ -389,9 +389,28 @@ Validated items:
 
 ## Phase 2 — Assisted Operations
 
+## Phase 2 — Assisted Operations
+
 ### Block 11 — Reminders
-**Status:** Pending  
-**Objective:** Help the user keep track of follow-ups and due actions.
+Status: Completed and approved.
+
+Delivered:
+- Reminder domain model
+- localStorage persistence
+- deterministic reminder service layer
+- Portuguese reminders UI
+- optional client linkage
+- optional charge linkage
+- completion flow
+- reminder timeline events
+- dashboard activity integration
+- client detail timeline integration
+
+Notes:
+- Reminder behavior was validated manually and structurally.
+- A client timeline linkage bug was identified during QA and fixed before final approval.
+- Hydration warning investigation indicated external DOM mutation rather than an app-side defect.
+
 
 ### Block 12 — Templates
 **Status:** Pending  
@@ -504,10 +523,9 @@ Expanded MVP ready for structured beta.
 
 # Current Status
 
-**Current active block:** Post-Block 10 stabilization completed  
-**Current phase:** Transition between Phase 1 — Core Transactional Foundation and Phase 2 — Assisted Operations  
+**Current active block:** Block 11 — Reminders completed and approved  
+**Current phase:** Phase 2 — Assisted Operations in progress  
 **Overall project status:** In progress
-
 
 # Notes
 

@@ -18,7 +18,8 @@ function normalizeTimelineEvent(raw: unknown): TimelineEvent | null {
     (data.entityType !== "client" &&
       data.entityType !== "service" &&
       data.entityType !== "quote" &&
-      data.entityType !== "charge")
+      data.entityType !== "charge" &&
+      data.entityType !== "reminder")
   ) {
     return null;
   }

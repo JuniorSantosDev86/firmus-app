@@ -1576,7 +1576,57 @@ Validated items:
 - It also restored automated confidence after the Portuguese UI transition and the evolution of core flows.
 - The project is now ready to continue with the next roadmap step on a healthier operational and testing base.
 
+## Block 11 — Reminders
+Status: Completed and approved.
 
+### Objective
+Introduce the first assisted-operations slice in Firmus through a lightweight reminders module that helps users track follow-ups and due-related actions without introducing premature automation complexity.
+
+### Scope delivered
+- Added a dedicated `Reminder` domain model with minimal, explicit fields.
+- Added reminder persistence in localStorage with safe parsing, normalization, and stable writes.
+- Added a reminders service layer for deterministic derived state and orchestration.
+- Added `/reminders` route with Portuguese UI.
+- Added reminder creation flow with optional client linkage.
+- Added reminder creation flow with optional charge linkage.
+- Added completion flow to move reminders from pending to done.
+- Added timeline event emission for:
+  - `reminder_created`
+  - `reminder_completed`
+- Added reminder labels to dashboard activity rendering.
+- Added reminders entry to internal top navigation.
+- Extended client timeline aggregation so reminder events linked by `metadata.clientId` or `metadata.chargeId` appear in the correct client detail timeline.
+
+### Validation summary
+Structural validation:
+- `npm run lint` passed.
+- `npm run build` passed.
+
+Manual functional validation:
+- Reminders page opened correctly.
+- Manual reminder creation worked.
+- Reminder with today date rendered correctly.
+- Overdue reminder rendered correctly.
+- Reminder linked directly to a client rendered the client name correctly.
+- Reminder linked to a charge worked correctly.
+- Reminder created from charge-only linkage inherited the client relationship correctly.
+- Marking a reminder as completed moved it from pending to done.
+- Reminder persistence remained correct after page refresh.
+- Reminder events appeared correctly in dashboard activity.
+- Reminder events appeared correctly in client detail timeline after the corrective patch.
+
+Hydration investigation:
+- The reported hydration warning pointed to `cz-shortcut-listen="true"` injected on `<body>`.
+- This attribute was not emitted by app code.
+- No hydration-specific app patch was applied because evidence indicated external DOM mutation rather than an app-side mismatch.
+
+### Approval notes
+- Block approved after the client detail timeline bug was corrected through a minimal patch in the aggregation layer.
+- The reminders slice remains lightweight, deterministic, and compatible with future automation blocks.
+- No backend, notifications, recurrence, or rule engine complexity was introduced.
+
+### Follow-up note
+- The current charge label shown inside reminders is functional but still minimal. It can be improved later for UX, but it does not block approval of this block.
 
 
 ## QA Template for Future Blocks
