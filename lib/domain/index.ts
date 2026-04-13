@@ -5,4 +5,6 @@ export * from "@/lib/domain/common";
 export * from "@/lib/domain/quote";
 export * from "@/lib/domain/service";
 export * from "@/lib/domain/reminder";
+export * from "@/lib/domain/template";
 export * from "@/lib/domain/timeline-event";
+export * from "@/lib/domain/weekly-summary";

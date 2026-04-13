@@ -389,7 +389,6 @@ Validated items:
 
 ## Phase 2 — Assisted Operations
 
-## Phase 2 — Assisted Operations
 
 ### Block 11 — Reminders
 Status: Completed and approved.
@@ -413,12 +412,50 @@ Notes:
 
 
 ### Block 12 — Templates
-**Status:** Pending  
-**Objective:** Reduce repetitive communication effort.
+Status: Completed and approved.
+
+Delivered:
+- Template domain model
+- localStorage persistence
+- templates service layer
+- Portuguese templates UI
+- create flow
+- edit flow
+- active/inactive toggle
+- category organization
+- internal navigation integration
+
+Validation:
+- manual QA approved
+- Cypress coverage added and approved
+- included in final all-green full suite run
+
+Notes:
+- Templates were intentionally kept lightweight.
+- No interpolation engine, outbound delivery, automation rules, or AI generation were introduced.
 
 ### Block 13 — Weekly Summary
-**Status:** Pending  
-**Objective:** Create retention through useful operational feedback.
+Status: Completed and approved.
+
+Delivered:
+- typed weekly summary structure
+- deterministic weekly summary service
+- Portuguese weekly summary UI
+- explicit period rendering
+- stats/cards for operational totals
+- sections for overdue charges, due soon charges, reminders, and recent activity
+- deterministic highlights derived from real data
+- internal navigation integration
+
+Validation:
+- manual QA approved
+- Cypress coverage added and approved
+- included in final all-green full suite run
+
+Notes:
+- Weekly Summary remains a derived view over existing slices.
+- No persisted canonical summary aggregate was introduced.
+- Test fragility was corrected in Cypress without changing product behavior.
 
 ### Block 14 — Text-Based Assisted Input
 **Status:** Pending  
@@ -523,9 +560,15 @@ Expanded MVP ready for structured beta.
 
 # Current Status
 
-**Current active block:** Block 11 — Reminders completed and approved  
+**Current active block:** Block 13 — Weekly Summary completed and approved  
 **Current phase:** Phase 2 — Assisted Operations in progress  
 **Overall project status:** In progress
+
+- Block 12 — Templates completed and approved.
+- Block 13 — Weekly Summary completed and approved.
+- Cypress coverage now includes Templates and Weekly Summary.
+- The next implementation target is Block 14 — Text-Based Assisted Input.
+
 
 # Notes
 

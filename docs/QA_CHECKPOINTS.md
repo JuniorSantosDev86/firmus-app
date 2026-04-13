@@ -1629,6 +1629,110 @@ Hydration investigation:
 - The current charge label shown inside reminders is functional but still minimal. It can be improved later for UX, but it does not block approval of this block.
 
 
+## Block 12 — Templates
+Status: Completed and approved.
+
+### Objective
+Introduce a lightweight reusable message library for repetitive operational communication inside Firmus, without adding automation, outbound delivery, or a complex template engine.
+
+### Scope delivered
+- Added a dedicated `Template` domain model.
+- Added localStorage persistence with safe parsing, normalization, and stable ordering.
+- Added a templates service layer for CRUD support, grouping, filtering, and preview handling.
+- Added `/templates` route with Portuguese UI.
+- Added template creation flow.
+- Added template editing flow.
+- Added active/inactive toggle flow.
+- Added category-based organization for:
+  - quote follow-up
+  - payment reminder
+  - approval prompt
+  - general
+- Added internal navigation entry for Templates.
+
+### Validation summary
+Structural validation:
+- `npm run lint` passed.
+- `npm run build` passed.
+
+Manual functional validation:
+- Templates screen opened correctly.
+- Empty state rendered safely.
+- Form rendered correctly.
+- Template creation worked correctly.
+- Category behavior worked correctly.
+- Template editing worked correctly.
+- Active/inactive toggle worked correctly.
+- Persistence after refresh worked correctly.
+- localStorage data structure was validated successfully.
+
+Automated regression validation:
+- `templates.cy.ts` passed.
+- Final full Cypress run passed with all specs green.
+
+### Approval notes
+- Templates were implemented as an internal reusable library only.
+- No rich-text editor, interpolation engine, outbound delivery, automation, or AI behavior was introduced.
+- Block approved as the first reusable communication layer in Phase 2.
+
+
+## Block 13 — Weekly Summary
+Status: Completed and approved.
+
+### Objective
+Introduce a deterministic weekly operational summary derived from existing system data, focused on real pending work, financial movement, reminders, and recent activity without inventing unsupported insights.
+
+### Scope delivered
+- Added a typed weekly summary structure.
+- Added a deterministic weekly summary service derived from:
+  - charges
+  - reminders
+  - timeline events
+- Added `/weekly-summary` route with Portuguese UI.
+- Added explicit visible period rendering.
+- Added stats/cards for:
+  - received in period
+  - open amount
+  - overdue amount
+  - pending reminders
+  - completed reminders in period
+- Added sections for:
+  - overdue charges
+  - due soon charges
+  - pending reminders
+  - completed reminders in period
+  - recent activity
+- Added deterministic highlights derived only from real data.
+- Added internal navigation entry for Weekly Summary.
+
+### Validation summary
+Structural validation:
+- `npm run lint` passed.
+- `npm run build` passed.
+
+Manual functional validation:
+- Weekly Summary screen opened correctly.
+- Visible period rendered correctly for the last 7 days.
+- Main totals rendered correctly.
+- Paid charges in period were reflected correctly.
+- Overdue charges rendered correctly.
+- Due soon charges rendered correctly.
+- Pending reminders rendered correctly.
+- Completed reminders in period rendered correctly.
+- Recent activity rendered correctly.
+- Highlights rendered correctly.
+- Empty-state behavior rendered safely.
+
+Automated regression validation:
+- `weekly-summary.cy.ts` passed.
+- Final full Cypress run passed with all specs green.
+
+### Approval notes
+- Weekly Summary remains a derived read model, not a persisted canonical aggregate.
+- No fake insight generation, automation side effects, or analytics-heavy complexity was introduced.
+- Initial Cypress assertion fragility was corrected at the test layer before final approval.
+
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:

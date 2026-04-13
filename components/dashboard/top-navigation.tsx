@@ -23,6 +23,8 @@ const mainNavItems: MainNavItem[] = [
 const auxNavItems = [
   { href: "/charges", label: "Cobranças", testId: "nav-charges" },
   { href: "/reminders", label: "Lembretes", testId: "nav-reminders" },
+  { href: "/templates", label: "Modelos", testId: "nav-templates" },
+  { href: "/weekly-summary", label: "Resumo semanal", testId: "nav-weekly-summary" },
   {
     href: "/financial-overview",
     label: "Visão Financeira",

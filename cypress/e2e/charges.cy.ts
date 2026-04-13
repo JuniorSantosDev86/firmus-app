@@ -1,5 +1,9 @@
+const FIXED_NOW = Date.UTC(2026, 3, 10, 12, 0, 0);
+
 describe("Charges", () => {
   it("creates, edits, marks as paid, and deletes a charge", () => {
+    cy.clock(FIXED_NOW, ["Date"]);
+
     cy.visit("/");
     cy.clearFirmusStorage();
 
