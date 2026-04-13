@@ -1732,6 +1732,105 @@ Automated regression validation:
 - No fake insight generation, automation side effects, or analytics-heavy complexity was introduced.
 - Initial Cypress assertion fragility was corrected at the test layer before final approval.
 
+## Block 14 — Text-Based Assisted Input
+Status: Completed and approved.
+
+### Objective
+Introduce a deterministic text-based assisted input flow that simulates future conversational workflows without external channels, chat gimmicks, or opaque AI behavior.
+
+### Scope delivered
+- Added a dedicated assisted input domain model with:
+  - `AssistedIntentType`
+  - `AssistedIntentConfidence`
+  - `ParsedAssistedIntent`
+  - `AssistedDraftAction`
+- Added deterministic rule-based parsing in `lib/services/text-input-parser.ts`.
+- Added orchestration in `lib/services/assisted-input.ts`.
+- Added `/assisted-input` route with Portuguese UI.
+- Added text interpretation flow with:
+  - instruction input
+  - “O que entendi” preview
+  - extracted fields preview
+  - warnings for ambiguity/incompleteness
+  - safe fallback for unknown intent
+- Added confirmation flow that creates real entities only after explicit user confirmation.
+- Integrated confirmed reminder creation with the existing reminders slice.
+- Integrated confirmed charge creation with the existing charges slice.
+- Preserved the rule that parse-only actions do not create entities or timeline events.
+
+### Validation summary
+Structural validation:
+- `npm run lint` passed.
+- `npm run build` passed.
+
+Manual functional validation:
+- Assisted Input screen loaded correctly.
+- Reminder-like instruction parsing behaved correctly.
+- Charge-like instruction parsing behaved correctly.
+- Ambiguous/unknown text produced safe fallback.
+- Parse-only flow did not create entities before confirmation.
+- Confirmed reminder creation worked through the real reminder flow.
+- Confirmed charge creation worked through the real charge flow.
+
+Automated regression validation:
+- `assisted-input.cy.ts` passed.
+- Final full Cypress run passed with all specs green.
+
+### Approval notes
+- Block 14 remains deterministic and inspectable.
+- No WhatsApp integration, chat UI, LLM usage, probabilistic parsing, or automatic execution was introduced.
+- This block successfully simulates future conversational workflows while keeping Firmus grounded in explicit confirmation and real domain actions.
+
+
+## Block 14 — Text-Based Assisted Input
+Status: Completed and approved.
+
+### Objective
+Introduce a deterministic text-based assisted input flow that simulates future conversational workflows without external channels, chat gimmicks, or opaque AI behavior.
+
+### Scope delivered
+- Added a dedicated assisted input domain model with:
+  - `AssistedIntentType`
+  - `AssistedIntentConfidence`
+  - `ParsedAssistedIntent`
+  - `AssistedDraftAction`
+- Added deterministic rule-based parsing in `lib/services/text-input-parser.ts`.
+- Added orchestration in `lib/services/assisted-input.ts`.
+- Added `/assisted-input` route with Portuguese UI.
+- Added text interpretation flow with:
+  - instruction input
+  - “O que entendi” preview
+  - extracted fields preview
+  - warnings for ambiguity/incompleteness
+  - safe fallback for unknown intent
+- Added confirmation flow that creates real entities only after explicit user confirmation.
+- Integrated confirmed reminder creation with the existing reminders slice.
+- Integrated confirmed charge creation with the existing charges slice.
+- Preserved the rule that parse-only actions do not create entities or timeline events.
+
+### Validation summary
+Structural validation:
+- `npm run lint` passed.
+- `npm run build` passed.
+
+Manual functional validation:
+- Assisted Input screen loaded correctly.
+- Reminder-like instruction parsing behaved correctly.
+- Charge-like instruction parsing behaved correctly.
+- Ambiguous/unknown text produced safe fallback.
+- Parse-only flow did not create entities before confirmation.
+- Confirmed reminder creation worked through the real reminder flow.
+- Confirmed charge creation worked through the real charge flow.
+
+Automated regression validation:
+- `assisted-input.cy.ts` passed.
+- Final full Cypress run passed with all specs green.
+
+### Approval notes
+- Block 14 remains deterministic and inspectable.
+- No WhatsApp integration, chat UI, LLM usage, probabilistic parsing, or automatic execution was introduced.
+- This block successfully simulates future conversational workflows while keeping Firmus grounded in explicit confirmation and real domain actions.
+
 
 ## QA Template for Future Blocks
 

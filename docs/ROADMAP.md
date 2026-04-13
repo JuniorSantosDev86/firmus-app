@@ -458,12 +458,51 @@ Notes:
 - Test fragility was corrected in Cypress without changing product behavior.
 
 ### Block 14 — Text-Based Assisted Input
-**Status:** Pending  
-**Objective:** Start simulating the future conversational workflow without needing WhatsApp integration yet.
+Status: Completed and approved.
+
+Delivered:
+- assisted input domain model
+- deterministic text parser
+- assisted input orchestration service
+- Portuguese assisted input UI
+- structured interpretation preview
+- warnings for ambiguous/incomplete text
+- explicit confirmation flow
+- real reminder creation through existing slice
+- real charge creation through existing slice
+
+Validation:
+- manual QA approved
+- Cypress coverage added and approved
+- included in final all-green full suite run
+
+Notes:
+- The feature simulates future conversational workflows without external channels.
+- No chat-first UI, WhatsApp dependency, LLM parsing, or automatic execution was introduced.
+- Parse-only actions remain non-destructive and do not create entities before user confirmation.
 
 ### Block 15 — Assisted Charge Suggestions
-**Status:** Pending  
-**Objective:** Give the first real feeling of an operational copilot.
+Status: Completed and approved.
+
+Delivered:
+- assisted charge suggestion domain model
+- deterministic suggestion engine
+- Portuguese suggestions UI
+- explanation and reason-code rendering
+- accept flow
+- dismiss flow
+- minimal suggestion-state persistence
+- real charge creation through existing slice on acceptance
+
+Validation:
+- manual QA approved
+- Cypress coverage added and approved
+- included in final all-green full suite run
+
+Notes:
+- Suggestions are derived from known validated data such as quotes, charges, reminders, and timeline events.
+- The feature remains explainable and inspectable.
+- No black-box AI behavior or automatic execution was introduced.
 
 ---
 
@@ -560,14 +599,17 @@ Expanded MVP ready for structured beta.
 
 # Current Status
 
-**Current active block:** Block 13 — Weekly Summary completed and approved  
-**Current phase:** Phase 2 — Assisted Operations in progress  
+**Current active block:** Block 15 — Assisted Charge Suggestions completed and approved  
+**Current phase:** Transition from Phase 2 — Assisted Operations to Phase 3 — Public Growth Layer  
 **Overall project status:** In progress
 
 - Block 12 — Templates completed and approved.
 - Block 13 — Weekly Summary completed and approved.
-- Cypress coverage now includes Templates and Weekly Summary.
-- The next implementation target is Block 14 — Text-Based Assisted Input.
+- Block 14 — Text-Based Assisted Input completed and approved.
+- Block 15 — Assisted Charge Suggestions completed and approved.
+- Assisted operations layer is now functionally complete for the current roadmap slice.
+- Final full Cypress run passed with all specs green.
+- The next implementation target is Block 16 — Public Quote Page.
 
 
 # Notes

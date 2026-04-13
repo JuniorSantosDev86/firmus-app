@@ -1,4 +1,6 @@
 export * from "@/lib/domain/business-profile";
+export * from "@/lib/domain/assisted-charge-suggestion";
+export * from "@/lib/domain/assisted-input";
 export * from "@/lib/domain/charge";
 export * from "@/lib/domain/client";
 export * from "@/lib/domain/common";

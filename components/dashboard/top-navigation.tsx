@@ -24,6 +24,16 @@ const auxNavItems = [
   { href: "/charges", label: "Cobranças", testId: "nav-charges" },
   { href: "/reminders", label: "Lembretes", testId: "nav-reminders" },
   { href: "/templates", label: "Modelos", testId: "nav-templates" },
+  {
+    href: "/assisted-input",
+    label: "Entrada assistida",
+    testId: "nav-assisted-input",
+  },
+  {
+    href: "/assisted-charge-suggestions",
+    label: "Sugestões",
+    testId: "nav-assisted-charge-suggestions",
+  },
   { href: "/weekly-summary", label: "Resumo semanal", testId: "nav-weekly-summary" },
   {
     href: "/financial-overview",
@@ -37,8 +47,16 @@ export function TopNavigation() {
 
   return (
     <header className="rounded-[28px] border border-[#E2E8F0] bg-white shadow-[0_16px_48px_-36px_rgba(15,23,42,0.45)]">
-      <nav className="flex min-h-20 items-center justify-between gap-6 px-5 sm:px-8" aria-label="Navegação principal">
-        <Link href="/" className="flex items-center gap-2.5 rounded-xl" data-testid="home-logo-link">
+      <nav
+        className="flex min-h-20 items-center gap-4 px-5 py-4 sm:px-8"
+        aria-label="Navegação principal"
+        data-testid="top-navigation"
+      >
+        <Link
+          href="/"
+          className="flex shrink-0 items-center gap-2.5 rounded-xl"
+          data-testid="home-logo-link"
+        >
           <Image
             src="/brand/firmus-logo-square.png"
             alt="Logo Firmus"
@@ -57,7 +75,10 @@ export function TopNavigation() {
           />
         </Link>
 
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul
+          className="hidden min-w-0 flex-1 flex-wrap items-center gap-1 sm:flex"
+          data-testid="top-navigation-main"
+        >
           {mainNavItems.map((item) => {
             const isActive = pathname === item.href;
 
@@ -80,29 +101,36 @@ export function TopNavigation() {
             );
           })}
         </ul>
+      </nav>
 
-        <div className="hidden items-center gap-2 sm:flex">
+      <nav
+        className="hidden border-t border-[#E2E8F0] px-5 py-3 sm:block sm:px-8"
+        aria-label="Navegação auxiliar"
+        data-testid="top-navigation-aux"
+      >
+        <ul className="flex flex-wrap items-center gap-2">
           {auxNavItems.map((item) => {
             const isActive = pathname === item.href;
 
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                data-testid={item.testId}
-                aria-current={isActive ? "page" : undefined}
-                className={cn(
-                  "inline-flex h-10 items-center rounded-xl border px-3 text-sm font-medium transition-colors",
-                  isActive
-                    ? "border-[#0EA5A4] bg-[#ECFEFF] text-[#087C7B]"
-                    : "border-[#E2E8F0] bg-white text-[#475569] hover:border-[#CBD5E1] hover:bg-[#F8FAFC]"
-                )}
-              >
-                {item.label}
-              </Link>
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  data-testid={item.testId}
+                  aria-current={isActive ? "page" : undefined}
+                  className={cn(
+                    "inline-flex h-10 items-center rounded-xl border px-3 text-sm font-medium transition-colors",
+                    isActive
+                      ? "border-[#0EA5A4] bg-[#ECFEFF] text-[#087C7B]"
+                      : "border-[#E2E8F0] bg-white text-[#475569] hover:border-[#CBD5E1] hover:bg-[#F8FAFC]"
+                  )}
+                >
+                  {item.label}
+                </Link>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </nav>
 
       <div className="flex gap-2 border-t border-[#E2E8F0] px-5 py-3 sm:hidden">
