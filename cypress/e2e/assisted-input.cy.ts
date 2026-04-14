@@ -81,6 +81,132 @@ describe("Assisted Input", () => {
     });
   });
 
+  it("parses quote intent in PT-BR with amount, client, title and inferred due date", () => {
+    cy.clock(FIXED_NOW, ["Date"]);
+
+    cy.visit("/assisted-input", {
+      onBeforeLoad(win) {
+        seedAssistedInputPrerequisites(win);
+      },
+    });
+
+    cy.get("textarea").type(
+      "Cria um orçamento de 250 reais para o João, referente a uma manutenção de ar condicionado com vencimento dia 25 próximo"
+    );
+    cy.contains("button", "Interpretar").click();
+
+    cy.contains("p", "Intento: Criar orçamento").should("be.visible");
+    cy.contains("p", "Cliente: João").should("be.visible");
+    cy.contains("p", "Valor: R$ 250,00").should("be.visible");
+    cy.contains("p", "Vencimento: 2026-04-25").should("be.visible");
+    cy.contains("p", "Título: manutenção de ar condicionado").should("be.visible");
+    cy.contains("p", /^Confiança:\s+(high|medium)$/).should("be.visible");
+    cy.contains("li", "O mês do vencimento foi inferido automaticamente. Confirme antes de criar.").should(
+      "be.visible"
+    );
+    cy.contains("li", "Não identifiquei o valor com segurança.").should("not.exist");
+  });
+
+  it("parses charge intent with tomorrow due date", () => {
+    cy.clock(FIXED_NOW, ["Date"]);
+
+    cy.visit("/assisted-input", {
+      onBeforeLoad(win) {
+        seedAssistedInputPrerequisites(win);
+      },
+    });
+
+    cy.get("textarea").type("Criar cobrança para Ana de R$ 90 com vencimento amanhã");
+    cy.contains("button", "Interpretar").click();
+
+    cy.contains("p", "Intento: Criar cobrança").should("be.visible");
+    cy.contains("p", "Valor: R$ 90,00").should("be.visible");
+    cy.contains("p", "Vencimento: 2026-04-14").should("be.visible");
+  });
+
+  it("parses reminder follow-up with today date", () => {
+    cy.clock(FIXED_NOW, ["Date"]);
+
+    cy.visit("/assisted-input", {
+      onBeforeLoad(win) {
+        seedAssistedInputPrerequisites(win);
+      },
+    });
+
+    cy.get("textarea").type("Lembrete de follow-up com Bruno hoje");
+    cy.contains("button", "Interpretar").click();
+
+    cy.contains("p", "Intento: Criar lembrete").should("be.visible");
+    cy.contains("p", "Cliente: Bruno").should("be.visible");
+    cy.contains("p", "Vencimento: 2026-04-13").should("be.visible");
+  });
+
+  it("keeps warnings unique and avoids duplicate-key console errors", () => {
+    cy.clock(FIXED_NOW, ["Date"]);
+
+    cy.visit("/assisted-input", {
+      onBeforeLoad(win) {
+        seedAssistedInputPrerequisites(win);
+        cy.spy(win.console, "error").as("consoleError");
+      },
+    });
+
+    cy.get("textarea").type("Organizar pendências internas da semana");
+    cy.contains("button", "Interpretar").click();
+
+    cy.contains("li", "Não identifiquei a intenção com segurança.").should("have.length", 1);
+
+    cy.get("@consoleError").then((consoleError) => {
+      const calls = (
+        consoleError as unknown as { getCalls: () => Array<{ args: unknown[] }> }
+      ).getCalls();
+      const duplicateKeyError = calls.some((call) =>
+        call.args.some(
+          (arg) =>
+            typeof arg === "string" &&
+            arg.includes("Encountered two children with the same key")
+        )
+      );
+
+      expect(duplicateKeyError).to.eq(false);
+    });
+  });
+
+  it("keeps partial parsing for incomplete quote instruction with lower confidence", () => {
+    cy.clock(FIXED_NOW, ["Date"]);
+
+    cy.visit("/assisted-input", {
+      onBeforeLoad(win) {
+        seedAssistedInputPrerequisites(win);
+      },
+    });
+
+    cy.get("textarea").type("Criar orçamento para João");
+    cy.contains("button", "Interpretar").click();
+
+    cy.contains("p", "Intento: Criar orçamento").should("be.visible");
+    cy.contains("p", "Cliente: João").should("be.visible");
+    cy.contains("p", "Valor: —").should("be.visible");
+    cy.contains("p", /^Confiança:\s+(medium|low)$/).should("be.visible");
+    cy.contains("li", "Não identifiquei o valor com segurança.").should("be.visible");
+  });
+
+  it("does not confuse day-of-month with amount", () => {
+    cy.clock(FIXED_NOW, ["Date"]);
+
+    cy.visit("/assisted-input", {
+      onBeforeLoad(win) {
+        seedAssistedInputPrerequisites(win);
+      },
+    });
+
+    cy.get("textarea").type("Lembrete de follow-up com Bruno dia 25");
+    cy.contains("button", "Interpretar").click();
+
+    cy.contains("p", "Valor: —").should("be.visible");
+    cy.contains("p", "Vencimento: 2026-04-25").should("be.visible");
+  });
+
   it("parses charge-like instruction without creating entity before confirmation", () => {
     cy.clock(FIXED_NOW, ["Date"]);
 

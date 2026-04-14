@@ -17,6 +17,21 @@ type FeedbackState =
   | { type: "error"; message: string }
   | null;
 
+function getUniqueWarnings(warnings: string[]): string[] {
+  const deduped = new Set<string>();
+
+  for (const warning of warnings) {
+    const normalized = warning.trim();
+    if (normalized.length === 0) {
+      continue;
+    }
+
+    deduped.add(normalized);
+  }
+
+  return Array.from(deduped);
+}
+
 function formatMoneyFromCents(value: number | undefined): string {
   if (typeof value !== "number" || !Number.isFinite(value)) {
     return "—";
@@ -29,6 +44,7 @@ function formatMoneyFromCents(value: number | undefined): string {
 }
 
 function getIntentLabel(intentType: AssistedInputInterpretation["parsedIntent"]["intentType"]): string {
+  if (intentType === "create_quote") return "Criar orçamento";
   if (intentType === "create_reminder") return "Criar lembrete";
   if (intentType === "create_charge") return "Criar cobrança";
   if (intentType === "use_template") return "Sugerir modelo";
@@ -65,6 +81,14 @@ export function AssistedInputManager() {
 
     return validateAssistedDraftAction(draftAction);
   }, [draftAction]);
+  const interpretationWarnings = useMemo(
+    () => getUniqueWarnings(interpretation?.warnings ?? []),
+    [interpretation]
+  );
+  const validationWarnings = useMemo(
+    () => getUniqueWarnings(draftValidation.warnings),
+    [draftValidation.warnings]
+  );
 
   function handleInterpret() {
     const next = interpretAssistedInput(textInput);
@@ -84,7 +108,12 @@ export function AssistedInputManager() {
       return;
     }
 
-    const entityLabel = result.entityType === "reminder" ? "Lembrete" : "Cobrança";
+    const entityLabel =
+      result.entityType === "reminder"
+        ? "Lembrete"
+        : result.entityType === "charge"
+          ? "Cobrança"
+          : "Orçamento";
     setFeedback({
       type: "success",
       message: `${entityLabel} criada com sucesso (${result.entityId.slice(0, 8)}).`,
@@ -159,10 +188,10 @@ export function AssistedInputManager() {
             </p>
           </div>
 
-          {interpretation.warnings.length > 0 ? (
+          {interpretationWarnings.length > 0 ? (
             <ul className="mt-4 space-y-1 text-sm text-amber-700">
-              {interpretation.warnings.map((warning) => (
-                <li key={warning}>• {warning}</li>
+              {interpretationWarnings.map((warning, index) => (
+                <li key={`${index}-${warning}`}>• {warning}</li>
               ))}
             </ul>
           ) : null}
@@ -292,7 +321,7 @@ export function AssistedInputManager() {
 
           {draftAction?.actionType === "none" ? (
             <p className="mt-5 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-3 text-sm text-muted-foreground">
-              Não consegui interpretar com segurança.
+              Nenhuma ação foi preparada. Ajuste o texto e interprete novamente.
             </p>
           ) : null}
 
@@ -304,10 +333,10 @@ export function AssistedInputManager() {
             </div>
           ) : null}
 
-          {draftValidation.warnings.length > 0 ? (
+          {validationWarnings.length > 0 ? (
             <ul className="mt-3 space-y-1 text-sm text-amber-700">
-              {draftValidation.warnings.map((warning) => (
-                <li key={warning}>• {warning}</li>
+              {validationWarnings.map((warning, index) => (
+                <li key={`${index}-${warning}`}>• {warning}</li>
               ))}
             </ul>
           ) : null}

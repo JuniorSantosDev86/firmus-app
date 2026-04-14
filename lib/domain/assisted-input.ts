@@ -1,4 +1,5 @@
 export type AssistedIntentType =
+  | "create_quote"
   | "create_reminder"
   | "create_charge"
   | "use_template"
@@ -21,7 +22,12 @@ export type ParsedAssistedIntent = {
 };
 
 export type AssistedDraftAction = {
-  actionType: "create_reminder" | "create_charge" | "suggest_template" | "none";
+  actionType:
+    | "create_quote"
+    | "create_reminder"
+    | "create_charge"
+    | "suggest_template"
+    | "none";
   title: string;
   description?: string;
   payload: Record<string, unknown>;

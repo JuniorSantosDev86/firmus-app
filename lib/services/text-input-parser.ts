@@ -4,177 +4,113 @@ import type {
   ParsedAssistedIntent,
 } from "@/lib/domain/assisted-input";
 
-const REMINDER_KEYWORDS = ["lembrete", "lembrar", "follow-up", "follow up"];
-const CHARGE_KEYWORDS = ["cobranca", "cobrança", "cobrar", "pagamento"];
-const TEMPLATE_KEYWORDS = ["modelo", "template", "mensagem pronta"];
+type NormalizedInput = {
+  raw: string;
+  trimmed: string;
+  lowered: string;
+  normalized: string;
+};
 
-function normalizeText(value: string): string {
-  return value
+type DetectedIntent = {
+  intentType: AssistedIntentType;
+  warnings: string[];
+};
+
+type DueDateExtraction = {
+  dueDate?: string;
+  warnings: string[];
+};
+
+function normalizeInput(rawText: string): NormalizedInput {
+  const trimmed = rawText.trim();
+  const lowered = trimmed.toLowerCase().replace(/\s+/g, " ");
+  const normalized = lowered
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return {
+    raw: rawText,
+    trimmed,
+    lowered,
+    normalized,
+  };
 }
 
-function containsAnyKeyword(value: string, keywords: string[]): boolean {
-  return keywords.some((keyword) => value.includes(keyword));
-}
-
-function toDateInputValue(value: Date): string {
-  return `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, "0")}-${String(
-    value.getDate()
+function toDateInputValue(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
+    date.getDate()
   ).padStart(2, "0")}`;
 }
 
-function parseDueDate(rawText: string): string | undefined {
-  const normalized = normalizeText(rawText);
-  const today = new Date();
-
-  if (normalized.includes("amanha")) {
-    const next = new Date(today);
-    next.setDate(today.getDate() + 1);
-    return toDateInputValue(next);
-  }
-
-  if (normalized.includes("hoje")) {
-    return toDateInputValue(today);
-  }
-
-  if (normalized.includes("proxima semana")) {
-    const next = new Date(today);
-    next.setDate(today.getDate() + 7);
-    return toDateInputValue(next);
-  }
-
-  const match = rawText.match(/\b(\d{1,2})[/-](\d{1,2})(?:[/-](\d{2,4}))?\b/);
-  if (!match) {
-    return undefined;
-  }
-
-  const day = Number.parseInt(match[1], 10);
-  const month = Number.parseInt(match[2], 10);
-  const capturedYear = match[3] ? Number.parseInt(match[3], 10) : today.getFullYear();
-  const year = capturedYear < 100 ? 2000 + capturedYear : capturedYear;
-
-  if (
-    !Number.isInteger(day) ||
-    !Number.isInteger(month) ||
-    !Number.isInteger(year) ||
-    day < 1 ||
-    day > 31 ||
-    month < 1 ||
-    month > 12
-  ) {
-    return undefined;
-  }
-
-  const date = new Date(year, month - 1, day);
-  if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day
-  ) {
-    return undefined;
-  }
-
-  return toDateInputValue(date);
+function stripLeadingArticles(value: string): string {
+  return value.replace(/^(?:o|a|os|as|um|uma)\s+/i, "").trim();
 }
 
-function parseAmountInCents(rawText: string): number | undefined {
-  const normalized = rawText.replace(/\s+/g, " ").trim();
-  const explicitCurrency = normalized.match(/r\$\s*([\d.]+(?:,\d{1,2})?)/i);
-  const candidate = explicitCurrency?.[1] ?? normalized.match(/(\d+[.,]\d{1,2})/)?.[1];
-
-  if (!candidate) {
+function parseMoneyNumber(raw: string): number | undefined {
+  const cleaned = raw.replace(/\s+/g, "").replace(/[^\d.,]/g, "");
+  if (cleaned.length === 0) {
     return undefined;
   }
 
-  const parsed = Number(candidate.replace(/\./g, "").replace(",", "."));
+  let normalized = cleaned;
+  const lastDot = normalized.lastIndexOf(".");
+  const lastComma = normalized.lastIndexOf(",");
+
+  if (lastDot >= 0 && lastComma >= 0) {
+    if (lastComma > lastDot) {
+      normalized = normalized.replace(/\./g, "").replace(",", ".");
+    } else {
+      normalized = normalized.replace(/,/g, "");
+    }
+  } else if (lastComma >= 0) {
+    normalized = normalized.replace(/,/g, ".");
+  } else if (lastDot >= 0) {
+    const decimalDigits = normalized.length - lastDot - 1;
+    if (decimalDigits !== 2) {
+      normalized = normalized.replace(/\./g, "");
+    }
+  }
+
+  const parsed = Number(normalized);
   if (!Number.isFinite(parsed) || parsed <= 0) {
     return undefined;
   }
 
-  return Math.round(parsed * 100);
+  return parsed;
 }
 
-function cleanClientCandidate(value: string): string | undefined {
-  const cleaned = value
-    .replace(/\b(amanha|hoje|ate|até|no dia|dia|valor|r\$)\b.*/i, "")
-    .replace(/[.,;:!?]+$/g, "")
-    .trim();
+function detectIntent(input: NormalizedInput): DetectedIntent {
+  const text = input.normalized;
 
-  return cleaned.length > 1 ? cleaned : undefined;
-}
+  const hasQuote =
+    /\borcamento\b/.test(text) &&
+    /(\bcria\b|\bcriar\b|\bgera\b|\bgerar\b|\bfaz\b|\bfazer\b|\bmonta\b|\bmontar\b|\bpara\b)/.test(
+      text
+    );
 
-function parseClientNameCandidate(rawText: string): string | undefined {
-  const quoted = rawText.match(/["“](.+?)["”]/);
-  if (quoted?.[1]) {
-    return cleanClientCandidate(quoted[1]);
-  }
+  const hasCharge =
+    /\bcobranca\b/.test(text) ||
+    /\bcobrar\b/.test(text) ||
+    /(\bcria\b|\bcriar\b|\bgera\b|\bgerar\b|\bfaz\b|\bfazer\b)\s+(?:uma\s+)?\bcobranca\b/.test(text);
 
-  const withClientKeyword = rawText.match(/\bcliente\s+([a-zA-ZÀ-ÿ0-9\s]+)$/i);
-  if (withClientKeyword?.[1]) {
-    return cleanClientCandidate(withClientKeyword[1]);
-  }
+  const hasReminder =
+    /\blembrete\b/.test(text) ||
+    /\blembrar\b/.test(text) ||
+    /\bfollow-up\b/.test(text) ||
+    /\bfollow up\b/.test(text);
 
-  const withParaKeyword = rawText.match(/\bpara\s+([a-zA-ZÀ-ÿ0-9\s]+)$/i);
-  if (withParaKeyword?.[1]) {
-    return cleanClientCandidate(withParaKeyword[1]);
-  }
-
-  return undefined;
-}
-
-function parseReminderTitle(rawText: string): string | undefined {
-  const stripped = rawText
-    .replace(/\blembrete\b/gi, "")
-    .replace(/\blembrar\b/gi, "")
-    .replace(/\bde\b/gi, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  if (stripped.length === 0) {
-    return undefined;
-  }
-
-  return stripped.slice(0, 120);
-}
-
-function parseTemplateCategory(rawText: string): string | undefined {
-  const normalized = normalizeText(rawText);
-
-  if (normalized.includes("pagamento") || normalized.includes("cobranca")) {
-    return "payment_reminder";
-  }
-
-  if (normalized.includes("aprovacao") || normalized.includes("aprovar")) {
-    return "approval_prompt";
-  }
-
-  if (normalized.includes("follow-up") || normalized.includes("follow up")) {
-    return "quote_followup";
-  }
-
-  if (containsAnyKeyword(normalized, TEMPLATE_KEYWORDS)) {
-    return "general";
-  }
-
-  return undefined;
-}
-
-function classifyIntent(rawText: string): {
-  intentType: AssistedIntentType;
-  warnings: string[];
-} {
-  const normalized = normalizeText(rawText);
-  const hasReminder = containsAnyKeyword(normalized, REMINDER_KEYWORDS);
-  const hasCharge = containsAnyKeyword(normalized, CHARGE_KEYWORDS);
-  const hasTemplate = containsAnyKeyword(normalized, TEMPLATE_KEYWORDS);
-
-  if (hasReminder && hasCharge) {
+  const positiveCount = [hasQuote, hasCharge, hasReminder].filter(Boolean).length;
+  if (positiveCount > 1) {
     return {
       intentType: "unknown",
-      warnings: ["A instrução parece misturar lembrete e cobrança."],
+      warnings: ["A instrução mistura mais de uma intenção. Confirme manualmente."],
     };
+  }
+
+  if (hasQuote) {
+    return { intentType: "create_quote", warnings: [] };
   }
 
   if (hasCharge) {
@@ -185,14 +121,247 @@ function classifyIntent(rawText: string): {
     return { intentType: "create_reminder", warnings: [] };
   }
 
-  if (hasTemplate) {
-    return { intentType: "use_template", warnings: [] };
-  }
-
   return { intentType: "unknown", warnings: [] };
 }
 
-function resolveConfidence(
+function extractAmount(input: NormalizedInput): number | undefined {
+  const raw = input.trimmed;
+
+  const candidates: Array<{ value: string; score: number }> = [];
+
+  const explicitCurrency = /r\$\s*([\d.,]+)/gi;
+  for (const match of raw.matchAll(explicitCurrency)) {
+    if (match[1]) {
+      candidates.push({ value: match[1], score: 100 });
+    }
+  }
+
+  const withReais = /\b(\d+(?:[.,]\d{1,2})?)\s*(?:reais|real)\b/gi;
+  for (const match of raw.matchAll(withReais)) {
+    if (match[1]) {
+      candidates.push({ value: match[1], score: 90 });
+    }
+  }
+
+  const withValueContext = /\b(?:no\s+valor\s+de|valor\s+de|valor|de)\s+(\d+(?:[.,]\d{1,2})?)\b/gi;
+  for (const match of raw.matchAll(withValueContext)) {
+    if (match[1]) {
+      candidates.push({ value: match[1], score: 70 });
+    }
+  }
+
+  const decimalOnly = /\b(\d+[.,]\d{2})\b/g;
+  for (const match of raw.matchAll(decimalOnly)) {
+    if (match[1]) {
+      candidates.push({ value: match[1], score: 60 });
+    }
+  }
+
+  const sorted = [...candidates].sort((a, b) => b.score - a.score);
+
+  for (const candidate of sorted) {
+    const parsed = parseMoneyNumber(candidate.value);
+    if (parsed === undefined) {
+      continue;
+    }
+
+    if (Number.isInteger(parsed) && parsed <= 31 && candidate.score < 90) {
+      continue;
+    }
+
+    return Math.round(parsed * 100);
+  }
+
+  return undefined;
+}
+
+function extractClient(input: NormalizedInput): string | undefined {
+  const pattern =
+    /\b(?:para|pra|pro|com)\s+(.+?)(?=(?:,|;|\.|\breferente\b|\bsobre\b|\bservi[cç]o\b|\bcom\s+vencimento\b|\bvencimento\b|\bhoje\b|\bamanh[ãa]\b|\bdia\s+\d{1,2}\b|\bde\s+r\$\b|\bde\s+\d+(?:[.,]\d+)?\s*(?:reais|real)\b|\bpara\s+\d{1,2}[/-]\d{1,2}\b|$))/gi;
+
+  for (const match of input.trimmed.matchAll(pattern)) {
+    if (!match[1]) {
+      continue;
+    }
+
+    let candidate = match[1].trim();
+    candidate = stripLeadingArticles(candidate);
+    candidate = candidate.replace(/\s+/g, " ").replace(/[.,;:!?]+$/g, "").trim();
+
+    if (candidate.length >= 2) {
+      return candidate;
+    }
+  }
+
+  return undefined;
+}
+
+function extractDueDate(input: NormalizedInput): DueDateExtraction {
+  const warnings: string[] = [];
+  const now = new Date();
+  const text = input.normalized;
+
+  if (text.includes("amanha")) {
+    const next = new Date(now);
+    next.setDate(now.getDate() + 1);
+    return { dueDate: toDateInputValue(next), warnings };
+  }
+
+  if (text.includes("hoje")) {
+    return { dueDate: toDateInputValue(now), warnings };
+  }
+
+  const fullDate = input.trimmed.match(/\b(\d{1,2})[/-](\d{1,2})(?:[/-](\d{2,4}))?\b/);
+  if (fullDate) {
+    const day = Number.parseInt(fullDate[1], 10);
+    const month = Number.parseInt(fullDate[2], 10);
+    const yearValue = fullDate[3] ? Number.parseInt(fullDate[3], 10) : now.getFullYear();
+    const year = yearValue < 100 ? 2000 + yearValue : yearValue;
+
+    const date = new Date(year, month - 1, day);
+    if (
+      date.getFullYear() === year &&
+      date.getMonth() === month - 1 &&
+      date.getDate() === day
+    ) {
+      return { dueDate: toDateInputValue(date), warnings };
+    }
+  }
+
+  const dayMatch = text.match(/\bdia\s+(\d{1,2})(?:\s+(proximo))?\b/);
+  if (!dayMatch) {
+    return { warnings };
+  }
+
+  const desiredDay = Number.parseInt(dayMatch[1], 10);
+  if (!Number.isInteger(desiredDay) || desiredDay < 1 || desiredDay > 31) {
+    return { warnings };
+  }
+
+  const inferred = new Date(now.getFullYear(), now.getMonth(), desiredDay);
+
+  if (desiredDay < now.getDate()) {
+    inferred.setMonth(inferred.getMonth() + 1);
+  }
+
+  if (inferred.getDate() !== desiredDay) {
+    inferred.setDate(0);
+    warnings.push("A data informada não existe neste mês. Ajuste antes de confirmar.");
+  }
+
+  if (dayMatch[2]) {
+    warnings.push("O mês do vencimento foi inferido automaticamente. Confirme antes de criar.");
+  }
+
+  return {
+    dueDate: toDateInputValue(inferred),
+    warnings,
+  };
+}
+
+function extractTitle(input: NormalizedInput, intentType: AssistedIntentType): string | undefined {
+  if (intentType !== "create_quote" && intentType !== "create_reminder") {
+    return undefined;
+  }
+
+  const titlePatterns = [
+    /\breferente\s+a\s+(?:um|uma)?\s*([^,.\n]+?)(?=\s+(?:com\s+vencimento|vencimento|hoje|amanh[ãa]|dia\s+\d{1,2})|$)/i,
+    /\bsobre\s+([^,.\n]+?)(?=\s+(?:com\s+vencimento|vencimento|hoje|amanh[ãa]|dia\s+\d{1,2})|$)/i,
+    /\bservi[cç]o\s+de\s+([^,.\n]+?)(?=\s+(?:com\s+vencimento|vencimento|hoje|amanh[ãa]|dia\s+\d{1,2})|$)/i,
+  ];
+
+  for (const pattern of titlePatterns) {
+    const match = input.trimmed.match(pattern);
+    if (!match?.[1]) {
+      continue;
+    }
+
+    const cleaned = match[1]
+      .replace(/^(?:de|do|da|dos|das|um|uma|o|a)\s+/i, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    if (cleaned.length > 0) {
+      return cleaned.slice(0, 120);
+    }
+  }
+
+  if (intentType === "create_reminder") {
+    const fallback = input.trimmed
+      .replace(/\blembrete\b/gi, "")
+      .replace(/\blembrar\b/gi, "")
+      .replace(/\bde\b/gi, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    if (fallback.length > 0) {
+      return fallback.slice(0, 120);
+    }
+  }
+
+  return undefined;
+}
+
+function getUniqueWarnings(warnings: string[]): string[] {
+  const unique = new Set<string>();
+
+  for (const warning of warnings) {
+    const normalized = warning.trim();
+    if (normalized.length === 0) {
+      continue;
+    }
+
+    unique.add(normalized);
+  }
+
+  return Array.from(unique);
+}
+
+function buildWarnings(params: {
+  detectedIntent: DetectedIntent;
+  amountInCents?: number;
+  clientNameCandidate?: string;
+  dueDate?: string;
+  reminderTitle?: string;
+  dueDateWarnings: string[];
+}): string[] {
+  const warnings: string[] = [...params.detectedIntent.warnings, ...params.dueDateWarnings];
+
+  if (params.detectedIntent.intentType === "unknown") {
+    warnings.push("Não identifiquei a intenção com segurança.");
+  }
+
+  if (
+    (params.detectedIntent.intentType === "create_charge" ||
+      params.detectedIntent.intentType === "create_quote") &&
+    params.amountInCents === undefined
+  ) {
+    warnings.push("Não identifiquei o valor com segurança.");
+  }
+
+  if (params.detectedIntent.intentType === "create_charge" && params.dueDate === undefined) {
+    warnings.push("Não identifiquei a data de vencimento.");
+  }
+
+  if (
+    params.detectedIntent.intentType === "create_reminder" &&
+    (!params.reminderTitle || params.reminderTitle.trim().length === 0)
+  ) {
+    warnings.push("Não identifiquei um título claro para o lembrete.");
+  }
+
+  if (
+    (params.detectedIntent.intentType === "create_charge" ||
+      params.detectedIntent.intentType === "create_quote") &&
+    params.clientNameCandidate === undefined
+  ) {
+    warnings.push("Não identifiquei o cliente com segurança.");
+  }
+
+  return getUniqueWarnings(warnings);
+}
+
+function computeConfidence(
   intentType: AssistedIntentType,
   extractedFields: ParsedAssistedIntent["extractedFields"]
 ): AssistedIntentConfidence {
@@ -201,32 +370,57 @@ function resolveConfidence(
   }
 
   if (intentType === "create_charge") {
-    if (
-      typeof extractedFields.amountInCents === "number" &&
-      typeof extractedFields.dueDate === "string"
-    ) {
+    const score =
+      Number(extractedFields.amountInCents !== undefined) +
+      Number(extractedFields.dueDate !== undefined) +
+      Number(extractedFields.clientNameCandidate !== undefined);
+
+    if (score >= 3) return "high";
+    if (score >= 1) return "medium";
+    return "low";
+  }
+
+  if (intentType === "create_quote") {
+    const score =
+      Number(extractedFields.amountInCents !== undefined) +
+      Number(extractedFields.clientNameCandidate !== undefined) +
+      Number(extractedFields.reminderTitle !== undefined);
+
+    if (score >= 3) return "high";
+    if (score >= 1) return "medium";
+    return "low";
+  }
+
+  if (intentType === "create_reminder") {
+    if (extractedFields.reminderTitle) {
       return "high";
     }
 
     return "medium";
   }
 
-  if (intentType === "create_reminder") {
-    return extractedFields.reminderTitle ? "high" : "medium";
-  }
-
-  if (intentType === "use_template") {
-    return extractedFields.templateCategory ? "high" : "medium";
-  }
-
   return "low";
 }
 
-export function parseTextInputIntent(rawText: string): ParsedAssistedIntent {
-  const trimmed = rawText.trim();
-  const warnings: string[] = [];
+function buildInterpretationResult(params: {
+  input: NormalizedInput;
+  detectedIntent: DetectedIntent;
+  extractedFields: ParsedAssistedIntent["extractedFields"];
+  warnings: string[];
+}): ParsedAssistedIntent {
+  return {
+    rawText: params.input.raw,
+    intentType: params.detectedIntent.intentType,
+    confidence: computeConfidence(params.detectedIntent.intentType, params.extractedFields),
+    extractedFields: params.extractedFields,
+    warnings: getUniqueWarnings(params.warnings),
+  };
+}
 
-  if (trimmed.length < 3) {
+export function parseTextInputIntent(rawText: string): ParsedAssistedIntent {
+  const input = normalizeInput(rawText);
+
+  if (input.trimmed.length < 3) {
     return {
       rawText,
       intentType: "unknown",
@@ -236,38 +430,32 @@ export function parseTextInputIntent(rawText: string): ParsedAssistedIntent {
     };
   }
 
-  const classified = classifyIntent(trimmed);
-  warnings.push(...classified.warnings);
+  const detectedIntent = detectIntent(input);
+  const amountInCents = extractAmount(input);
+  const clientNameCandidate = extractClient(input);
+  const dueDateExtraction = extractDueDate(input);
+  const reminderTitle = extractTitle(input, detectedIntent.intentType);
 
   const extractedFields: ParsedAssistedIntent["extractedFields"] = {
-    clientNameCandidate: parseClientNameCandidate(trimmed),
-    amountInCents: parseAmountInCents(trimmed),
-    dueDate: parseDueDate(trimmed),
-    reminderTitle: classified.intentType === "create_reminder" ? parseReminderTitle(trimmed) : undefined,
-    templateCategory: classified.intentType === "use_template" ? parseTemplateCategory(trimmed) : undefined,
+    clientNameCandidate,
+    amountInCents,
+    dueDate: dueDateExtraction.dueDate,
+    reminderTitle,
   };
 
-  if (classified.intentType === "create_charge" && extractedFields.amountInCents === undefined) {
-    warnings.push("Não identifiquei o valor da cobrança.");
-  }
+  const warnings = buildWarnings({
+    detectedIntent,
+    amountInCents,
+    clientNameCandidate,
+    dueDate: dueDateExtraction.dueDate,
+    reminderTitle,
+    dueDateWarnings: dueDateExtraction.warnings,
+  });
 
-  if (classified.intentType === "create_charge" && extractedFields.dueDate === undefined) {
-    warnings.push("Não identifiquei a data de vencimento.");
-  }
-
-  if (classified.intentType === "create_reminder" && extractedFields.reminderTitle === undefined) {
-    warnings.push("Não identifiquei um título claro para o lembrete.");
-  }
-
-  if (classified.intentType === "unknown") {
-    warnings.push("Não consegui interpretar com segurança.");
-  }
-
-  return {
-    rawText,
-    intentType: classified.intentType,
-    confidence: resolveConfidence(classified.intentType, extractedFields),
+  return buildInterpretationResult({
+    input,
+    detectedIntent,
     extractedFields,
     warnings,
-  };
+  });
 }

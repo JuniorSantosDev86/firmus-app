@@ -20,8 +20,23 @@ export type AssistedDraftValidation = {
 };
 
 export type ConfirmAssistedDraftResult =
-  | { ok: true; entityType: "reminder" | "charge"; entityId: string }
+  | { ok: true; entityType: "reminder" | "charge" | "quote"; entityId: string }
   | { ok: false; reason: string };
+
+function getUniqueWarnings(warnings: string[]): string[] {
+  const deduped = new Set<string>();
+
+  for (const warning of warnings) {
+    const normalized = warning.trim();
+    if (normalized.length === 0) {
+      continue;
+    }
+
+    deduped.add(normalized);
+  }
+
+  return Array.from(deduped);
+}
 
 function normalizeText(value: string): string {
   return value
@@ -71,6 +86,20 @@ function findClientByText(clients: Client[], candidate?: string, rawText?: strin
 }
 
 function buildDraftAction(parsedIntent: ParsedAssistedIntent, matchedClient: Client | null): AssistedDraftAction {
+  if (parsedIntent.intentType === "create_quote") {
+    return {
+      actionType: "create_quote",
+      title: "Criar orçamento",
+      description: "Revise os campos extraídos e finalize pelo fluxo de orçamentos.",
+      payload: {
+        clientId: matchedClient?.id,
+        amountInCents: parsedIntent.extractedFields.amountInCents,
+        dueDate: parsedIntent.extractedFields.dueDate,
+        title: parsedIntent.extractedFields.reminderTitle,
+      },
+    };
+  }
+
   if (parsedIntent.intentType === "create_reminder") {
     return {
       actionType: "create_reminder",
@@ -166,7 +195,7 @@ export function interpretAssistedInput(rawText: string): AssistedInputInterpreta
     draftAction,
     matchedClient,
     availableClients,
-    warnings: [...parsedIntent.warnings, ...validation.warnings],
+    warnings: getUniqueWarnings([...parsedIntent.warnings, ...validation.warnings]),
     canConfirm: validation.canConfirm,
   };
 }
