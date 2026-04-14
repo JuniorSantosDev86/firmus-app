@@ -1831,6 +1831,156 @@ Automated regression validation:
 - No WhatsApp integration, chat UI, LLM usage, probabilistic parsing, or automatic execution was introduced.
 - This block successfully simulates future conversational workflows while keeping Firmus grounded in explicit confirmation and real domain actions.
 
+## Block 15 — Assisted Input MVP Interpretation
+
+### Status
+Completed and validated.
+
+### Goal
+Introduce and stabilize the first MVP version of Assisted Input ("Entrada assistida") as an interpretation layer for PT-BR natural-language instructions.
+
+### Scope of this block
+The purpose of Block 15 was not full operational execution yet.
+Its purpose was to make Assisted Input useful, stable, and trustworthy as an MVP interaction layer.
+
+That means:
+- interpret natural-language instructions in PT-BR
+- extract structured intent and relevant fields
+- present a review layer before confirmation
+- surface uncertainty through warnings
+- avoid UI instability and parsing regressions
+
+### Delivered
+- Added/strengthened PT-BR natural-language parsing for assisted input.
+- Improved intent recognition for operational commands such as:
+  - orçamento
+  - cobrança
+  - lembrete / follow-up
+- Improved extraction of key fields such as:
+  - client
+  - amount
+  - title/context
+  - due date
+- Added a safer review step before confirmation.
+- Improved warning generation for partial or uncertain interpretations.
+- Added deduplication for warnings to avoid repeated rendering.
+- Fixed duplicate-key rendering issues in the warnings list.
+- Improved confidence behavior for complete vs partial interpretations.
+- Preserved partial parsing when the instruction is incomplete.
+- Kept the flow safe by avoiding premature automatic creation.
+
+### Product result
+After Block 15, Assisted Input stopped feeling like a fragile experiment and started feeling like a real MVP feature.
+
+The feature became capable of:
+- interpreting realistic PT-BR operational instructions
+- showing what was understood
+- exposing missing or inferred fields
+- allowing the user to review the result safely before confirmation
+
+### Validation summary
+The following behavior was validated for Block 15:
+- safe initial load
+- no duplicate warning rendering
+- no duplicate React key regression in warning lists
+- useful PT-BR parsing for quote-like commands
+- useful PT-BR parsing for charge-like commands
+- useful PT-BR parsing for reminder / follow-up commands
+- safe handling of incomplete input
+- safe fallback for ambiguous input
+- no confusion between day-of-month and monetary amount
+- no entity creation before confirmation in interpretation-first scenarios
+
+### Quality outcome
+Block 15 was considered done when the feature achieved MVP-level trustworthiness:
+- interpretation became useful
+- warnings became stable
+- UI stopped breaking on repeated warning states
+- parsing handled realistic PT-BR input better
+- review-before-confirmation became clear to the user
+
+### Important note
+Block 15 delivered the Assisted Input interpretation layer.
+It did **not** yet represent full assisted execution as the primary product goal.
+
+That next step belongs to Block 16, where the flow evolved into:
+interpretation -> draft -> validation -> real entity creation -> timeline event
+
+### Follow-up
+The natural continuation after Block 15 was:
+- Block 16: operationalize assisted input with real entity execution
+- Block 17: consolidate shell/navigation and dashboard control-tower behavior
+
+## Block 16 — Assisted Input Operational Execution
+
+### Status
+Completed and validated.
+
+### Goal
+Turn the Assisted Input flow from an interpretation-only UI into a real operational execution pipeline capable of creating actual entities in the correct module.
+
+### Delivered
+- Added a typed assisted-input draft layer for supported actions.
+- Added explicit validation rules by action type.
+- Added centralized execution routing for assisted actions.
+- Enabled real creation flow for:
+  - quotes
+  - charges
+  - reminders
+- Preserved the current review/edit confirmation experience in the UI.
+- Extended the assisted-input manager to support quote confirmation in addition to charge and reminder flows.
+- Kept user-edited values overriding parser-inferred values before execution.
+- Reused existing module creation/storage flows instead of duplicating business logic.
+- Reused existing timeline/event registration already emitted by the target module logic.
+
+### Validation summary
+The following quality gates were validated for Block 16:
+- assisted input continues to interpret PT-BR commands
+- assisted input now creates real entities after confirmation
+- charge creation works through the real storage path
+- quote creation works through the real storage path
+- reminder creation works through the real service path
+- invalid drafts are blocked before confirmation
+- timeline events are emitted after successful creation
+- no regression was observed in the core application flows
+- lint passed
+- typecheck passed
+- production build passed
+- full Cypress run passed locally
+
+### E2E coverage relevant to this block
+Assisted Input suite validated:
+- safe initial load
+- reminder-like parsing without premature creation
+- quote parsing in PT-BR with amount, client, title, and inferred due date
+- charge parsing with relative due date
+- follow-up reminder parsing
+- unique warnings / no duplicate-key regression
+- partial parsing for incomplete input
+- no confusion between day-of-month and amount
+- safe fallback for ambiguous input
+- real reminder creation flow
+- real charge creation flow
+- invalid charge blocking
+- real quote creation flow
+
+### Full regression status at validation time
+Cypress full run:
+- 12 specs
+- 34 tests
+- 34 passing
+- 0 failing
+
+### Notes
+- Block 16 should now be treated as operationally complete for MVP scope.
+- The next step is not further parser sophistication.
+- The next step is consolidating product structure through Block 17:
+  - app shell
+  - centralized navigation
+  - sidebar on desktop
+  - drawer on mobile
+  - timeline-driven dashboard / control tower
+
 
 ## QA Template for Future Blocks
 

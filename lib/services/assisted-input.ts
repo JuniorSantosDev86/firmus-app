@@ -1,27 +1,14 @@
-import { getCharges, upsertCharge } from "@/lib/charge-storage";
 import { readClients } from "@/lib/client-storage";
-import type { AssistedDraftAction, ParsedAssistedIntent } from "@/lib/domain/assisted-input";
-import type { Client } from "@/lib/domain/client";
-import { createReminder } from "@/lib/services/reminders";
+import { buildAssistedActionDraft, findClientByText } from "@/lib/assisted-input/draft-builders";
+import { executeAssistedActionDraft } from "@/lib/assisted-input/execute-assisted-action";
+import type {
+  AssistedActionDraft,
+  AssistedDraftValidation,
+  AssistedInputInterpretation,
+  ConfirmAssistedDraftResult,
+} from "@/lib/assisted-input/types";
+import { validateAssistedActionDraft } from "@/lib/assisted-input/validators";
 import { parseTextInputIntent } from "@/lib/services/text-input-parser";
-
-export type AssistedInputInterpretation = {
-  parsedIntent: ParsedAssistedIntent;
-  draftAction: AssistedDraftAction;
-  matchedClient: Client | null;
-  availableClients: Client[];
-  warnings: string[];
-  canConfirm: boolean;
-};
-
-export type AssistedDraftValidation = {
-  canConfirm: boolean;
-  warnings: string[];
-};
-
-export type ConfirmAssistedDraftResult =
-  | { ok: true; entityType: "reminder" | "charge" | "quote"; entityId: string }
-  | { ok: false; reason: string };
 
 function getUniqueWarnings(warnings: string[]): string[] {
   const deduped = new Set<string>();
@@ -38,15 +25,7 @@ function getUniqueWarnings(warnings: string[]): string[] {
   return Array.from(deduped);
 }
 
-function normalizeText(value: string): string {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim();
-}
-
-function generateEntityId(prefix: "charge" | "assist"): string {
+function generateEntityId(prefix: "assist"): string {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
     return crypto.randomUUID();
   }
@@ -63,120 +42,10 @@ function toDateInputValue(value: string): string | undefined {
   return parsed.toISOString().slice(0, 10);
 }
 
-function findClientByText(clients: Client[], candidate?: string, rawText?: string): Client | null {
-  const byCandidate = normalizeText(candidate ?? "");
-  if (byCandidate.length > 0) {
-    const exact = clients.find((client) => normalizeText(client.name) === byCandidate);
-    if (exact) {
-      return exact;
-    }
-
-    const contained = clients.find((client) => normalizeText(client.name).includes(byCandidate));
-    if (contained) {
-      return contained;
-    }
-  }
-
-  const normalizedRaw = normalizeText(rawText ?? "");
-  if (normalizedRaw.length === 0) {
-    return null;
-  }
-
-  return clients.find((client) => normalizedRaw.includes(normalizeText(client.name))) ?? null;
-}
-
-function buildDraftAction(parsedIntent: ParsedAssistedIntent, matchedClient: Client | null): AssistedDraftAction {
-  if (parsedIntent.intentType === "create_quote") {
-    return {
-      actionType: "create_quote",
-      title: "Criar orçamento",
-      description: "Revise os campos extraídos e finalize pelo fluxo de orçamentos.",
-      payload: {
-        clientId: matchedClient?.id,
-        amountInCents: parsedIntent.extractedFields.amountInCents,
-        dueDate: parsedIntent.extractedFields.dueDate,
-        title: parsedIntent.extractedFields.reminderTitle,
-      },
-    };
-  }
-
-  if (parsedIntent.intentType === "create_reminder") {
-    return {
-      actionType: "create_reminder",
-      title: "Criar lembrete",
-      description: "Lembrete será criado apenas após sua confirmação.",
-      payload: {
-        title: parsedIntent.extractedFields.reminderTitle ?? parsedIntent.rawText.trim(),
-        dueDate: parsedIntent.extractedFields.dueDate,
-        clientId: matchedClient?.id,
-      },
-    };
-  }
-
-  if (parsedIntent.intentType === "create_charge") {
-    return {
-      actionType: "create_charge",
-      title: "Criar cobrança",
-      description: "Cobrança será criada apenas após sua confirmação.",
-      payload: {
-        clientId: matchedClient?.id,
-        amountInCents: parsedIntent.extractedFields.amountInCents,
-        dueDate: parsedIntent.extractedFields.dueDate,
-      },
-    };
-  }
-
-  if (parsedIntent.intentType === "use_template") {
-    return {
-      actionType: "suggest_template",
-      title: "Sugerir modelo",
-      description: "Nenhuma ação automática será executada.",
-      payload: {
-        templateCategory: parsedIntent.extractedFields.templateCategory,
-      },
-    };
-  }
-
-  return {
-    actionType: "none",
-    title: "Sem ação confirmável",
-    payload: {},
-  };
-}
-
-export function validateAssistedDraftAction(draftAction: AssistedDraftAction): AssistedDraftValidation {
-  if (draftAction.actionType === "create_reminder") {
-    const title =
-      typeof draftAction.payload.title === "string" ? draftAction.payload.title.trim() : "";
-
-    if (title.length === 0) {
-      return { canConfirm: false, warnings: ["Ajuste os campos antes de confirmar."] };
-    }
-
-    return { canConfirm: true, warnings: [] };
-  }
-
-  if (draftAction.actionType === "create_charge") {
-    const clientId =
-      typeof draftAction.payload.clientId === "string" ? draftAction.payload.clientId.trim() : "";
-    const amountInCents =
-      typeof draftAction.payload.amountInCents === "number"
-        ? draftAction.payload.amountInCents
-        : NaN;
-    const dueDate =
-      typeof draftAction.payload.dueDate === "string" ? draftAction.payload.dueDate.trim() : "";
-
-    if (clientId.length === 0 || !Number.isFinite(amountInCents) || amountInCents <= 0 || dueDate.length === 0) {
-      return { canConfirm: false, warnings: ["Ajuste os campos antes de confirmar."] };
-    }
-
-    return { canConfirm: true, warnings: [] };
-  }
-
-  return {
-    canConfirm: false,
-    warnings: draftAction.actionType === "none" ? ["Não consegui interpretar com segurança."] : [],
-  };
+export function validateAssistedDraftAction(
+  draftAction: AssistedActionDraft
+): AssistedDraftValidation {
+  return validateAssistedActionDraft(draftAction);
 }
 
 export function interpretAssistedInput(rawText: string): AssistedInputInterpretation {
@@ -187,8 +56,8 @@ export function interpretAssistedInput(rawText: string): AssistedInputInterpreta
     parsedIntent.extractedFields.clientNameCandidate,
     parsedIntent.rawText
   );
-  const draftAction = buildDraftAction(parsedIntent, matchedClient);
-  const validation = validateAssistedDraftAction(draftAction);
+  const draftAction = buildAssistedActionDraft(parsedIntent, matchedClient);
+  const validation = validateAssistedActionDraft(draftAction);
 
   return {
     parsedIntent,
@@ -200,67 +69,10 @@ export function interpretAssistedInput(rawText: string): AssistedInputInterpreta
   };
 }
 
-export function confirmAssistedDraftAction(draftAction: AssistedDraftAction): ConfirmAssistedDraftResult {
-  const validation = validateAssistedDraftAction(draftAction);
-  if (!validation.canConfirm) {
-    return { ok: false, reason: "Ajuste os campos antes de confirmar." };
-  }
-
-  if (draftAction.actionType === "create_reminder") {
-    const title = String(draftAction.payload.title ?? "").trim();
-    const clientId =
-      typeof draftAction.payload.clientId === "string" && draftAction.payload.clientId.trim().length > 0
-        ? draftAction.payload.clientId.trim()
-        : undefined;
-    const dueDate =
-      typeof draftAction.payload.dueDate === "string" && draftAction.payload.dueDate.trim().length > 0
-        ? draftAction.payload.dueDate.trim()
-        : undefined;
-
-    const created = createReminder({
-      title,
-      dueDate,
-      clientId,
-      sourceType: clientId ? "client_followup" : "manual",
-    });
-
-    if (!created) {
-      return { ok: false, reason: "Não foi possível criar o lembrete." };
-    }
-
-    return { ok: true, entityType: "reminder", entityId: created.id };
-  }
-
-  if (draftAction.actionType === "create_charge") {
-    const clientId = String(draftAction.payload.clientId ?? "").trim();
-    const amountInCents = Number(draftAction.payload.amountInCents);
-    const dueDate = String(draftAction.payload.dueDate ?? "").trim();
-    const chargeId = generateEntityId("charge");
-    const previousIds = new Set(getCharges().map((charge) => charge.id));
-
-    const next = upsertCharge(
-      {
-        clientId,
-        amountInCents,
-        dueDate,
-        status: "pending",
-      },
-      chargeId
-    );
-
-    const created =
-      next.find((charge) => charge.id === chargeId) ??
-      next.find((charge) => !previousIds.has(charge.id)) ??
-      null;
-
-    if (!created) {
-      return { ok: false, reason: "Não foi possível criar a cobrança." };
-    }
-
-    return { ok: true, entityType: "charge", entityId: created.id };
-  }
-
-  return { ok: false, reason: "Ação não confirmável." };
+export function confirmAssistedDraftAction(
+  draftAction: AssistedActionDraft
+): ConfirmAssistedDraftResult {
+  return executeAssistedActionDraft(draftAction);
 }
 
 export function createAssistedInterpretationId(): string {
@@ -274,3 +86,10 @@ export function normalizeDraftDueDate(value: unknown): string | undefined {
 
   return toDateInputValue(value);
 }
+
+export type {
+  AssistedActionDraft,
+  AssistedDraftValidation,
+  AssistedInputInterpretation,
+  ConfirmAssistedDraftResult,
+};

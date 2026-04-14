@@ -28,6 +28,7 @@ function seedAssistedInputPrerequisites(win: Window): void {
   win.localStorage.setItem("firmus.clients", JSON.stringify(SEEDED_CLIENTS));
   win.localStorage.setItem("firmus.charges", JSON.stringify([]));
   win.localStorage.setItem("firmus.reminders", JSON.stringify([]));
+  win.localStorage.setItem("firmus.quotes", JSON.stringify({ quotes: [], items: [] }));
   win.localStorage.setItem("firmus.timelineEvents", JSON.stringify([]));
 }
 
@@ -39,6 +40,26 @@ function readStoredArray<T>(win: Window, key: string): T[] {
 
   const parsed = JSON.parse(raw) as unknown;
   return Array.isArray(parsed) ? (parsed as T[]) : [];
+}
+
+function readStoredQuoteStore(
+  win: Window
+): { quotes: Array<Record<string, unknown>>; items: Array<Record<string, unknown>> } {
+  const raw = win.localStorage.getItem("firmus.quotes");
+  if (!raw) {
+    return { quotes: [], items: [] };
+  }
+
+  const parsed = JSON.parse(raw) as unknown;
+  if (typeof parsed !== "object" || parsed === null) {
+    return { quotes: [], items: [] };
+  }
+
+  const data = parsed as Record<string, unknown>;
+  return {
+    quotes: Array.isArray(data.quotes) ? (data.quotes as Array<Record<string, unknown>>) : [],
+    items: Array.isArray(data.items) ? (data.items as Array<Record<string, unknown>>) : [],
+  };
 }
 
 describe("Assisted Input", () => {
@@ -276,7 +297,7 @@ describe("Assisted Input", () => {
     });
 
     cy.contains("button", "Confirmar criação").click();
-    cy.contains("Lembrete criada com sucesso").should("be.visible");
+    cy.contains("Lembrete criado com sucesso.").should("be.visible");
 
     cy.window().then((win) => {
       const reminders = readStoredArray<Record<string, unknown>>(win, "firmus.reminders");
@@ -304,10 +325,9 @@ describe("Assisted Input", () => {
       expect(charges).to.have.length(0);
     });
 
-    cy.contains("label", "Cliente")
-      .parent()
-      .find("select")
-      .select("Ana Silva");
+    cy.contains("label", "Cliente").parent().find("select").select("Ana Silva");
+    cy.contains("label", "Valor (R$)").parent().find("input").clear().type("999.99");
+    cy.contains("label", "Vencimento").parent().find("input").clear().type("2026-04-20");
     cy.contains("button", "Confirmar criação").should("not.be.disabled");
     cy.contains("button", "Confirmar criação").click();
     cy.contains("Cobrança criada com sucesso").should("be.visible");
@@ -316,8 +336,70 @@ describe("Assisted Input", () => {
       const charges = readStoredArray<Record<string, unknown>>(win, "firmus.charges");
       expect(charges).to.have.length(1);
       expect(charges[0].clientId).to.eq("client-ana");
-      expect(charges[0].amountInCents).to.eq(32050);
-      expect(String(charges[0].dueDate)).to.contain("2026-04-16");
+      expect(charges[0].amountInCents).to.eq(99999);
+      expect(String(charges[0].dueDate)).to.contain("2026-04-20");
+
+      const timeline = readStoredArray<Record<string, unknown>>(win, "firmus.timelineEvents");
+      const event = timeline.find((item) => item.type === "charge_created");
+      expect(event).to.not.equal(undefined);
+      expect(event?.entityType).to.eq("charge");
+    });
+  });
+
+  it("blocks invalid charge confirmation when required fields are missing", () => {
+    cy.clock(FIXED_NOW, ["Date"]);
+
+    cy.visit("/assisted-input", {
+      onBeforeLoad(win) {
+        seedAssistedInputPrerequisites(win);
+      },
+    });
+
+    cy.get("textarea").type("Criar cobrança para Ana de R$ 120");
+    cy.contains("button", "Interpretar").click();
+
+    cy.contains("li", "Informe a data de vencimento da cobrança.").should("be.visible");
+    cy.contains("button", "Confirmar criação").should("be.disabled");
+
+    cy.window().then((win) => {
+      const charges = readStoredArray(win, "firmus.charges");
+      expect(charges).to.have.length(0);
+    });
+  });
+
+  it("confirms quote creation through real flow", () => {
+    cy.clock(FIXED_NOW, ["Date"]);
+
+    cy.visit("/assisted-input", {
+      onBeforeLoad(win) {
+        seedAssistedInputPrerequisites(win);
+      },
+    });
+
+    cy.get("textarea").type(
+      "Cria orçamento de R$ 450 para Ana referente a manutenção preventiva para 20/04/2026"
+    );
+    cy.contains("button", "Interpretar").click();
+
+    cy.contains("label", "Cliente").parent().find("select").select("Ana Silva");
+    cy.contains("button", "Confirmar criação").should("not.be.disabled");
+    cy.contains("button", "Confirmar criação").click();
+    cy.contains("Orçamento criado com sucesso").should("be.visible");
+
+    cy.window().then((win) => {
+      const store = readStoredQuoteStore(win);
+      expect(store.quotes).to.have.length(1);
+      expect(store.items).to.have.length(1);
+
+      expect(store.quotes[0].clientId).to.eq("client-ana");
+      expect(store.quotes[0].status).to.eq("draft");
+      expect(store.items[0].unitPriceInCents).to.eq(45000);
+      expect(String(store.items[0].description)).to.contain("manutenção preventiva");
+
+      const timeline = readStoredArray<Record<string, unknown>>(win, "firmus.timelineEvents");
+      const event = timeline.find((item) => item.type === "quote_created");
+      expect(event).to.not.equal(undefined);
+      expect(event?.entityType).to.eq("quote");
     });
   });
 });

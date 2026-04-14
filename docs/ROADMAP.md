@@ -508,9 +508,79 @@ Notes:
 
 ## Phase 3 — Public Growth Layer
 
-### Block 16 — Public Quote Page
-**Status:** Pending  
-**Objective:** Turn the quote into a professional public touchpoint.
+## Block 16 — Assisted Input as Real Operational Entry Point
+**Status:** Completed
+
+### Objective
+Transform Assisted Input into a real operational entry point for the product.
+
+### Outcome
+Completed successfully.
+
+The flow now behaves as:
+natural-language instruction -> interpretation -> structured draft -> validation -> centralized execution -> real entity creation -> timeline event emission
+
+### Scope delivered
+- Typed draft structure for assisted actions
+- Validation rules by intent/action type
+- Central execution router
+- Real creation for:
+  - quote
+  - charge
+  - reminder
+- Quote confirmation added to assisted-input flow
+- User edits preserved as final source of truth before creation
+- Reuse of existing business/storage logic
+- Reuse of existing timeline emission paths
+
+### Why this matters
+This block turns Assisted Input from a promising UX layer into a real product workflow.
+It is now a meaningful operational entrypoint rather than only a parser demo.
+
+### Exit criteria reached
+- real entity creation enabled
+- validation blocking working
+- quote flow included
+- timeline emission preserved
+- UI flow maintained
+- regression safety validated
+
+---
+
+## Block 17 — Product Shell and Control Tower
+**Status:** Next
+
+### Objective
+Turn Firmus from a set of functional pages into a more cohesive product shell.
+
+### Main goals
+- Introduce a proper application shell
+- Replace the overcrowded top-nav pattern as the primary navigation structure
+- Add left sidebar for desktop
+- Add top bar + drawer navigation for mobile
+- Centralize navigation in a single registry
+- Strengthen dashboard as a control-tower experience
+- Consume real timeline/activity data in the home/dashboard
+
+### Expected architecture
+- central navigation registry
+- reusable app shell
+- desktop sidebar
+- mobile drawer
+- page header / content frame
+- lightweight timeline consumption in dashboard
+- recent activity and operational overview cards
+
+### Expected outcome
+After Block 17, the app should feel structurally more mature, more navigable, and more aligned with the product thesis of an operational copilot.
+
+### Out of scope for Block 17
+- backend
+- auth
+- multi-user support
+- external integrations
+- broad redesign of visual identity
+- major domain rewrites
 
 ### Block 17 — Premium Quote PDF
 **Status:** Pending  

@@ -3,8 +3,8 @@
 import { useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import type { AssistedDraftAction } from "@/lib/domain/assisted-input";
 import {
+  type AssistedActionDraft,
   confirmAssistedDraftAction,
   interpretAssistedInput,
   normalizeDraftDueDate,
@@ -43,6 +43,39 @@ function formatMoneyFromCents(value: number | undefined): string {
   }).format(value / 100);
 }
 
+function parseAmountInputToCents(raw: string): number | undefined {
+  const cleaned = raw.trim().replace(/\s+/g, "").replace(/[^\d.,]/g, "");
+  if (cleaned.length === 0) {
+    return undefined;
+  }
+
+  let normalized = cleaned;
+  const lastDot = normalized.lastIndexOf(".");
+  const lastComma = normalized.lastIndexOf(",");
+
+  if (lastDot >= 0 && lastComma >= 0) {
+    if (lastComma > lastDot) {
+      normalized = normalized.replace(/\./g, "").replace(",", ".");
+    } else {
+      normalized = normalized.replace(/,/g, "");
+    }
+  } else if (lastComma >= 0) {
+    normalized = normalized.replace(/,/g, ".");
+  } else if (lastDot >= 0) {
+    const decimalDigits = normalized.length - lastDot - 1;
+    if (decimalDigits !== 2) {
+      normalized = normalized.replace(/\./g, "");
+    }
+  }
+
+  const parsed = Number(normalized);
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    return undefined;
+  }
+
+  return Math.round(parsed * 100);
+}
+
 function getIntentLabel(intentType: AssistedInputInterpretation["parsedIntent"]["intentType"]): string {
   if (intentType === "create_quote") return "Criar orçamento";
   if (intentType === "create_reminder") return "Criar lembrete";
@@ -52,9 +85,9 @@ function getIntentLabel(intentType: AssistedInputInterpretation["parsedIntent"][
 }
 
 function updateDraftPayload(
-  current: AssistedDraftAction | null,
+  current: AssistedActionDraft | null,
   patch: Record<string, unknown>
-): AssistedDraftAction | null {
+): AssistedActionDraft | null {
   if (!current) {
     return null;
   }
@@ -62,17 +95,18 @@ function updateDraftPayload(
   return {
     ...current,
     payload: {
-      ...current.payload,
+      ...(current.payload as Record<string, unknown>),
       ...patch,
     },
-  };
+  } as AssistedActionDraft;
 }
 
 export function AssistedInputManager() {
   const [textInput, setTextInput] = useState("");
   const [interpretation, setInterpretation] = useState<AssistedInputInterpretation | null>(null);
-  const [draftAction, setDraftAction] = useState<AssistedDraftAction | null>(null);
+  const [draftAction, setDraftAction] = useState<AssistedActionDraft | null>(null);
   const [feedback, setFeedback] = useState<FeedbackState>(null);
+  const [chargeAmountInputValue, setChargeAmountInputValue] = useState("");
 
   const draftValidation = useMemo(() => {
     if (!draftAction) {
@@ -94,6 +128,16 @@ export function AssistedInputManager() {
     const next = interpretAssistedInput(textInput);
     setInterpretation(next);
     setDraftAction(next.draftAction);
+    if (next.draftAction.actionType === "create_charge") {
+      const nextValue =
+        typeof next.draftAction.payload.amountInCents === "number" &&
+        Number.isFinite(next.draftAction.payload.amountInCents)
+          ? (next.draftAction.payload.amountInCents / 100).toFixed(2)
+          : "";
+      setChargeAmountInputValue(nextValue);
+    } else {
+      setChargeAmountInputValue("");
+    }
     setFeedback(null);
   }
 
@@ -108,24 +152,19 @@ export function AssistedInputManager() {
       return;
     }
 
-    const entityLabel =
-      result.entityType === "reminder"
-        ? "Lembrete"
-        : result.entityType === "charge"
-          ? "Cobrança"
-          : "Orçamento";
     setFeedback({
       type: "success",
-      message: `${entityLabel} criada com sucesso (${result.entityId.slice(0, 8)}).`,
+      message: `${result.message} (${result.entityId.slice(0, 8)}).`,
     });
   }
 
-  const payload = draftAction?.payload ?? {};
+  const payload = (draftAction?.payload ?? {}) as Record<string, unknown>;
   const amountInputValue =
     typeof payload.amountInCents === "number" && Number.isFinite(payload.amountInCents)
       ? (payload.amountInCents / 100).toFixed(2)
       : "";
-  const dueDateInputValue = normalizeDraftDueDate(payload.dueDate) ?? "";
+  const dueDateInputValue =
+    normalizeDraftDueDate(payload.dueDate ?? payload.validUntil) ?? "";
 
   return (
     <div className="space-y-6">
@@ -277,18 +316,16 @@ export function AssistedInputManager() {
                 <div className="grid gap-1">
                   <label className="text-xs text-muted-foreground">Valor (R$)</label>
                   <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={amountInputValue}
+                    type="text"
+                    inputMode="decimal"
+                    value={chargeAmountInputValue}
                     onChange={(event) => {
-                      const parsed = Number(event.target.value);
+                      const nextRawValue = event.target.value;
+                      const parsed = parseAmountInputToCents(nextRawValue);
+                      setChargeAmountInputValue(nextRawValue);
                       setDraftAction((current) =>
                         updateDraftPayload(current, {
-                          amountInCents:
-                            Number.isFinite(parsed) && parsed > 0
-                              ? Math.round(parsed * 100)
-                              : undefined,
+                          amountInCents: typeof parsed === "number" && parsed > 0 ? parsed : undefined,
                         })
                       );
                     }}
@@ -313,6 +350,84 @@ export function AssistedInputManager() {
             </div>
           ) : null}
 
+          {draftAction?.actionType === "create_quote" ? (
+            <div className="mt-5 space-y-3 rounded-xl border border-border bg-background p-4">
+              <p className="text-sm font-medium text-foreground">Ajuste os campos antes de confirmar</p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid gap-1 sm:col-span-2">
+                  <label className="text-xs text-muted-foreground">Cliente</label>
+                  <select
+                    value={typeof payload.clientId === "string" ? payload.clientId : ""}
+                    onChange={(event) =>
+                      setDraftAction((current) =>
+                        updateDraftPayload(current, {
+                          clientId: event.target.value.length > 0 ? event.target.value : undefined,
+                        })
+                      )
+                    }
+                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                  >
+                    <option value="">Selecione</option>
+                    {interpretation.availableClients.map((client) => (
+                      <option key={client.id} value={client.id}>
+                        {client.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="grid gap-1 sm:col-span-2">
+                  <label className="text-xs text-muted-foreground">Título/Contexto</label>
+                  <input
+                    value={typeof payload.title === "string" ? payload.title : ""}
+                    onChange={(event) =>
+                      setDraftAction((current) =>
+                        updateDraftPayload(current, { title: event.target.value })
+                      )
+                    }
+                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                  />
+                </div>
+
+                <div className="grid gap-1">
+                  <label className="text-xs text-muted-foreground">Valor estimado (R$)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={amountInputValue}
+                    onChange={(event) => {
+                      const parsed = Number(event.target.value);
+                      setDraftAction((current) =>
+                        updateDraftPayload(current, {
+                          amountInCents:
+                            Number.isFinite(parsed) && parsed >= 0
+                              ? Math.round(parsed * 100)
+                              : undefined,
+                        })
+                      );
+                    }}
+                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                  />
+                </div>
+
+                <div className="grid gap-1">
+                  <label className="text-xs text-muted-foreground">Validade</label>
+                  <input
+                    type="date"
+                    value={dueDateInputValue}
+                    onChange={(event) =>
+                      setDraftAction((current) =>
+                        updateDraftPayload(current, { validUntil: event.target.value || undefined })
+                      )
+                    }
+                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                  />
+                </div>
+              </div>
+            </div>
+          ) : null}
+
           {draftAction?.actionType === "suggest_template" ? (
             <p className="mt-5 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-3 text-sm text-muted-foreground">
               Sugestão identificada de uso de modelo. Nenhuma criação automática foi executada.
@@ -325,7 +440,10 @@ export function AssistedInputManager() {
             </p>
           ) : null}
 
-          {draftAction && (draftAction.actionType === "create_reminder" || draftAction.actionType === "create_charge") ? (
+          {draftAction &&
+          (draftAction.actionType === "create_reminder" ||
+            draftAction.actionType === "create_charge" ||
+            draftAction.actionType === "create_quote") ? (
             <div className="mt-5">
               <Button type="button" onClick={handleConfirm} disabled={!draftValidation.canConfirm}>
                 Confirmar criação
