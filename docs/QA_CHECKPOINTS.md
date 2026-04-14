@@ -1981,6 +1981,91 @@ Cypress full run:
   - drawer on mobile
   - timeline-driven dashboard / control tower
 
+## Technical Exception — Product Shell and Control Tower
+
+### Status
+Completed and validated.
+
+### Goal
+Introduce a cohesive product shell for Firmus before continuing the official public-growth roadmap blocks.
+
+This technical exception was intentionally executed outside the official block numbering to solve a structural product issue:
+the app had outgrown the previous top-navigation pattern and needed a more mature shell before continuing expansion.
+
+### Objective
+Turn Firmus from a collection of functional pages into a more cohesive operational product shell.
+
+### Delivered
+- Introduced a reusable application shell for the main product area.
+- Added desktop sidebar as the primary navigation pattern.
+- Added mobile top bar + drawer navigation.
+- Centralized primary navigation in a single registry.
+- Removed the previous overcrowded top-nav as the main structural navigation model.
+- Added a shared page-header pattern for internal routes.
+- Adapted major existing routes to the new shell without changing their purpose.
+- Preserved the current Portuguese product direction.
+- Strengthened the dashboard as a control-tower experience.
+- Added timeline-based recent activity reading for the dashboard.
+- Added real operational summary cards and upcoming-action visibility.
+- Preserved local persistence and existing module flows.
+
+### Functional result
+After this technical exception, Firmus now behaves more like a real product shell and less like a set of disconnected tools.
+
+The current shell now provides:
+- desktop sidebar navigation
+- mobile drawer navigation
+- centralized navigation source of truth
+- consistent page framing across main routes
+- dashboard with real operational visibility
+- recent activity based on persisted timeline events
+- upcoming actions derived from real stored data
+
+### Validation summary
+The following behavior was validated successfully:
+- app shell renders correctly
+- desktop sidebar navigation is visible and usable
+- mobile drawer opens and closes correctly
+- major routes remain reachable inside the shell
+- dashboard renders recent activity from real stored data
+- dashboard renders upcoming actions from real stored data
+- no route-level regression was observed in core product areas
+- no typecheck regression
+- no lint regression
+- build passed
+- full local Cypress run passed
+
+### Cypress result at validation time
+Full local run:
+- 12 specs
+- 36 tests
+- 36 passing
+- 0 failing
+
+Included relevant validation for:
+- shell rendering
+- mobile drawer behavior
+- recent timeline activity rendering
+- navigation reachability across core routes
+- all prior core product flows still passing
+
+### Product notes
+This exception should be treated as completed and stable enough for the MVP continuation path.
+
+However, before starting the official Block 17, the following visual polish items were intentionally left as next-step refinements:
+- standardize remaining mixed language labels to full PT-BR
+- improve sidebar contrast / legibility slightly
+- strengthen CTA/status emphasis in “Próximas ações”
+- improve visual hierarchy in “Atividades recentes”
+- review whether the small lower-left helper card should remain or be removed
+
+### Final QA decision
+Approved.
+
+### Continuation rule
+After visual polish refinements are applied, the project should return to the official roadmap flow starting from:
+- Block 17 — Premium Quote PDF
+
 
 ## QA Template for Future Blocks
 

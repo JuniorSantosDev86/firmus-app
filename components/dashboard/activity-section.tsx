@@ -10,6 +10,14 @@ const eventTypeLabel: Record<string, string> = {
   reminder_completed: "Lembrete concluído",
 };
 
+const entityTypeLabel: Record<TimelineEvent["entityType"], string> = {
+  client: "Cliente",
+  service: "Serviço",
+  quote: "Orçamento",
+  charge: "Cobrança",
+  reminder: "Lembrete",
+};
+
 function formatEventTimestamp(timestamp: number): string {
   return new Intl.DateTimeFormat("pt-BR", {
     dateStyle: "short",
@@ -36,12 +44,15 @@ export function ActivitySection({ events }: ActivitySectionProps) {
               <li
                 key={event.id}
                 className="flex flex-col gap-2 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
+                data-testid={`dashboard-activity-item-${event.id}`}
               >
                 <div>
                   <p className="text-sm font-medium text-[#0F172A]">
                     {eventTypeLabel[event.type] ?? "Atualização registrada"}
                   </p>
-                  <p className="text-sm text-[#64748B]">Entidade: {event.entityType}</p>
+                  <p className="text-sm text-[#64748B]">
+                    Entidade: {entityTypeLabel[event.entityType] ?? "Registro"}
+                  </p>
                 </div>
                 <span className="text-xs font-medium text-[#475569]">
                   {formatEventTimestamp(event.timestamp)}

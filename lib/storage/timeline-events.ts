@@ -67,6 +67,13 @@ export function getTimelineEvents(): TimelineEvent[] {
   }
 }
 
+export function getRecentTimelineEvents(limit = 6): TimelineEvent[] {
+  return getTimelineEvents()
+    .slice()
+    .sort((a, b) => b.timestamp - a.timestamp)
+    .slice(0, Math.max(0, limit));
+}
+
 export function addTimelineEvent(event: TimelineEvent): void {
   if (typeof window === "undefined") {
     return;

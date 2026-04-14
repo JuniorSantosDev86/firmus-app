@@ -508,50 +508,9 @@ Notes:
 
 ## Phase 3 — Public Growth Layer
 
-## Block 16 — Assisted Input as Real Operational Entry Point
-**Status:** Completed
-
-### Objective
-Transform Assisted Input into a real operational entry point for the product.
-
-### Outcome
-Completed successfully.
-
-The flow now behaves as:
-natural-language instruction -> interpretation -> structured draft -> validation -> centralized execution -> real entity creation -> timeline event emission
-
-### Scope delivered
-- Typed draft structure for assisted actions
-- Validation rules by intent/action type
-- Central execution router
-- Real creation for:
-  - quote
-  - charge
-  - reminder
-- Quote confirmation added to assisted-input flow
-- User edits preserved as final source of truth before creation
-- Reuse of existing business/storage logic
-- Reuse of existing timeline emission paths
-
-### Why this matters
-This block turns Assisted Input from a promising UX layer into a real product workflow.
-It is now a meaningful operational entrypoint rather than only a parser demo.
-
-### Exit criteria reached
-- real entity creation enabled
-- validation blocking working
-- quote flow included
-- timeline emission preserved
-- UI flow maintained
-- regression safety validated
-
----
-
-## Block 17 — Product Shell and Control Tower
-**Status:** Next
-
-### Objective
-Turn Firmus from a set of functional pages into a more cohesive product shell.
+### Technical Exception — Product Shell and Control Tower
+**Status:** Next  
+**Objective:** Turn Firmus from a set of functional pages into a more cohesive product shell without changing the official public-growth numbering.
 
 ### Main goals
 - Introduce a proper application shell
@@ -572,15 +531,64 @@ Turn Firmus from a set of functional pages into a more cohesive product shell.
 - recent activity and operational overview cards
 
 ### Expected outcome
-After Block 17, the app should feel structurally more mature, more navigable, and more aligned with the product thesis of an operational copilot.
+After this technical exception, the app should feel structurally more mature, more navigable, and more aligned with the product thesis of an operational copilot.
 
-### Out of scope for Block 17
+### Out of scope
 - backend
 - auth
 - multi-user support
 - external integrations
 - broad redesign of visual identity
 - major domain rewrites
+
+## Technical Exception — Product Shell and Control Tower
+**Status:** Completed
+
+### Objective
+Turn Firmus from a set of functional pages into a more cohesive product shell before continuing the official public-growth roadmap sequence.
+
+### Why this exception happened
+The previous top-navigation pattern had reached its structural limit.
+Before continuing outward-facing growth features, the app needed a stronger internal shell and clearer operational navigation.
+
+### Outcome
+Completed successfully.
+
+The app now includes:
+- desktop sidebar as primary navigation
+- mobile top bar + drawer navigation
+- centralized navigation registry
+- shared internal page-header structure
+- dashboard/control-tower behavior using real persisted data
+- recent activity based on timeline events
+- upcoming actions and operational summary from real module data
+
+### Why this matters
+This exception improves product cohesion, navigation clarity, and operational usability.
+It creates a stronger base for the next official roadmap steps without changing the public-growth numbering.
+
+### Exit criteria reached
+- shell implemented
+- sidebar implemented
+- mobile drawer implemented
+- centralized navigation implemented
+- dashboard upgraded to control-tower role
+- recent activity and upcoming actions connected to real data
+- regression safety validated
+
+### Follow-up before returning to official roadmap
+Apply visual polish refinements:
+- full PT-BR consistency
+- sidebar legibility tuning
+- stronger CTA/status emphasis in operational lists
+- better hierarchy in recent activity
+- review lower-left helper card usefulness
+
+### Return point after this exception
+Resume official roadmap at:
+- Block 17 — Premium Quote PDF
+
+---
 
 ### Block 17 — Premium Quote PDF
 **Status:** Pending  
@@ -624,7 +632,7 @@ After Block 17, the app should feel structurally more mature, more navigable, an
 
 ---
 
-## Phase 5 — Expansion and Monetization Readiness
+## Phase 5 — Expansion, Fiscal Compliance, and Monetization Readiness
 
 ### Block 26 — Improved Text Parsing
 **Status:** Pending  
@@ -634,53 +642,96 @@ After Block 17, the app should feel structurally more mature, more navigable, an
 **Status:** Pending  
 **Objective:** Prepare the system for future external channels.
 
-### Block 28 — Feature Flags and Plan Limits
+### Block 28 — NFSe Foundation
+**Status:** Pending  
+**Objective:** Prepare the minimum fiscal layer required for service invoice issuance.
+
+### Expected scope
+- fiscal profile fields for issuer
+- minimum customer/taker fiscal requirements
+- service-to-tax mapping needed for issuance
+- invoice status model
+- link between quotes / charges / service execution and invoice readiness
+- validation rules before attempting issuance
+- safe issuer-side configuration UI
+
+### Out of scope
+- full accounting module
+- bank reconciliation
+- advanced tax engine
+- multi-city fallback abstraction beyond the chosen provider strategy
+- cancellation and substitution edge cases beyond MVP needs
+
+---
+
+### Block 29 — NFSe Issuance Integration
+**Status:** Pending  
+**Objective:** Emit NFS-e through the selected official-compatible integration path.
+
+### Expected scope
+- integration adapter for the chosen NFS-e path/provider
+- issuance request flow
+- response/status persistence
+- protocol / receipt / invoice identifiers
+- error handling and retry-safe states
+- basic issuance history visibility
+
+### Out of scope
+- broad fiscal BI
+- complex reconciliation workflows
+- municipality-specific deep customizations outside the chosen MVP strategy
+
+---
+
+### Block 30 — DAS Companion and Official Channel Handoff
+**Status:** Pending  
+**Objective:** Help the MEI stay compliant with DAS obligations without pretending to replace the official payment channels.
+
+### Expected scope
+- monthly DAS reminder/status layer
+- due-date visibility inside Firmus
+- guidance for official payment flow
+- handoff/deep-link strategy to official channels where applicable
+- support content for PIX / debit automatic / consolidated DAS usage
+- manual payment confirmation / bookkeeping marker inside the product
+
+### Out of scope
+- native DAS payment processing inside Firmus
+- unofficial scraping-based automation
+- dependency on brittle browser automation against government portals
+- pretending there is a stable public payment API if none is adopted in the MVP strategy
+
+---
+
+### Block 31 — Feature Flags and Plan Limits
 **Status:** Pending  
 **Objective:** Prepare technical support for Free / Plus / Pro plans.
 
-### Block 29 — Improved Onboarding
+### Block 32 — Improved Onboarding
 **Status:** Pending  
 **Objective:** Make the first user experience faster and more guided.
 
-### Block 30 — MVP Hardening
+### Block 33 — MVP Hardening
 **Status:** Pending  
 **Objective:** Stabilize the expanded MVP before beta usage.
 
 ---
 
-# Milestones
-
-## Milestone 1 — 50 Hours
-Core transactional foundation validated.
-
-## Milestone 2 — 75 Hours
-Assisted operations layer validated.
-
-## Milestone 3 — 100 Hours
-Public-facing growth layer validated.
-
-## Milestone 4 — 125 Hours
-Initial automation and intelligence validated.
-
-## Milestone 5 — 150 Hours
-Expanded MVP ready for structured beta.
-
----
-
 # Current Status
 
-**Current active block:** Block 15 — Assisted Charge Suggestions completed and approved  
-**Current phase:** Transition from Phase 2 — Assisted Operations to Phase 3 — Public Growth Layer  
+**Current technical exception:** Product Shell and Control Tower  
+**Current official roadmap block:** Block 17 — Premium Quote PDF  
 **Overall project status:** In progress
 
 - Block 12 — Templates completed and approved.
 - Block 13 — Weekly Summary completed and approved.
 - Block 14 — Text-Based Assisted Input completed and approved.
 - Block 15 — Assisted Charge Suggestions completed and approved.
+- Block 16 — Assisted Input as Real Operational Entry Point completed and approved.
 - Assisted operations layer is now functionally complete for the current roadmap slice.
-- Final full Cypress run passed with all specs green.
-- The next implementation target is Block 16 — Public Quote Page.
+- The next official implementation target, after the shell exception, is Block 17 — Premium Quote PDF.
 
+---
 
 # Notes
 
@@ -688,4 +739,6 @@ Expanded MVP ready for structured beta.
 - Each block should only be marked as completed after QA validation.
 - Scope discipline is mandatory.
 - The product must evolve in layers, not through uncontrolled feature accumulation.
-- After Block 10, the project completed a controlled UI translation/branding pass and a safe deletion + Cypress stabilization pass before continuing.
+- The shell work is an intentional technical exception outside the official growth-layer numbering.
+- NFSe is now explicitly inside the MVP roadmap as part of fiscal compliance readiness.
+- DAS is included as a compliance-assistance workflow, not as a native payment rail.
