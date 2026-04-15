@@ -1,4 +1,44 @@
 describe("Quotes", () => {
+  function quoteItemByIndex(index: number) {
+    return cy.get("form").find(".firmus-subpanel").eq(index);
+  }
+
+  function fillQuoteItemByIndex(index: number, values: {
+    description?: string;
+    quantity: string;
+    unitPrice?: string;
+    serviceName?: string;
+  }): void {
+    if (values.serviceName) {
+      quoteItemByIndex(index)
+        .contains("label", "Serviço (opcional)")
+        .next("select")
+        .select(values.serviceName);
+    }
+
+    if (values.description !== undefined) {
+      quoteItemByIndex(index)
+        .contains("label", "Descrição")
+        .next("input")
+        .clear()
+        .type(values.description);
+    }
+
+    quoteItemByIndex(index)
+      .contains("label", "Quantidade")
+      .next("input")
+      .clear()
+      .type(values.quantity);
+
+    if (values.unitPrice !== undefined) {
+      quoteItemByIndex(index)
+        .contains("label", "Preço unitário")
+        .next("input")
+        .clear()
+        .type(values.unitPrice);
+    }
+  }
+
   it("creates, edits, and deletes a quote with totals and service reuse", () => {
     cy.visit("/");
     cy.clearFirmusStorage();
@@ -20,32 +60,28 @@ describe("Quotes", () => {
 
     cy.get("#clientId").find("option").contains("Acme Health");
 
-    cy.contains("label", "Descrição")
-      .first()
-      .parents("div.rounded-xl")
-      .first()
-      .within(() => {
-        cy.get("input").eq(0).type("Sessão estratégica");
-        cy.get("input").eq(1).clear().type("2");
-        cy.get("input").eq(2).clear().type("100.00");
-        cy.contains(/R\$\s*200,00/).should("be.visible");
-      });
+    fillQuoteItemByIndex(0, {
+      description: "Sessão estratégica",
+      quantity: "2",
+      unitPrice: "100.00",
+    });
+    cy.contains(/R\$\s*200,00/).should("be.visible");
 
     cy.contains("button", "Adicionar item").click();
 
-    cy.contains("h3", "Itens do orçamento")
-      .parents("div.space-y-3")
-      .first()
-      .find("div.rounded-xl")
-      .eq(1)
-      .first()
-      .within(() => {
-        cy.get("select").select("Pacote SEO");
-        cy.get("input").eq(0).should("have.value", "Otimização mensal");
-        cy.get("input").eq(1).clear().type("3");
-        cy.get("input").eq(2).should("have.value", "50.00");
-        cy.contains(/R\$\s*150,00/).should("be.visible");
-      });
+    fillQuoteItemByIndex(1, {
+      serviceName: "Pacote SEO",
+      quantity: "3",
+    });
+    quoteItemByIndex(1)
+      .contains("label", "Descrição")
+      .next("input")
+      .should("have.value", "Otimização mensal");
+    quoteItemByIndex(1)
+      .contains("label", "Preço unitário")
+      .next("input")
+      .should("have.value", "50.00");
+    cy.contains(/R\$\s*150,00/).should("be.visible");
 
     cy.get("#discount").clear().type("25.00");
 

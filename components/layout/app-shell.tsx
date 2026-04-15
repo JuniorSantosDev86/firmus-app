@@ -16,6 +16,11 @@ type AppShellProps = {
 export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isPublicQuoteSurface = pathname.startsWith("/public/quotes/");
+
+  if (isPublicQuoteSurface) {
+    return <div className="min-h-screen bg-[#F2F6FA]">{children}</div>;
+  }
 
   return (
     <div className="min-h-screen bg-[#F2F6FA]" data-testid="app-shell">

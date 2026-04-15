@@ -1,4 +1,14 @@
 describe("Clients", () => {
+  function fillQuoteItemByIndex(index: number, values: {
+    description: string;
+    quantity: string;
+    unitPrice: string;
+  }): void {
+    cy.contains("label", "Descrição").eq(index).parent().find("input").clear().type(values.description);
+    cy.contains("label", "Quantidade").eq(index).parent().find("input").clear().type(values.quantity);
+    cy.contains("label", "Preço unitário").eq(index).parent().find("input").clear().type(values.unitPrice);
+  }
+
   it("creates, edits, and deletes a client without related data", () => {
     cy.visit("/");
     cy.clearFirmusStorage();
@@ -53,15 +63,11 @@ describe("Clients", () => {
 
     cy.visit("/quotes");
     cy.get("#clientId").find("option").contains("Cliente Bloqueado");
-    cy.contains("label", "Descrição")
-      .first()
-      .parents("div.rounded-xl")
-      .first()
-      .within(() => {
-        cy.get("input").eq(0).type("Escopo inicial");
-        cy.get("input").eq(1).clear().type("1");
-        cy.get("input").eq(2).clear().type("150.00");
-      });
+    fillQuoteItemByIndex(0, {
+      description: "Escopo inicial",
+      quantity: "1",
+      unitPrice: "150.00",
+    });
     cy.contains("button", "Criar orçamento").click();
 
     cy.visit("/charges");

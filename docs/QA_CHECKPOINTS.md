@@ -2067,6 +2067,34 @@ After visual polish refinements are applied, the project should return to the of
 - Block 17 — Premium Quote PDF
 
 
+## Block 17 — Premium Quote PDF
+Status: Approved
+
+### Scope delivered
+- Implemented the premium printable/PDF quote surface at `/public/quotes/[publicId]/pdf`
+- Reused the same public quote rendering foundation instead of creating a parallel rendering system
+- Added print-oriented document behavior and premium document presentation
+- Kept routes thin and avoided premature backend complexity
+
+### Validation performed
+- PDF route rendered correctly with the same canonical quote data used by the public route
+- Page-only controls were absent on the PDF-oriented surface where appropriate
+- Money fidelity was validated across:
+  - line items
+  - subtotal
+  - discount
+  - final total
+- Public document remained isolated from the internal shell
+- Invalid id handling remained safe
+- Optional missing fields rendered without breaking the document
+- Final full Cypress run passed with all specs green:
+  - 13 specs
+  - 40 tests
+  - 0 failures
+
+### QA verdict
+Approved. Block 17 is complete, validated, and safe. The premium public quote/PDF layer is now part of the validated product surface.
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:

@@ -591,8 +591,21 @@ Resume official roadmap at:
 ---
 
 ### Block 17 — Premium Quote PDF
-**Status:** Pending  
+**Status:** Completed  
 **Objective:** Improve perceived professionalism and sharing quality.
+
+**Delivered:**
+- premium public quote document
+- dedicated `/public/quotes/[publicId]/pdf` route
+- shared quote document presenter
+- shared premium quote rendering component
+- isolated public shell behavior for quote surfaces
+- print-oriented document styling
+- canonical totals rendering from existing quote data
+- Cypress coverage for the public quote and PDF surfaces
+
+**Validation status:** Approved
+
 
 ### Block 18 — Quote Approval Actions
 **Status:** Pending  
@@ -717,20 +730,9 @@ Resume official roadmap at:
 
 ---
 
-# Current Status
-
-**Current technical exception:** Product Shell and Control Tower  
-**Current official roadmap block:** Block 17 — Premium Quote PDF  
+**Current official roadmap block:** Block 18 — Quote Approval Actions  
+**Current technical exception:** Product Shell and Control Tower completed  
 **Overall project status:** In progress
-
-- Block 12 — Templates completed and approved.
-- Block 13 — Weekly Summary completed and approved.
-- Block 14 — Text-Based Assisted Input completed and approved.
-- Block 15 — Assisted Charge Suggestions completed and approved.
-- Block 16 — Assisted Input as Real Operational Entry Point completed and approved.
-- Assisted operations layer is now functionally complete for the current roadmap slice.
-- The next official implementation target, after the shell exception, is Block 17 — Premium Quote PDF.
-
 ---
 
 # Notes

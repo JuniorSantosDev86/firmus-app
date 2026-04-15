@@ -167,3 +167,25 @@
     @apply border border-[#BAE6FD] bg-[#ECFEFF] text-[#0F766E];
   }
 }
+
+@media print {
+  html,
+  body {
+    background: #ffffff !important;
+  }
+
+  .premium-quote-sheet {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: #ffffff;
+  }
+
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+}
