@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { PublicCtaRow } from "@/components/public/public-cta-row";
+import { PublicStatusCard } from "@/components/public/public-status-card";
+import { PublicSurfaceShell } from "@/components/public/public-surface-shell";
 import { PublicQuoteActions } from "@/components/quotes/public-quote-actions";
 import { PublicQuoteDocument } from "@/components/quotes/public-quote-document";
 import { approveQuoteByPublicId } from "@/lib/services/quote-approval-service";
@@ -56,29 +59,25 @@ export function PublicQuotePage({ publicId, mode }: PublicQuotePageProps) {
 
   if (snapshot === undefined) {
     return (
-      <main className="mx-auto w-full max-w-[980px] px-4 py-8">
-        <section className="rounded-2xl border border-[#D9E3EE] bg-white p-6">
-          <p className="text-sm text-[#64748B]">Carregando orçamento...</p>
-        </section>
-      </main>
+      <PublicSurfaceShell width="quote">
+        <PublicStatusCard description="Carregando orçamento..." />
+      </PublicSurfaceShell>
     );
   }
 
   if (snapshot === null) {
     return (
-      <main className="mx-auto w-full max-w-[980px] px-4 py-8" data-testid="public-quote-not-found">
-        <section className="rounded-2xl border border-[#D9E3EE] bg-white p-6">
-          <h1 className="text-xl font-semibold text-[#0F172A]">Orçamento não encontrado</h1>
-          <p className="mt-2 text-sm text-[#64748B]">
-            Verifique o link público informado e tente novamente.
-          </p>
-        </section>
-      </main>
+      <PublicSurfaceShell width="quote" testId="public-quote-not-found">
+        <PublicStatusCard
+          title="Orçamento não encontrado"
+          description="Verifique o link público informado e tente novamente."
+        />
+      </PublicSurfaceShell>
     );
   }
 
   return (
-    <main className="mx-auto w-full max-w-[980px] space-y-5 px-4 py-8 print:max-w-none print:space-y-0 print:px-0 print:py-0">
+    <PublicSurfaceShell width="quote" className="firmus-public-stack print:space-y-0" printBleed>
       {mode === "page" ? (
         <>
           <PublicQuoteActions
@@ -89,25 +88,28 @@ export function PublicQuotePage({ publicId, mode }: PublicQuotePageProps) {
             feedbackMessage={approvalFeedback}
             onApprove={handleApprove}
           />
-          <div className="flex flex-wrap items-center justify-end gap-2 print:hidden">
+          <PublicCtaRow
+            title="Compartilhamento e impressão"
+            description="Envie a versão PDF ou imprima este documento com o mesmo padrão visual."
+          >
             <Link
               href={`/public/quotes/${snapshot.publicId}/pdf`}
-              className="inline-flex h-9 items-center rounded-lg border border-[#CBD5E1] px-3 text-sm font-medium text-[#334155] hover:bg-[#F8FAFC]"
+              className="inline-flex h-9 items-center rounded-lg border border-[#CBD5E1] px-3 text-sm font-medium text-[#334155] transition-colors hover:bg-[#F8FAFC]"
             >
               Versão PDF
             </Link>
             <button
               type="button"
               onClick={() => window.print()}
-              className="inline-flex h-9 items-center rounded-lg bg-[#0F766E] px-3 text-sm font-medium text-white hover:bg-[#0D6C65]"
+              className="inline-flex h-9 items-center rounded-lg bg-[#0F766E] px-3 text-sm font-medium text-white transition-colors hover:bg-[#0D6C65]"
             >
               Imprimir
             </button>
-          </div>
+          </PublicCtaRow>
         </>
       ) : null}
 
       <PublicQuoteDocument snapshot={snapshot} />
-    </main>
+    </PublicSurfaceShell>
   );
 }

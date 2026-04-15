@@ -648,8 +648,23 @@ Resume official roadmap at:
 **Validation status:** Approved
 
 ### Block 20 — Public Touchpoint Polish
-**Status:** Pending  
-**Objective:** Refine the public-facing growth surfaces for stronger trust, consistency, and presentation quality.
+**Status:** Completed  
+**Objective:** Improve visual quality and consistency across public-facing outputs.
+
+**Delivered:**
+- shared public surface shell
+- shared public status card
+- shared public CTA row
+- consolidated public visual language for:
+  - public quote page
+  - premium quote PDF
+  - public quote approval layer
+  - public bio page
+- unified public spacing, card hierarchy, heading rhythm, and fallback treatment
+- improved public approval-state presentation
+- improved public loading and unavailable states
+- preserved public-shell isolation
+- Cypress validation over the polished public surfaces
 
 ---
 
@@ -765,7 +780,7 @@ Resume official roadmap at:
 # Current Status
 
 **Current technical exception:** Product Shell and Control Tower completed  
-**Current official roadmap block:** Block 20 — Public Touchpoint Polish  
+**Current official roadmap block:** Block 21 — Automation Rules Foundation  
 **Overall project status:** In progress
 
 - Block 12 — Templates completed and approved.
@@ -776,9 +791,10 @@ Resume official roadmap at:
 - Block 17 — Premium Quote PDF completed and approved.
 - Block 18 — Quote Approval Actions completed and approved.
 - Block 19 — Basic Bio Link completed and approved.
-- Assisted operations layer is now functionally complete for the current roadmap slice.
-- The public-growth layer has now advanced through the first professional public identity milestone.
-- The next official implementation target is Block 20 — Public Touchpoint Polish.
+- Block 20 — Public Touchpoint Polish completed and approved.
+- Assisted operations layer is functionally complete for the current roadmap slice.
+- The public-growth layer is now completed through its current planned polish milestone.
+- The next official implementation target is Block 21 — Automation Rules Foundation.
 
 ---
 

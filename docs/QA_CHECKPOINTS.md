@@ -2156,6 +2156,38 @@ Notes:
 - No backend, auth, analytics, SEO tooling, or multi-page public website was introduced.
 - The block stayed aligned with the public-growth layer and reused the public-shell pattern established in previous public surfaces.
 
+### Block 20 — Public Touchpoint Polish
+Status: Completed and approved.
+
+Delivered:
+- shared public surface shell
+- shared public status card
+- shared public CTA row
+- consolidated public visual language for:
+  - public quote page
+  - premium quote PDF
+  - public quote approval layer
+  - public bio page
+- unified public spacing, card hierarchy, heading rhythm, and fallback treatment
+- improved public approval-state presentation
+- improved public loading and unavailable states
+- preserved public-shell isolation
+- Cypress validation over the polished public surfaces
+
+Validation:
+- manual QA approved
+- Cypress coverage remained green after the polish pass
+- included in final all-green full suite run
+- `npm run lint` passed
+- `npm run build` passed
+
+Notes:
+- Block 20 was implemented as a public-surface consolidation pass, not as a domain-expansion block.
+- No new business rules, approval logic, persistence layer, backend infrastructure, or CMS/site-builder behavior were introduced.
+- Quote page remained document-centered.
+- PDF route remained document-only.
+- Public bio page remained minimal and professional.
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:

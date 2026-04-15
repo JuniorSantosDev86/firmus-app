@@ -54,18 +54,16 @@ function displayValue(value: string | null): string {
 export function PublicQuoteDocument({ snapshot, className }: PublicQuoteDocumentProps) {
   return (
     <article className={className} data-testid="premium-quote-document">
-      <div className="premium-quote-sheet mx-auto max-w-[960px] rounded-2xl border border-[#DDE7F2] bg-white p-6 shadow-[0_30px_80px_-60px_rgba(15,23,42,0.6)] md:p-9 print:max-w-none print:rounded-none print:border-0 print:p-0 print:shadow-none">
+      <div className="premium-quote-sheet firmus-public-card mx-auto max-w-[960px] p-6 md:p-9 print:max-w-none print:rounded-none print:border-0 print:p-0 print:shadow-none">
         <header className="border-b border-[#E2E8F0] pb-6">
           <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
             <div className="space-y-2">
-              <p className="text-xs font-semibold tracking-[0.14em] text-[#0F766E] uppercase">
-                Proposta comercial
-              </p>
-              <h1 className="text-3xl font-semibold tracking-tight text-[#0F172A]">Orçamento</h1>
+              <p className="firmus-public-eyebrow">Proposta comercial</p>
+              <h1 className="firmus-public-title">Orçamento</h1>
               <p className="text-sm text-[#64748B]">Documento para apresentação e aprovação comercial.</p>
             </div>
 
-            <div className="rounded-xl border border-[#DAE5EF] bg-[#F8FBFF] px-4 py-3 text-sm text-[#334155]">
+            <div className="firmus-public-subcard px-4 py-3 text-sm text-[#334155]">
               <p><span className="font-medium">Número:</span> {quoteCode(snapshot.quote.id)}</p>
               <p><span className="font-medium">Emissão:</span> {formatDate(snapshot.quote.issueDate)}</p>
               <p><span className="font-medium">Validade:</span> {formatDate(snapshot.quote.validUntil)}</p>
@@ -78,8 +76,8 @@ export function PublicQuoteDocument({ snapshot, className }: PublicQuoteDocument
         </header>
 
         <section className="grid gap-4 border-b border-[#E2E8F0] py-6 md:grid-cols-2">
-          <div className="rounded-xl border border-[#E2E8F0] bg-[#FCFEFF] p-4">
-            <p className="text-xs font-semibold tracking-[0.12em] text-[#64748B] uppercase">Prestador</p>
+          <div className="firmus-public-subcard p-4">
+            <p className="firmus-public-section-title">Prestador</p>
             <p className="mt-2 text-lg font-semibold text-[#0F172A]">{snapshot.business.businessName}</p>
             {snapshot.business.professionalName ? (
               <p className="text-sm text-[#334155]">Responsável: {snapshot.business.professionalName}</p>
@@ -89,8 +87,8 @@ export function PublicQuoteDocument({ snapshot, className }: PublicQuoteDocument
             <p className="text-sm text-[#475569]">WhatsApp: {displayValue(snapshot.business.whatsapp)}</p>
           </div>
 
-          <div className="rounded-xl border border-[#E2E8F0] bg-[#FCFEFF] p-4">
-            <p className="text-xs font-semibold tracking-[0.12em] text-[#64748B] uppercase">Cliente</p>
+          <div className="firmus-public-subcard p-4">
+            <p className="firmus-public-section-title">Cliente</p>
             <p className="mt-2 text-lg font-semibold text-[#0F172A]">{snapshot.client.name}</p>
             <p className="mt-2 text-sm text-[#475569]">Cidade: {displayValue(snapshot.client.city)}</p>
             <p className="text-sm text-[#475569]">WhatsApp: {displayValue(snapshot.client.whatsapp)}</p>
@@ -99,7 +97,7 @@ export function PublicQuoteDocument({ snapshot, className }: PublicQuoteDocument
         </section>
 
         <section className="py-6">
-          <h2 className="text-sm font-semibold tracking-[0.12em] text-[#64748B] uppercase">Itens do orçamento</h2>
+          <h2 className="firmus-public-section-title">Itens do orçamento</h2>
           <div className="mt-4 overflow-hidden rounded-xl border border-[#DCE6F0]">
             <table className="w-full border-collapse text-sm">
               <thead>
@@ -111,14 +109,26 @@ export function PublicQuoteDocument({ snapshot, className }: PublicQuoteDocument
                 </tr>
               </thead>
               <tbody>
-                {snapshot.items.map((item) => (
-                  <tr key={item.id} className="border-t border-[#E2E8F0]">
-                    <td className="px-4 py-3 text-[#0F172A]">{item.description}</td>
-                    <td className="px-4 py-3 text-right text-[#334155]">{formatQuantity(item.quantity)}</td>
-                    <td className="px-4 py-3 text-right text-[#334155]">{formatMoneyFromCents(item.unitPriceInCents)}</td>
-                    <td className="px-4 py-3 text-right font-medium text-[#0F172A]">{formatMoneyFromCents(item.lineTotalInCents)}</td>
+                {snapshot.items.length > 0 ? (
+                  snapshot.items.map((item) => (
+                    <tr key={item.id} className="border-t border-[#E2E8F0]">
+                      <td className="px-4 py-3 text-[#0F172A]">{item.description}</td>
+                      <td className="px-4 py-3 text-right text-[#334155]">{formatQuantity(item.quantity)}</td>
+                      <td className="px-4 py-3 text-right text-[#334155]">
+                        {formatMoneyFromCents(item.unitPriceInCents)}
+                      </td>
+                      <td className="px-4 py-3 text-right font-medium text-[#0F172A]">
+                        {formatMoneyFromCents(item.lineTotalInCents)}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr className="border-t border-[#E2E8F0]">
+                    <td colSpan={4} className="px-4 py-5 text-center text-sm text-[#64748B]">
+                      Nenhum item foi incluído neste orçamento.
+                    </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

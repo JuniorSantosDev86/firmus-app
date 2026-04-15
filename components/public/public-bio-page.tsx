@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { PublicStatusCard } from "@/components/public/public-status-card";
+import { PublicSurfaceShell } from "@/components/public/public-surface-shell";
 import {
   getPublicBioSnapshot,
   type PublicBioSnapshot,
@@ -25,7 +27,11 @@ function BioIdentity({ snapshot }: { snapshot: PublicBioSnapshot }) {
   const brandInitials = getInitials(snapshot.businessName);
 
   return (
-    <section className="space-y-4 rounded-[24px] border border-[#D9E3EE] bg-white p-7 shadow-[0_24px_50px_-36px_rgba(15,23,42,0.44)]">
+    <section className="firmus-public-card space-y-4 p-7">
+      <div className="space-y-1">
+        <p className="firmus-public-eyebrow">Perfil público</p>
+        <p className="text-sm text-[#64748B]">Apresentação profissional para compartilhamento com clientes.</p>
+      </div>
       <div className="flex items-start gap-4">
         {snapshot.logoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -42,9 +48,7 @@ function BioIdentity({ snapshot }: { snapshot: PublicBioSnapshot }) {
         )}
 
         <div className="min-w-0 space-y-1">
-          <h1 className="text-[30px] leading-tight font-semibold tracking-tight text-[#0F172A]">
-            {snapshot.businessName}
-          </h1>
+          <h1 className="firmus-public-title">{snapshot.businessName}</h1>
           {snapshot.professionalName ? (
             <p className="text-sm font-medium text-[#334155]">{snapshot.professionalName}</p>
           ) : null}
@@ -63,10 +67,8 @@ function BioIdentity({ snapshot }: { snapshot: PublicBioSnapshot }) {
 
 function BioContact({ snapshot }: { snapshot: PublicBioSnapshot }) {
   return (
-    <section className="space-y-3 rounded-[20px] border border-[#D9E3EE] bg-white p-6">
-      <h2 className="text-sm font-semibold tracking-[0.12em] text-[#64748B] uppercase">
-        Contato profissional
-      </h2>
+    <section className="firmus-public-card space-y-3 p-6">
+      <h2 className="firmus-public-section-title">Contato profissional</h2>
 
       {snapshot.whatsapp ? (
         <div className="space-y-3">
@@ -103,31 +105,27 @@ export function PublicBioPage() {
 
   if (snapshot === undefined) {
     return (
-      <main className="mx-auto w-full max-w-[760px] px-4 py-8" data-testid="public-bio-loading">
-        <section className="rounded-2xl border border-[#D9E3EE] bg-white p-6">
-          <p className="text-sm text-[#64748B]">Carregando página pública...</p>
-        </section>
-      </main>
+      <PublicSurfaceShell width="bio" testId="public-bio-loading">
+        <PublicStatusCard description="Carregando página pública..." />
+      </PublicSurfaceShell>
     );
   }
 
   if (snapshot === null) {
     return (
-      <main className="mx-auto w-full max-w-[760px] px-4 py-8" data-testid="public-bio-not-ready">
-        <section className="rounded-2xl border border-[#D9E3EE] bg-white p-6">
-          <h1 className="text-xl font-semibold text-[#0F172A]">Perfil público indisponível</h1>
-          <p className="mt-2 text-sm text-[#64748B]">
-            Configure o Perfil da empresa para publicar esta página.
-          </p>
-        </section>
-      </main>
+      <PublicSurfaceShell width="bio" testId="public-bio-not-ready">
+        <PublicStatusCard
+          title="Perfil público indisponível"
+          description="Configure o Perfil da empresa para publicar esta página."
+        />
+      </PublicSurfaceShell>
     );
   }
 
   return (
-    <main className="mx-auto w-full max-w-[760px] space-y-5 px-4 py-8" data-testid="public-bio-page">
+    <PublicSurfaceShell width="bio" className="firmus-public-stack" testId="public-bio-page">
       <BioIdentity snapshot={snapshot} />
       <BioContact snapshot={snapshot} />
-    </main>
+    </PublicSurfaceShell>
   );
 }
