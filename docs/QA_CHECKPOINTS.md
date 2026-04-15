@@ -2126,6 +2126,36 @@ Notes:
 - Approval emits `quote_approved` only on a real approval transition.
 - Canonical monetary logic remained unchanged.
 
+### Block 19 — Basic Bio Link
+Status: Completed and approved.
+
+Delivered:
+- public bio presenter
+- thin public bio route
+- public bio page
+- Business Profile as source of truth for the public page
+- public-shell isolation for `/public/bio`
+- internal entry point in Business Profile:
+  - Abrir página pública
+- WhatsApp CTA derived from stored business profile data when available
+- Cypress coverage for:
+  - public bio rendering
+  - missing optional fields
+  - internal entry point visibility
+
+Validation:
+- manual QA approved
+- Cypress coverage added and approved
+- included in final all-green full suite run
+- `npm run lint` passed
+- `npm run build` passed
+
+Notes:
+- The public bio page was implemented as a minimal professional identity surface, not as a site builder or CMS.
+- Business Profile remained the only source of truth.
+- No backend, auth, analytics, SEO tooling, or multi-page public website was introduced.
+- The block stayed aligned with the public-growth layer and reused the public-shell pattern established in previous public surfaces.
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:

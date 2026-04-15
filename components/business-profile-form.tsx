@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -93,10 +94,19 @@ export function BusinessProfileForm() {
   return (
     <div className="space-y-6">
       <section className="firmus-panel">
-        <div className="mb-5">
-          <h2 className="text-lg font-semibold tracking-tight text-foreground">
-            Perfil atual
-          </h2>
+        <div className="mb-5 flex items-start justify-between gap-3">
+          <h2 className="text-lg font-semibold tracking-tight text-foreground">Perfil atual</h2>
+          <Link
+            href="/public/bio"
+            target="_blank"
+            rel="noreferrer"
+            data-testid="open-public-bio-link"
+            className="inline-flex h-9 items-center rounded-lg border border-[#B6E9E8] bg-[#E9FAFA] px-3 text-sm font-semibold text-[#0B6D6D] transition-colors hover:bg-[#DDF4F3]"
+          >
+            Abrir página pública
+          </Link>
+        </div>
+        <div>
           {!hasProfile ? (
             <p className="mt-2 text-sm text-muted-foreground">
               Nenhum perfil da empresa salvo ainda.

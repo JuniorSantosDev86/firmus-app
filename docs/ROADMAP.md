@@ -628,16 +628,28 @@ Resume official roadmap at:
 **Validation status:** Approved
 
 ### Block 19 — Basic Bio Link
-**Status:** Pending  
+**Status:** Completed  
 **Objective:** Create the first professional public identity page.
 
-### Block 19 — Basic Bio Link
-**Status:** Pending  
-**Objective:** Create the first professional public identity page.
+**Delivered:**
+- public bio presenter
+- thin public bio route
+- public bio page
+- Business Profile as source of truth for the public page
+- public-shell isolation for `/public/bio`
+- internal entry point in Business Profile:
+  - Abrir página pública
+- WhatsApp CTA derived from stored business profile data when available
+- Cypress coverage for:
+  - public bio rendering
+  - missing optional fields
+  - internal entry point visibility
+
+**Validation status:** Approved
 
 ### Block 20 — Public Touchpoint Polish
 **Status:** Pending  
-**Objective:** Improve visual quality and consistency across public-facing outputs.
+**Objective:** Refine the public-facing growth surfaces for stronger trust, consistency, and presentation quality.
 
 ---
 
@@ -750,10 +762,10 @@ Resume official roadmap at:
 
 ---
 
-### Current Status
+# Current Status
 
 **Current technical exception:** Product Shell and Control Tower completed  
-**Current official roadmap block:** Block 19 — Basic Bio Link  
+**Current official roadmap block:** Block 20 — Public Touchpoint Polish  
 **Overall project status:** In progress
 
 - Block 12 — Templates completed and approved.
@@ -763,21 +775,12 @@ Resume official roadmap at:
 - Block 16 — Assisted Input as Real Operational Entry Point completed and approved.
 - Block 17 — Premium Quote PDF completed and approved.
 - Block 18 — Quote Approval Actions completed and approved.
+- Block 19 — Basic Bio Link completed and approved.
 - Assisted operations layer is now functionally complete for the current roadmap slice.
-- The public-growth layer has now advanced through the quote approval milestone.
-- The next official implementation target is Block 19 — Basic Bio Link.
+- The public-growth layer has now advanced through the first professional public identity milestone.
+- The next official implementation target is Block 20 — Public Touchpoint Polish.
 
 ---
-
-# Notes
-
-- This roadmap is a living document.
-- Each block should only be marked as completed after QA validation.
-- Scope discipline is mandatory.
-- The product must evolve in layers, not through uncontrolled feature accumulation.
-- The shell work is an intentional technical exception outside the official growth-layer numbering.
-- NFSe is now explicitly inside the MVP roadmap as part of fiscal compliance readiness.
-- DAS is included as a compliance-assistance workflow, not as a native payment rail.
 
 # Notes
 
