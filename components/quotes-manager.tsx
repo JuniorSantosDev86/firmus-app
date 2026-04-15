@@ -401,6 +401,26 @@ export function QuotesManager() {
                         Emissão {quote.issueDate}
                         {quote.validUntil ? ` • Válido até ${quote.validUntil}` : ""}
                       </p>
+                      <div className="mt-3 flex flex-wrap items-center gap-2">
+                        <Link
+                          href={`/public/quotes/${quote.id}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex h-7 items-center rounded-md border border-[#D4DEE8] bg-white px-2.5 text-xs font-medium text-[#334155] hover:bg-[#F8FAFC]"
+                          data-testid={`quote-open-public-${quote.id}`}
+                        >
+                          Abrir página pública
+                        </Link>
+                        <Link
+                          href={`/public/quotes/${quote.id}/pdf`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex h-7 items-center rounded-md border border-[#D4DEE8] bg-white px-2.5 text-xs font-medium text-[#334155] hover:bg-[#F8FAFC]"
+                          data-testid={`quote-open-premium-pdf-${quote.id}`}
+                        >
+                          Abrir PDF premium
+                        </Link>
+                      </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <Button

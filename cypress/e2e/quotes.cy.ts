@@ -95,6 +95,12 @@ describe("Quotes", () => {
     cy.contains('[data-testid^="quote-item-"]', "Acme Health")
       .should("contain.text", "325,00")
       .within(() => {
+        cy.get('[data-testid^="quote-open-public-"]')
+          .should("have.attr", "href")
+          .and("match", /^\/public\/quotes\/[^/]+$/);
+        cy.get('[data-testid^="quote-open-premium-pdf-"]')
+          .should("have.attr", "href")
+          .and("match", /^\/public\/quotes\/[^/]+\/pdf$/);
         cy.get('[data-testid^="quote-edit-"]').click();
       });
 

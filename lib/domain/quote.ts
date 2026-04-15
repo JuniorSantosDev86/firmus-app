@@ -27,6 +27,7 @@ export interface Quote extends TimestampedEntity {
   id: EntityId;
   clientId: EntityId;
   status: QuoteStatus;
+  approvedAt?: string | null;
   issueDate: ISODate;
   validUntil: ISODate | null;
   itemIds: EntityId[];

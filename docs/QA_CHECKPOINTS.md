@@ -2095,6 +2095,37 @@ Status: Approved
 ### QA verdict
 Approved. Block 17 is complete, validated, and safe. The premium public quote/PDF layer is now part of the validated product surface.
 
+### Block 18 — Quote Approval Actions
+Status: Completed and approved.
+
+Delivered:
+- lightweight public quote approval action
+- dedicated quote approval orchestration service
+- quote approval persistence with:
+  - status transition to approved
+  - approvedAt metadata
+- timeline event emission for:
+  - quote_approved
+- approved-state reflection on the public quote page
+- internal Quotes entry points for:
+  - Abrir página pública
+  - Abrir PDF premium
+- Cypress coverage for public approval flow and internal public/PDF entry points
+
+Validation:
+- manual QA approved
+- Cypress coverage added and approved
+- included in final all-green full suite run
+- `npm run lint` passed
+- `npm run build` passed
+
+Notes:
+- Block 18 was implemented on top of the existing Block 17 public quote foundation.
+- The PDF route remained document-only.
+- No signature, payment, auth, client portal, or broad backend expansion was introduced.
+- Approval emits `quote_approved` only on a real approval transition.
+- Canonical monetary logic remained unchanged.
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:

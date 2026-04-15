@@ -103,6 +103,24 @@ function sanitizeIsoDate(value: unknown): string {
   return new Date().toISOString().slice(0, 10);
 }
 
+function sanitizeOptionalTimestamp(value: unknown): string | null {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const trimmed = value.trim();
+  if (trimmed.length === 0) {
+    return null;
+  }
+
+  const parsed = new Date(trimmed);
+  if (Number.isNaN(parsed.getTime())) {
+    return null;
+  }
+
+  return parsed.toISOString();
+}
+
 function sanitizeStatus(value: unknown): QuoteStatus {
   if (typeof value === "string" && QUOTE_STATUSES.has(value as QuoteStatus)) {
     return value as QuoteStatus;
@@ -227,6 +245,7 @@ function normalizeQuote(raw: unknown, allItems: QuoteItem[]): Quote | null {
   const data = raw as Record<string, unknown>;
   const id = sanitizeNonEmptyString(data.id) ?? generateId("quote");
   const clientId = sanitizeNonEmptyString(data.clientId);
+  const status = sanitizeStatus(data.status);
 
   if (clientId === null) {
     return null;
@@ -257,7 +276,8 @@ function normalizeQuote(raw: unknown, allItems: QuoteItem[]): Quote | null {
   return {
     id,
     clientId,
-    status: sanitizeStatus(data.status),
+    status,
+    approvedAt: status === "approved" ? sanitizeOptionalTimestamp(data.approvedAt) : null,
     issueDate: sanitizeIsoDate(data.issueDate),
     validUntil:
       data.validUntil === null
@@ -338,6 +358,11 @@ export function upsertQuote(input: QuoteInput, quoteId?: string): QuoteStore {
   const isUpdate = existingQuote !== null;
   const quoteIdentifier = existingQuote?.id ?? quoteId ?? generateId("quote");
   const now = new Date().toISOString();
+  const nextStatus = sanitizeStatus(input.status);
+  const approvedAt =
+    nextStatus === "approved"
+      ? sanitizeOptionalTimestamp(existingQuote?.approvedAt) ?? now
+      : null;
 
   const preparedItems = input.items
     .map((item) => {
@@ -380,7 +405,8 @@ export function upsertQuote(input: QuoteInput, quoteId?: string): QuoteStore {
   const nextQuote: Quote = {
     id: quoteIdentifier,
     clientId: input.clientId,
-    status: sanitizeStatus(input.status),
+    status: nextStatus,
+    approvedAt,
     issueDate: sanitizeIsoDate(input.issueDate),
     validUntil:
       input.validUntil === null
@@ -437,4 +463,31 @@ export function deleteQuote(quoteId: string): QuoteStore {
 
   saveQuoteStore(nextStore);
   return nextStore;
+}
+
+export function markQuoteAsApproved(quoteId: string, approvedAtIso: string): Quote | null {
+  const existing = readQuoteStore();
+  const target = existing.quotes.find((quote) => quote.id === quoteId) ?? null;
+  if (!target) {
+    return null;
+  }
+
+  const nextApprovedAt = sanitizeOptionalTimestamp(approvedAtIso) ?? new Date().toISOString();
+
+  const nextQuote: Quote = {
+    ...target,
+    status: "approved",
+    approvedAt: nextApprovedAt,
+    updatedAt: new Date().toISOString(),
+  };
+
+  const nextStore: QuoteStore = {
+    quotes: existing.quotes
+      .map((quote) => (quote.id === quoteId ? nextQuote : quote))
+      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)),
+    items: existing.items,
+  };
+
+  saveQuoteStore(nextStore);
+  return nextQuote;
 }

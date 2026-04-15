@@ -51,6 +51,10 @@ function getTimelineLabel(type: string): string {
     return "Orçamento criado";
   }
 
+  if (type === "quote_approved") {
+    return "Orçamento aprovado";
+  }
+
   if (type === "charge_created") {
     return "Cobrança criada";
   }

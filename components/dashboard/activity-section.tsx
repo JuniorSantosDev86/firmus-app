@@ -4,6 +4,7 @@ const eventTypeLabel: Record<string, string> = {
   client_created: "Cliente criado",
   service_created: "Serviço criado",
   quote_created: "Orçamento criado",
+  quote_approved: "Orçamento aprovado",
   charge_created: "Cobrança criada",
   charge_paid: "Cobrança marcada como paga",
   reminder_created: "Lembrete criado",

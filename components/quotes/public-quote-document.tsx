@@ -70,6 +70,9 @@ export function PublicQuoteDocument({ snapshot, className }: PublicQuoteDocument
               <p><span className="font-medium">Emissão:</span> {formatDate(snapshot.quote.issueDate)}</p>
               <p><span className="font-medium">Validade:</span> {formatDate(snapshot.quote.validUntil)}</p>
               <p><span className="font-medium">Status:</span> {getStatusLabel(snapshot.quote.status)}</p>
+              {snapshot.quote.approvedAt ? (
+                <p><span className="font-medium">Aprovado em:</span> {formatDate(snapshot.quote.approvedAt)}</p>
+              ) : null}
             </div>
           </div>
         </header>

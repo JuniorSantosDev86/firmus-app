@@ -608,8 +608,28 @@ Resume official roadmap at:
 
 
 ### Block 18 — Quote Approval Actions
-**Status:** Pending  
+**Status:** Completed  
 **Objective:** Make the public quote page interactive.
+
+**Delivered:**
+- lightweight public quote approval action
+- dedicated quote approval orchestration service
+- quote approval persistence with:
+  - status transition to approved
+  - approvedAt metadata
+- timeline event emission for:
+  - quote_approved
+- approved-state reflection on the public quote page
+- internal Quotes entry points for:
+  - Abrir página pública
+  - Abrir PDF premium
+- Cypress coverage for public approval flow and internal public/PDF entry points
+
+**Validation status:** Approved
+
+### Block 19 — Basic Bio Link
+**Status:** Pending  
+**Objective:** Create the first professional public identity page.
 
 ### Block 19 — Basic Bio Link
 **Status:** Pending  
@@ -730,10 +750,34 @@ Resume official roadmap at:
 
 ---
 
-**Current official roadmap block:** Block 18 — Quote Approval Actions  
+### Current Status
+
 **Current technical exception:** Product Shell and Control Tower completed  
+**Current official roadmap block:** Block 19 — Basic Bio Link  
 **Overall project status:** In progress
+
+- Block 12 — Templates completed and approved.
+- Block 13 — Weekly Summary completed and approved.
+- Block 14 — Text-Based Assisted Input completed and approved.
+- Block 15 — Assisted Charge Suggestions completed and approved.
+- Block 16 — Assisted Input as Real Operational Entry Point completed and approved.
+- Block 17 — Premium Quote PDF completed and approved.
+- Block 18 — Quote Approval Actions completed and approved.
+- Assisted operations layer is now functionally complete for the current roadmap slice.
+- The public-growth layer has now advanced through the quote approval milestone.
+- The next official implementation target is Block 19 — Basic Bio Link.
+
 ---
+
+# Notes
+
+- This roadmap is a living document.
+- Each block should only be marked as completed after QA validation.
+- Scope discipline is mandatory.
+- The product must evolve in layers, not through uncontrolled feature accumulation.
+- The shell work is an intentional technical exception outside the official growth-layer numbering.
+- NFSe is now explicitly inside the MVP roadmap as part of fiscal compliance readiness.
+- DAS is included as a compliance-assistance workflow, not as a native payment rail.
 
 # Notes
 

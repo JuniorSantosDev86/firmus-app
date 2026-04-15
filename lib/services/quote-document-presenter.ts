@@ -16,6 +16,7 @@ export type QuoteDocumentSnapshot = {
   quote: {
     id: string;
     status: QuoteStatus;
+    approvedAt: string | null;
     issueDate: string;
     validUntil: string | null;
     subtotalInCents: number;
@@ -97,6 +98,7 @@ export function getQuoteDocumentSnapshot(publicId: string): QuoteDocumentSnapsho
     quote: {
       id: quote.id,
       status: quote.status,
+      approvedAt: quote.approvedAt ?? null,
       issueDate: quote.issueDate,
       validUntil: quote.validUntil,
       subtotalInCents: quote.subtotalInCents,

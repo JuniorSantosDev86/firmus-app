@@ -129,6 +129,8 @@ function seedPublicQuoteStorage(win: Window): { primaryQuoteId: string; optional
     })
   );
 
+  win.localStorage.setItem("firmus.timelineEvents", JSON.stringify([]));
+
   return { primaryQuoteId, optionalFieldsQuoteId };
 }
 
@@ -140,7 +142,7 @@ function assertInternalShellAbsent(): void {
   cy.getByTestId("nav-dashboard").should("not.exist");
 }
 
-describe("Public Premium Quote - Block 17", () => {
+describe("Public Premium Quote - Block 18", () => {
   it("renders the public route with canonical quote data and page actions", () => {
     cy.visit("/", {
       onBeforeLoad(win) {
@@ -187,6 +189,66 @@ describe("Public Premium Quote - Block 17", () => {
       .should("be.visible")
       .and("have.attr", "href", `/public/quotes/${PRIMARY_PUBLIC_QUOTE_ID}/pdf`);
     cy.contains("button", "Imprimir").should("be.visible");
+    cy.contains("button", "Aprovar orçamento").should("be.visible");
+
+    assertInternalShellAbsent();
+  });
+
+  it("approves a quote from the public route and emits a single quote_approved event", () => {
+    cy.visit("/", {
+      onBeforeLoad(win) {
+        seedPublicQuoteStorage(win);
+      },
+    });
+
+    cy.visit(`/public/quotes/${PRIMARY_PUBLIC_QUOTE_ID}`);
+
+    cy.contains("button", "Aprovar orçamento").click();
+    cy.getByTestId("public-quote-approval-feedback").should(
+      "contain.text",
+      "Orçamento aprovado com sucesso."
+    );
+    cy.getByTestId("premium-quote-document")
+      .contains("p", /Status:\s*Aprovado/)
+      .should("be.visible");
+    cy.getByTestId("premium-quote-document")
+      .contains("p", /Aprovado em:/)
+      .should("be.visible");
+    assertSummaryValue("Subtotal", "390,00");
+    assertSummaryValue("Desconto", "40,00");
+    assertSummaryValue("Total", "350,00");
+
+    cy.window().then((win) => {
+      const quoteStoreRaw = win.localStorage.getItem("firmus.quotes");
+      expect(quoteStoreRaw).to.not.equal(null);
+
+      const quoteStore = JSON.parse(quoteStoreRaw ?? "{}") as {
+        quotes?: Array<Record<string, unknown>>;
+      };
+      const approvedQuote = (quoteStore.quotes ?? []).find(
+        (quote) => quote.id === PRIMARY_PUBLIC_QUOTE_ID
+      );
+
+      expect(approvedQuote?.status).to.eq("approved");
+      expect(approvedQuote?.approvedAt).to.be.a("string");
+
+      const timelineRaw = win.localStorage.getItem("firmus.timelineEvents");
+      expect(timelineRaw).to.not.equal(null);
+      const timeline = JSON.parse(timelineRaw ?? "[]") as Array<Record<string, unknown>>;
+      const approvedEvents = timeline.filter((event) => event.type === "quote_approved");
+      expect(approvedEvents).to.have.length(1);
+      expect(approvedEvents[0]?.entityType).to.eq("quote");
+      expect(approvedEvents[0]?.entityId).to.eq(PRIMARY_PUBLIC_QUOTE_ID);
+    });
+
+    cy.reload();
+    cy.contains("button", "Orçamento aprovado").should("be.disabled");
+    cy.window().then((win) => {
+      const timelineRaw = win.localStorage.getItem("firmus.timelineEvents");
+      const timeline = JSON.parse(timelineRaw ?? "[]") as Array<Record<string, unknown>>;
+      const approvedEvents = timeline.filter((event) => event.type === "quote_approved");
+      expect(approvedEvents).to.have.length(1);
+    });
 
     assertInternalShellAbsent();
   });
@@ -212,6 +274,8 @@ describe("Public Premium Quote - Block 17", () => {
 
     cy.contains("a", "Versão PDF").should("not.exist");
     cy.contains("button", "Imprimir").should("not.exist");
+    cy.getByTestId("public-quote-actions").should("not.exist");
+    cy.contains("button", "Aprovar orçamento").should("not.exist");
 
     assertInternalShellAbsent();
   });
