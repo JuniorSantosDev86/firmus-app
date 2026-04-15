@@ -27,20 +27,20 @@ export function SidebarNav() {
 
   return (
     <div
-      className="hidden h-screen w-[290px] flex-col border-r border-[#E2E8F0] bg-white px-4 py-5 lg:flex"
+      className="hidden h-screen w-[308px] flex-col border-r border-[#D9E3EE] bg-[#F8FBFF] px-5 py-6 lg:flex"
       data-testid="sidebar-nav"
     >
       <Link
         href="/"
-        className="mb-6 flex items-center gap-2 rounded-xl px-2 py-1"
+        className="mb-7 flex items-center gap-2.5 rounded-2xl border border-[#DCE5EF] bg-white px-3 py-3 shadow-[0_18px_42px_-38px_rgba(15,23,42,0.55)]"
         data-testid="home-logo-link"
       >
         <Image
           src="/brand/firmus-logo-square.png"
           alt="Logo Firmus"
-          width={32}
-          height={32}
-          className="h-8 w-8"
+          width={36}
+          height={36}
+          className="h-9 w-9"
           priority
         />
         <Image
@@ -48,19 +48,19 @@ export function SidebarNav() {
           alt="Firmus"
           width={124}
           height={36}
-          className="h-auto w-[108px]"
+          className="h-auto w-[114px]"
           priority
         />
       </Link>
 
-      <nav aria-label="Navegação principal" className="min-h-0 flex-1 overflow-y-auto pr-1">
-        <div className="space-y-6">
+      <nav aria-label="Navegação principal" className="min-h-0 flex-1 overflow-y-auto pr-1.5">
+        <div className="space-y-7">
           {NAV_GROUP_ORDER.map((group) => {
             const groupItems = PRIMARY_NAVIGATION.filter((item) => item.group === group);
 
             return (
-              <section key={group} className="space-y-2">
-                <h2 className="px-2 text-xs font-semibold tracking-wide text-[#64748B] uppercase">
+              <section key={group} className="space-y-2.5">
+                <h2 className="px-2 text-[11px] font-semibold tracking-[0.12em] text-[#64748B] uppercase">
                   {NAVIGATION_GROUP_LABELS[group]}
                 </h2>
                 <ul className="space-y-1.5">
@@ -75,13 +75,13 @@ export function SidebarNav() {
                           data-testid={item.testId}
                           aria-current={active ? "page" : undefined}
                           className={cn(
-                            "flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-medium transition-colors",
+                            "flex h-11 items-center gap-3 rounded-xl px-3.5 text-sm font-medium transition-all",
                             active
-                              ? "bg-[#E6FFFA] text-[#087C7B]"
-                              : "text-[#475569] hover:bg-[#F1F5F9] hover:text-[#0F172A]"
+                              ? "border border-[#B9E6E4] bg-[#E8F7F6] text-[#0B6D6D] shadow-[0_12px_28px_-24px_rgba(8,124,123,0.5)]"
+                              : "text-[#334155] hover:bg-[#EEF4FA] hover:text-[#0F172A]"
                           )}
                         >
-                          <Icon className="h-4 w-4" aria-hidden="true" />
+                          <Icon className={cn("h-4 w-4", active ? "text-[#0EA5A4]" : "text-[#64748B]")} aria-hidden="true" />
                           <span>{item.label}</span>
                         </Link>
                       </li>
@@ -93,13 +93,6 @@ export function SidebarNav() {
           })}
         </div>
       </nav>
-
-      <div className="mt-5 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-4">
-        <p className="text-xs font-semibold text-[#334155]">Torre de Controle</p>
-        <p className="mt-1 text-xs leading-relaxed text-[#64748B]">
-          Fluxos reais, atividade recente e próximas ações em um só lugar.
-        </p>
-      </div>
     </div>
   );
 }

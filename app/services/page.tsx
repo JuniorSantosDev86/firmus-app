@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ServicesPage() {
   return (
-    <main className="mx-auto w-full max-w-3xl space-y-8">
+    <main className="mx-auto w-full max-w-[1120px] space-y-8">
       <PageHeader
         title="Serviços"
         description="Defina os serviços que você oferece para reaproveitá-los nos próximos orçamentos."

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function RemindersPage() {
   return (
-    <main className="mx-auto w-full max-w-3xl space-y-8">
+    <main className="mx-auto w-full max-w-[1120px] space-y-8">
       <PageHeader
         title="Lembretes"
         description="Registre lembretes manuais e acompanhe ações pendentes do dia a dia."

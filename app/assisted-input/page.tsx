@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function AssistedInputPage() {
   return (
-    <main className="mx-auto w-full max-w-3xl space-y-8">
+    <main className="mx-auto w-full max-w-[1120px] space-y-8">
       <PageHeader
         title="Entrada assistida"
         description="Digite uma instrução curta, revise o que foi entendido e confirme antes de criar."

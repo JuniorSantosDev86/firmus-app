@@ -108,7 +108,7 @@ export function ClientDetailView({ clientId }: ClientDetailViewProps) {
 
   if (snapshot === null) {
     return (
-        <section className="rounded-2xl border border-border bg-card p-6">
+        <section className="firmus-panel">
         <p className="text-sm text-muted-foreground">Carregando detalhe do cliente...</p>
       </section>
     );
@@ -116,7 +116,7 @@ export function ClientDetailView({ clientId }: ClientDetailViewProps) {
 
   if (snapshot.client === null) {
     return (
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <header className="space-y-3">
           <Link
             href="/clients"
@@ -137,7 +137,7 @@ export function ClientDetailView({ clientId }: ClientDetailViewProps) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <header className="space-y-3">
           <Link
             href="/clients"
@@ -162,12 +162,12 @@ export function ClientDetailView({ clientId }: ClientDetailViewProps) {
         </header>
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
           Orçamentos relacionados
         </h2>
         {snapshot.quotes.length === 0 ? (
-          <p className="mt-4 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
+          <p className="mt-4 firmus-empty-state">
             Nenhum orçamento vinculado a este cliente.
           </p>
         ) : (
@@ -175,7 +175,7 @@ export function ClientDetailView({ clientId }: ClientDetailViewProps) {
             {snapshot.quotes.map((quote) => (
               <li
                 key={quote.id}
-                className="rounded-xl border border-border bg-background px-4 py-3"
+                className="firmus-list-card"
               >
                 <p className="font-medium text-foreground">
                   {formatMoneyFromCents(quote.totalInCents)}
@@ -190,12 +190,12 @@ export function ClientDetailView({ clientId }: ClientDetailViewProps) {
         )}
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
           Cobranças relacionadas
         </h2>
         {snapshot.charges.length === 0 ? (
-          <p className="mt-4 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
+          <p className="mt-4 firmus-empty-state">
             Nenhuma cobrança vinculada a este cliente.
           </p>
         ) : (
@@ -203,7 +203,7 @@ export function ClientDetailView({ clientId }: ClientDetailViewProps) {
             {snapshot.charges.map((charge) => (
               <li
                 key={charge.id}
-                className="rounded-xl border border-border bg-background px-4 py-3"
+                className="firmus-list-card"
               >
                 <p className="font-medium text-foreground">
                   {formatMoneyFromCents(charge.amountInCents)}
@@ -218,12 +218,12 @@ export function ClientDetailView({ clientId }: ClientDetailViewProps) {
         )}
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
           Linha do tempo consolidada
         </h2>
         {snapshot.timelineEvents.length === 0 ? (
-          <p className="mt-4 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
+          <p className="mt-4 firmus-empty-state">
             Nenhum evento de linha do tempo para este contexto de cliente.
           </p>
         ) : (
@@ -231,7 +231,7 @@ export function ClientDetailView({ clientId }: ClientDetailViewProps) {
             {snapshot.timelineEvents.map((event) => (
               <li
                 key={event.id}
-                className="rounded-xl border border-border bg-background px-4 py-3"
+                className="firmus-list-card"
               >
                 <p className="font-medium text-foreground">{getTimelineLabel(event.type)}</p>
                 <p className="mt-1 text-sm text-muted-foreground">

@@ -81,38 +81,38 @@ export function WeeklySummaryView() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <p className="text-sm text-muted-foreground">Período</p>
         <p className="mt-1 text-base font-medium text-foreground">
           {formatPeriod(summary.rangeStart, summary.rangeEnd)}
         </p>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          <article className="rounded-xl border border-border bg-background px-4 py-4">
+          <article className="firmus-subpanel">
             <p className="text-sm text-muted-foreground">Recebido no período</p>
             <p className="mt-2 text-lg font-semibold text-foreground">
               {formatMoneyFromCents(summary.totals.chargesPaidInPeriodInCents)}
             </p>
           </article>
-          <article className="rounded-xl border border-border bg-background px-4 py-4">
+          <article className="firmus-subpanel">
             <p className="text-sm text-muted-foreground">Em aberto</p>
             <p className="mt-2 text-lg font-semibold text-foreground">
               {formatMoneyFromCents(summary.totals.chargesPendingInCents)}
             </p>
           </article>
-          <article className="rounded-xl border border-border bg-background px-4 py-4">
+          <article className="firmus-subpanel">
             <p className="text-sm text-muted-foreground">Em atraso</p>
             <p className="mt-2 text-lg font-semibold text-foreground">
               {formatMoneyFromCents(summary.totals.overdueChargesInCents)}
             </p>
           </article>
-          <article className="rounded-xl border border-border bg-background px-4 py-4">
+          <article className="firmus-subpanel">
             <p className="text-sm text-muted-foreground">Lembretes pendentes</p>
             <p className="mt-2 text-lg font-semibold text-foreground">
               {summary.totals.pendingRemindersCount}
             </p>
           </article>
-          <article className="rounded-xl border border-border bg-background px-4 py-4">
+          <article className="firmus-subpanel">
             <p className="text-sm text-muted-foreground">Lembretes concluídos</p>
             <p className="mt-2 text-lg font-semibold text-foreground">
               {summary.totals.completedRemindersInPeriodCount}
@@ -121,7 +121,7 @@ export function WeeklySummaryView() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">Destaques</h2>
         {summary.highlights.length === 0 ? (
           <p className="mt-4 text-sm text-muted-foreground">Sem destaques para este período.</p>
@@ -136,14 +136,14 @@ export function WeeklySummaryView() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">Cobranças vencidas</h2>
         {summary.sections.overdueCharges.length === 0 ? (
           <p className="mt-4 text-sm text-muted-foreground">Nenhuma cobrança vencida.</p>
         ) : (
           <ul className="mt-4 space-y-3">
             {summary.sections.overdueCharges.map((charge) => (
-              <li key={charge.id} className="rounded-xl border border-border bg-background px-4 py-3">
+              <li key={charge.id} className="firmus-list-card">
                 <p className="text-sm font-medium text-foreground">Cobrança {charge.id.slice(0, 8)}</p>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Vencimento: {formatDate(charge.dueDate)}
@@ -157,14 +157,14 @@ export function WeeklySummaryView() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">Cobranças próximas</h2>
         {summary.sections.dueSoonCharges.length === 0 ? (
           <p className="mt-4 text-sm text-muted-foreground">Nenhuma cobrança próxima.</p>
         ) : (
           <ul className="mt-4 space-y-3">
             {summary.sections.dueSoonCharges.map((charge) => (
-              <li key={charge.id} className="rounded-xl border border-border bg-background px-4 py-3">
+              <li key={charge.id} className="firmus-list-card">
                 <p className="text-sm font-medium text-foreground">Cobrança {charge.id.slice(0, 8)}</p>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Vencimento: {formatDate(charge.dueDate)}
@@ -178,14 +178,14 @@ export function WeeklySummaryView() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">Lembretes pendentes</h2>
         {summary.sections.pendingReminders.length === 0 ? (
           <p className="mt-4 text-sm text-muted-foreground">Nenhum lembrete pendente.</p>
         ) : (
           <ul className="mt-4 space-y-3">
             {summary.sections.pendingReminders.map((reminder) => (
-              <li key={reminder.id} className="rounded-xl border border-border bg-background px-4 py-3">
+              <li key={reminder.id} className="firmus-list-card">
                 <p className="text-sm font-medium text-foreground">{reminder.title}</p>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Vencimento: {reminder.dueDate ? formatDate(reminder.dueDate) : "Sem data"}
@@ -196,7 +196,7 @@ export function WeeklySummaryView() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
           Lembretes concluídos no período
         </h2>
@@ -205,7 +205,7 @@ export function WeeklySummaryView() {
         ) : (
           <ul className="mt-4 space-y-3">
             {summary.sections.completedRemindersInPeriod.map((reminder) => (
-              <li key={reminder.id} className="rounded-xl border border-border bg-background px-4 py-3">
+              <li key={reminder.id} className="firmus-list-card">
                 <p className="text-sm font-medium text-foreground">{reminder.title}</p>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Concluído em: {reminder.completedAt ? formatDate(reminder.completedAt) : "Sem data"}
@@ -216,14 +216,14 @@ export function WeeklySummaryView() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">Atividade recente</h2>
         {summary.sections.recentActivity.length === 0 ? (
           <p className="mt-4 text-sm text-muted-foreground">Nenhuma atividade recente.</p>
         ) : (
           <ul className="mt-4 space-y-3">
             {summary.sections.recentActivity.map((event) => (
-              <li key={event.id} className="rounded-xl border border-border bg-background px-4 py-3">
+              <li key={event.id} className="firmus-list-card">
                 <p className="text-sm font-medium text-foreground">
                   {ACTIVITY_TYPE_LABELS[event.type] ?? "Atualização registrada"}
                 </p>

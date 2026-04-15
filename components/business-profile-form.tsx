@@ -92,7 +92,7 @@ export function BusinessProfileForm() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <div className="mb-5">
           <h2 className="text-lg font-semibold tracking-tight text-foreground">
             Perfil atual
@@ -146,7 +146,7 @@ export function BusinessProfileForm() {
         ) : null}
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
           {hasProfile ? "Editar perfil da empresa" : "Criar perfil da empresa"}
         </h2>
@@ -163,7 +163,7 @@ export function BusinessProfileForm() {
               onChange={(event) =>
                 updateField("businessName", event.target.value)
               }
-              className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="firmus-input"
             />
           </div>
 
@@ -179,7 +179,7 @@ export function BusinessProfileForm() {
               onChange={(event) =>
                 updateField("professionalName", event.target.value)
               }
-              className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="firmus-input"
             />
           </div>
 
@@ -195,7 +195,7 @@ export function BusinessProfileForm() {
               onChange={(event) =>
                 updateField("shortDescription", event.target.value)
               }
-              className="rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="firmus-textarea"
             />
           </div>
 
@@ -209,7 +209,7 @@ export function BusinessProfileForm() {
                 name="city"
                 value={formValues.city}
                 onChange={(event) => updateField("city", event.target.value)}
-                className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                className="firmus-input"
               />
             </div>
 
@@ -224,7 +224,7 @@ export function BusinessProfileForm() {
                 onChange={(event) =>
                   updateField("whatsapp", event.target.value)
                 }
-                className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                className="firmus-input"
               />
             </div>
           </div>
@@ -238,7 +238,7 @@ export function BusinessProfileForm() {
               name="logoUrl"
               value={formValues.logoUrl}
               onChange={(event) => updateField("logoUrl", event.target.value)}
-              className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="firmus-input"
             />
           </div>
 

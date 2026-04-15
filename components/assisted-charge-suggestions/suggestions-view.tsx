@@ -89,11 +89,11 @@ export function SuggestionsView() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">Sugestões abertas</h2>
 
         {suggestions.length === 0 ? (
-          <p className="mt-4 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
+          <p className="mt-4 firmus-empty-state">
             Nenhuma sugestão disponível no momento.
           </p>
         ) : (
@@ -101,7 +101,7 @@ export function SuggestionsView() {
             {suggestions.map((suggestion) => (
               <li
                 key={suggestion.id}
-                className="rounded-xl border border-border bg-background px-4 py-4"
+                className="firmus-subpanel"
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div className="space-y-2">
@@ -157,7 +157,7 @@ export function SuggestionsView() {
       {feedback ? (
         <p
           className={
-            feedback.type === "success" ? "text-sm text-emerald-700" : "text-sm text-rose-700"
+            feedback.type === "success" ? "text-sm text-[#166534]" : "text-sm text-[#B91C1C]"
           }
         >
           {feedback.message}

@@ -25,7 +25,7 @@ export function QuickAccessCard({
   testId,
 }: QuickAccessCardProps) {
   return (
-    <article className="flex h-full flex-col rounded-[20px] border border-[#E2E8F0] bg-white p-5 shadow-[0_14px_34px_-28px_rgba(15,23,42,0.4)]">
+    <article className="flex h-full flex-col rounded-[20px] border border-[#D9E3EE] bg-white p-5 shadow-[0_18px_44px_-36px_rgba(15,23,42,0.42)]">
       <div className="mb-5 flex items-start justify-between gap-3">
         <div className="space-y-2">
           <h2 className="text-[22px] font-semibold tracking-tight text-[#0F172A]">{title}</h2>
@@ -36,7 +36,7 @@ export function QuickAccessCard({
         </div>
       </div>
 
-      <div className="rounded-2xl border border-[#CCFBF1] bg-gradient-to-r from-[#ECFEFF] via-[#F0FDFA] to-[#EFF6FF] px-4 py-3">
+      <div className="rounded-2xl border border-[#D9E3EE] bg-gradient-to-r from-[#F2FAFD] via-[#F8FBFF] to-[#F2F8FF] px-4 py-3">
         <p className="text-xs font-medium uppercase tracking-wide text-[#64748B]">{metricLabel}</p>
         <p className="mt-2 text-3xl font-semibold tracking-tight text-[#0F172A]">{metricValue}</p>
       </div>
@@ -45,8 +45,8 @@ export function QuickAccessCard({
         href={href}
         data-testid={testId}
         className={cn(
-          "mt-5 inline-flex h-11 items-center justify-center rounded-xl bg-[#0EA5A4] px-4 text-sm font-semibold text-white transition-colors",
-          "hover:bg-[#0B8E8D]"
+          "mt-5 inline-flex h-11 items-center justify-center rounded-xl bg-[#0F766E] px-4 text-sm font-semibold text-white transition-colors",
+          "hover:bg-[#0D5F59]"
         )}
       >
         {actionLabel}

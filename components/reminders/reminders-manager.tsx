@@ -99,12 +99,22 @@ function ReminderItem({
 }) {
   const clientName = getClientName(clients, reminder.clientId);
   const chargeLabel = getChargeLabel(charges, reminder.chargeId);
+  const dueLabel = reminder.isOverdue
+    ? "Atrasado"
+    : reminder.isDueToday
+      ? "Hoje"
+      : formatDueDate(reminder.dueDate);
+  const dueClassName = reminder.isOverdue
+    ? "firmus-chip-warning"
+    : reminder.isDueToday
+      ? "firmus-chip-info"
+      : "firmus-chip-info";
 
   return (
     <li
       key={reminder.id}
       data-testid={`reminder-item-${reminder.id}`}
-      className="rounded-xl border border-border bg-background px-4 py-3"
+      className="firmus-list-card"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
@@ -112,15 +122,13 @@ function ReminderItem({
           {reminder.description ? (
             <p className="mt-1 text-sm text-muted-foreground">{reminder.description}</p>
           ) : null}
-          <p className="mt-1 text-xs text-muted-foreground">
-            {reminder.isOverdue
-              ? "Atrasado"
-              : reminder.isDueToday
-                ? "Hoje"
-                : formatDueDate(reminder.dueDate)}
-          </p>
+          <span
+            className={`mt-2 inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${dueClassName}`}
+          >
+            {dueLabel}
+          </span>
           {clientName ? (
-            <p className="mt-1 text-xs text-muted-foreground">Cliente: {clientName}</p>
+            <p className="mt-2 text-xs text-muted-foreground">Cliente: {clientName}</p>
           ) : null}
           {chargeLabel ? (
             <p className="mt-1 text-xs text-muted-foreground">Cobrança: {chargeLabel}</p>
@@ -209,7 +217,7 @@ export function RemindersManager() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">Novo lembrete</h2>
 
         <form className="mt-5 space-y-4" onSubmit={handleCreateReminder}>
@@ -224,7 +232,7 @@ export function RemindersManager() {
                 required
                 value={formValues.title}
                 onChange={(event) => updateField("title", event.target.value)}
-                className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                className="firmus-input"
               />
             </div>
 
@@ -238,7 +246,7 @@ export function RemindersManager() {
                 rows={3}
                 value={formValues.description}
                 onChange={(event) => updateField("description", event.target.value)}
-                className="rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                className="firmus-textarea"
               />
             </div>
 
@@ -252,7 +260,7 @@ export function RemindersManager() {
                 type="date"
                 value={formValues.dueDate}
                 onChange={(event) => updateField("dueDate", event.target.value)}
-                className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                className="firmus-input"
               />
             </div>
 
@@ -265,7 +273,7 @@ export function RemindersManager() {
                 name="clientId"
                 value={formValues.clientId}
                 onChange={(event) => updateField("clientId", event.target.value)}
-                className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                className="firmus-input"
               >
                 <option value="">Sem cliente</option>
                 {clients.map((client) => (
@@ -285,7 +293,7 @@ export function RemindersManager() {
                 name="chargeId"
                 value={formValues.chargeId}
                 onChange={(event) => updateField("chargeId", event.target.value)}
-                className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                className="firmus-input"
               >
                 <option value="">Sem cobrança</option>
                 {charges.map((charge) => (
@@ -303,11 +311,11 @@ export function RemindersManager() {
         </form>
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">Pendentes</h2>
 
         {snapshot.pending.length === 0 ? (
-          <p className="mt-4 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
+          <p className="mt-4 firmus-empty-state">
             Nenhum lembrete pendente.
           </p>
         ) : (
@@ -325,11 +333,11 @@ export function RemindersManager() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">Concluídos</h2>
 
         {snapshot.done.length === 0 ? (
-          <p className="mt-4 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
+          <p className="mt-4 firmus-empty-state">
             Nenhum lembrete concluído.
           </p>
         ) : (

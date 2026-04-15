@@ -135,7 +135,7 @@ export function ClientsManager() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <div className="mb-5 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-foreground">
@@ -155,7 +155,7 @@ export function ClientsManager() {
         </div>
 
         {clients.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
+          <p className="firmus-empty-state">
             Adicione seu primeiro cliente para começar a criar orçamentos e acompanhar atendimentos.
           </p>
         ) : (
@@ -164,7 +164,7 @@ export function ClientsManager() {
               <li
                 key={client.id}
                 data-testid={`client-item-${client.id}`}
-                className="rounded-xl border border-border bg-background px-4 py-3"
+                className="firmus-list-card"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -176,7 +176,7 @@ export function ClientsManager() {
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/clients/${client.id}`}
-                      className="inline-flex h-7 items-center justify-center rounded-lg border border-input bg-background px-2.5 text-[0.8rem] font-medium text-foreground transition-colors hover:bg-muted"
+                      className="inline-flex h-7 items-center justify-center rounded-lg border border-[#CBD5E1] bg-white px-2.5 text-[0.8rem] font-medium text-[#334155] transition-colors hover:bg-[#F8FAFC]"
                     >
                       Ver
                     </Link>
@@ -209,7 +209,7 @@ export function ClientsManager() {
         ) : null}
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
           {selectedClient ? "Editar cliente" : "Criar cliente"}
         </h2>
@@ -224,7 +224,7 @@ export function ClientsManager() {
               required
               value={formValues.name}
               onChange={(event) => updateField("name", event.target.value)}
-              className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="firmus-input"
             />
           </div>
 
@@ -238,7 +238,7 @@ export function ClientsManager() {
                 name="whatsapp"
                 value={formValues.whatsapp}
                 onChange={(event) => updateField("whatsapp", event.target.value)}
-                className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                className="firmus-input"
               />
             </div>
 
@@ -252,7 +252,7 @@ export function ClientsManager() {
                 type="email"
                 value={formValues.email}
                 onChange={(event) => updateField("email", event.target.value)}
-                className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                className="firmus-input"
               />
             </div>
           </div>
@@ -266,7 +266,7 @@ export function ClientsManager() {
               name="city"
               value={formValues.city}
               onChange={(event) => updateField("city", event.target.value)}
-              className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="firmus-input"
             />
           </div>
 
@@ -280,7 +280,7 @@ export function ClientsManager() {
               rows={3}
               value={formValues.notes}
               onChange={(event) => updateField("notes", event.target.value)}
-              className="rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="firmus-textarea"
             />
           </div>
 

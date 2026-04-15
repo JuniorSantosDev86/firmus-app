@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function BusinessProfilePage() {
   return (
-    <main className="mx-auto w-full max-w-3xl space-y-8">
+    <main className="mx-auto w-full max-w-[1120px] space-y-8">
       <PageHeader
         title="Perfil da empresa"
         description="Mantenha os dados da sua empresa atualizados para os próximos fluxos de clientes e orçamentos."

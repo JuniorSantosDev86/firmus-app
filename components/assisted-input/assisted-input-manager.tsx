@@ -168,7 +168,7 @@ export function AssistedInputManager() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">Digite sua instrução</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Exemplos: &quot;Criar cobrança para Ana de R$ 250,00 para amanhã&quot; ou &quot;Lembrete de follow-up com Bruno hoje&quot;.
@@ -180,7 +180,7 @@ export function AssistedInputManager() {
             onChange={(event) => setTextInput(event.target.value)}
             rows={4}
             placeholder="Escreva uma instrução operacional curta..."
-            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+            className="w-full firmus-textarea"
           />
           <Button type="button" onClick={handleInterpret}>
             Interpretar
@@ -189,7 +189,7 @@ export function AssistedInputManager() {
       </section>
 
       {interpretation ? (
-        <section className="rounded-2xl border border-border bg-card p-6">
+        <section className="firmus-panel">
           <h2 className="text-lg font-semibold tracking-tight text-foreground">O que entendi</h2>
 
           <div className="mt-4 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
@@ -228,7 +228,7 @@ export function AssistedInputManager() {
           </div>
 
           {interpretationWarnings.length > 0 ? (
-            <ul className="mt-4 space-y-1 text-sm text-amber-700">
+            <ul className="mt-4 space-y-1 text-sm text-[#C2410C]">
               {interpretationWarnings.map((warning, index) => (
                 <li key={`${index}-${warning}`}>• {warning}</li>
               ))}
@@ -236,7 +236,7 @@ export function AssistedInputManager() {
           ) : null}
 
           {draftAction?.actionType === "create_reminder" ? (
-            <div className="mt-5 space-y-3 rounded-xl border border-border bg-background p-4">
+            <div className="mt-5 space-y-3 firmus-subpanel">
               <p className="text-sm font-medium text-foreground">Ajuste os campos antes de confirmar</p>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="grid gap-1">
@@ -248,7 +248,7 @@ export function AssistedInputManager() {
                         updateDraftPayload(current, { title: event.target.value })
                       )
                     }
-                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                    className="firmus-input"
                   />
                 </div>
                 <div className="grid gap-1">
@@ -261,7 +261,7 @@ export function AssistedInputManager() {
                         updateDraftPayload(current, { dueDate: event.target.value || undefined })
                       )
                     }
-                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                    className="firmus-input"
                   />
                 </div>
                 <div className="grid gap-1 sm:col-span-2">
@@ -275,7 +275,7 @@ export function AssistedInputManager() {
                         })
                       )
                     }
-                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                    className="firmus-input"
                   >
                     <option value="">Sem cliente</option>
                     {interpretation.availableClients.map((client) => (
@@ -290,7 +290,7 @@ export function AssistedInputManager() {
           ) : null}
 
           {draftAction?.actionType === "create_charge" ? (
-            <div className="mt-5 space-y-3 rounded-xl border border-border bg-background p-4">
+            <div className="mt-5 space-y-3 firmus-subpanel">
               <p className="text-sm font-medium text-foreground">Ajuste os campos antes de confirmar</p>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="grid gap-1 sm:col-span-2">
@@ -302,7 +302,7 @@ export function AssistedInputManager() {
                         updateDraftPayload(current, { clientId: event.target.value })
                       )
                     }
-                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                    className="firmus-input"
                   >
                     <option value="">Selecione</option>
                     {interpretation.availableClients.map((client) => (
@@ -329,7 +329,7 @@ export function AssistedInputManager() {
                         })
                       );
                     }}
-                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                    className="firmus-input"
                   />
                 </div>
 
@@ -343,7 +343,7 @@ export function AssistedInputManager() {
                         updateDraftPayload(current, { dueDate: event.target.value || undefined })
                       )
                     }
-                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                    className="firmus-input"
                   />
                 </div>
               </div>
@@ -351,7 +351,7 @@ export function AssistedInputManager() {
           ) : null}
 
           {draftAction?.actionType === "create_quote" ? (
-            <div className="mt-5 space-y-3 rounded-xl border border-border bg-background p-4">
+            <div className="mt-5 space-y-3 firmus-subpanel">
               <p className="text-sm font-medium text-foreground">Ajuste os campos antes de confirmar</p>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="grid gap-1 sm:col-span-2">
@@ -365,7 +365,7 @@ export function AssistedInputManager() {
                         })
                       )
                     }
-                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                    className="firmus-input"
                   >
                     <option value="">Selecione</option>
                     {interpretation.availableClients.map((client) => (
@@ -385,7 +385,7 @@ export function AssistedInputManager() {
                         updateDraftPayload(current, { title: event.target.value })
                       )
                     }
-                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                    className="firmus-input"
                   />
                 </div>
 
@@ -407,7 +407,7 @@ export function AssistedInputManager() {
                         })
                       );
                     }}
-                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                    className="firmus-input"
                   />
                 </div>
 
@@ -421,7 +421,7 @@ export function AssistedInputManager() {
                         updateDraftPayload(current, { validUntil: event.target.value || undefined })
                       )
                     }
-                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                    className="firmus-input"
                   />
                 </div>
               </div>
@@ -429,13 +429,13 @@ export function AssistedInputManager() {
           ) : null}
 
           {draftAction?.actionType === "suggest_template" ? (
-            <p className="mt-5 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-3 text-sm text-muted-foreground">
+            <p className="mt-5 rounded-xl border border-dashed border-[#D4DEE8] bg-[#F8FBFF] px-4 py-3 text-sm text-muted-foreground">
               Sugestão identificada de uso de modelo. Nenhuma criação automática foi executada.
             </p>
           ) : null}
 
           {draftAction?.actionType === "none" ? (
-            <p className="mt-5 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-3 text-sm text-muted-foreground">
+            <p className="mt-5 rounded-xl border border-dashed border-[#D4DEE8] bg-[#F8FBFF] px-4 py-3 text-sm text-muted-foreground">
               Nenhuma ação foi preparada. Ajuste o texto e interprete novamente.
             </p>
           ) : null}
@@ -452,7 +452,7 @@ export function AssistedInputManager() {
           ) : null}
 
           {validationWarnings.length > 0 ? (
-            <ul className="mt-3 space-y-1 text-sm text-amber-700">
+            <ul className="mt-3 space-y-1 text-sm text-[#C2410C]">
               {validationWarnings.map((warning, index) => (
                 <li key={`${index}-${warning}`}>• {warning}</li>
               ))}
@@ -460,7 +460,7 @@ export function AssistedInputManager() {
           ) : null}
         </section>
       ) : (
-        <section className="rounded-2xl border border-dashed border-border bg-muted/30 px-6 py-5 text-sm text-muted-foreground">
+        <section className="rounded-xl border border-dashed border-[#D4DEE8] bg-[#F8FBFF] px-6 py-5 text-sm text-muted-foreground">
           Entrada assistida pronta para interpretar instruções curtas e mostrar um rascunho antes de criar qualquer ação real.
         </section>
       )}
@@ -469,8 +469,8 @@ export function AssistedInputManager() {
         <p
           className={
             feedback.type === "success"
-              ? "text-sm text-emerald-700"
-              : "text-sm text-rose-700"
+              ? "text-sm text-[#166534]"
+              : "text-sm text-[#B91C1C]"
           }
         >
           {feedback.message}

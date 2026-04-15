@@ -80,6 +80,22 @@ function getChargeStatusLabel(status: "pending" | "paid" | "overdue"): string {
   return "Em atraso";
 }
 
+function getChargeStatusBadgeClass(status: "pending" | "paid" | "overdue"): string {
+  if (status === "paid") {
+    return "firmus-chip-success";
+  }
+
+  if (status === "overdue") {
+    return "firmus-chip-warning";
+  }
+
+  if (status === "pending") {
+    return "firmus-chip-info";
+  }
+
+  return "firmus-chip-success";
+}
+
 function getDefaultFormValues(clients: Client[]): ChargeFormValues {
   return {
     clientId: clients[0]?.id ?? "",
@@ -240,7 +256,7 @@ export function ChargesManager() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <div className="mb-5 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-foreground">
@@ -260,7 +276,7 @@ export function ChargesManager() {
         </div>
 
         {charges.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
+          <p className="firmus-empty-state">
             Crie sua primeira cobrança para acompanhar os pagamentos esperados dos clientes.
           </p>
         ) : (
@@ -271,27 +287,33 @@ export function ChargesManager() {
                 <li
                   key={charge.id}
                   data-testid={`charge-item-${charge.id}`}
-                  className="rounded-xl border border-border bg-background px-4 py-3"
+                  className="firmus-list-card sm:px-5"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="font-medium text-foreground">
+                      <p className="text-base font-semibold text-[#0F172A]">
                         {getClientName(clients, charge.clientId)}
                       </p>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {formatMoneyFromCents(charge.amountInCents)} • {getChargeStatusLabel(resolvedStatus)}
-                      </p>
-                      <p className="mt-1 text-xs text-muted-foreground">
+                      <div className="mt-2 flex flex-wrap items-center gap-2">
+                        <p className="text-sm font-semibold text-[#1E293B]">{formatMoneyFromCents(charge.amountInCents)}</p>
+                        <span
+                          className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${getChargeStatusBadgeClass(resolvedStatus)}`}
+                        >
+                          {getChargeStatusLabel(resolvedStatus)}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-xs text-[#64748B]">
                         Vence em {charge.dueDate.slice(0, 10)}
                         {charge.quoteId ? " • Orçamento vinculado" : ""}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 self-center">
                       {charge.status === "pending" ? (
                         <Button
                           type="button"
-                          variant="outline"
+                          variant="default"
                           size="sm"
+                          className="bg-[#1F8A68] text-white hover:bg-[#166F53]"
                           data-testid={`charge-mark-paid-${charge.id}`}
                           onClick={() => handleMarkAsPaid(charge)}
                         >
@@ -325,13 +347,13 @@ export function ChargesManager() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
           {editingChargeId ? "Editar cobrança" : "Criar cobrança"}
         </h2>
 
         {!hasClients ? (
-          <p className="mt-5 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
+          <p className="mt-5 firmus-empty-state">
             Você precisa de pelo menos um cliente antes de criar cobranças.{" "}
             <Link href="/clients" className="underline underline-offset-4 hover:no-underline">
               Abrir clientes
@@ -351,7 +373,7 @@ export function ChargesManager() {
                   required
                   value={formValues.clientId}
                   onChange={(event) => handleClientChange(event.target.value)}
-                  className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                  className="firmus-input"
                 >
                   {clients.map((client) => (
                     <option key={client.id} value={client.id}>
@@ -370,7 +392,7 @@ export function ChargesManager() {
                   name="quoteId"
                   value={formValues.quoteId}
                   onChange={(event) => updateField("quoteId", event.target.value)}
-                  className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                  className="firmus-input"
                 >
                   <option value="">Sem orçamento</option>
                   {availableQuotes.map((quote) => (
@@ -393,7 +415,7 @@ export function ChargesManager() {
                   placeholder="0.00"
                   value={formValues.amount}
                   onChange={(event) => updateField("amount", event.target.value)}
-                  className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                  className="firmus-input"
                 />
               </div>
 
@@ -408,7 +430,7 @@ export function ChargesManager() {
                   required
                   value={formValues.dueDate}
                   onChange={(event) => updateField("dueDate", event.target.value)}
-                  className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                  className="firmus-input"
                 />
               </div>
 
@@ -423,7 +445,7 @@ export function ChargesManager() {
                   onChange={(event) =>
                     updateField("status", event.target.value as ChargeStatus)
                   }
-                  className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                  className="firmus-input"
                 >
                   {STATUS_OPTIONS.map((status) => (
                     <option key={status} value={status}>

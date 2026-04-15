@@ -139,7 +139,7 @@ export function ServicesManager() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <div className="mb-5 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-foreground">
@@ -159,7 +159,7 @@ export function ServicesManager() {
         </div>
 
         {services.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
+          <p className="firmus-empty-state">
             Adicione seu primeiro serviço para montar orçamentos com uma base clara e reaproveitável.
           </p>
         ) : (
@@ -168,7 +168,7 @@ export function ServicesManager() {
               <li
                 key={service.id}
                 data-testid={`service-item-${service.id}`}
-                className="rounded-xl border border-border bg-background px-4 py-3"
+                className="firmus-list-card"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -206,7 +206,7 @@ export function ServicesManager() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
           {selectedService ? "Editar serviço" : "Criar serviço"}
         </h2>
@@ -221,7 +221,7 @@ export function ServicesManager() {
               required
               value={formValues.name}
               onChange={(event) => updateField("name", event.target.value)}
-              className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="firmus-input"
             />
           </div>
 
@@ -235,7 +235,7 @@ export function ServicesManager() {
               rows={3}
               value={formValues.description}
               onChange={(event) => updateField("description", event.target.value)}
-              className="rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="firmus-textarea"
             />
           </div>
 
@@ -252,7 +252,7 @@ export function ServicesManager() {
                 placeholder="0.00"
                 value={formValues.basePrice}
                 onChange={(event) => updateField("basePrice", event.target.value)}
-                className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                className="firmus-input"
               />
             </div>
 
@@ -271,7 +271,7 @@ export function ServicesManager() {
                 onChange={(event) =>
                   updateField("estimatedDeliveryDays", event.target.value)
                 }
-                className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                className="firmus-input"
               />
             </div>
           </div>

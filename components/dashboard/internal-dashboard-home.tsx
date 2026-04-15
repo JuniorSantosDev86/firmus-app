@@ -202,11 +202,12 @@ export function InternalDashboardHome() {
   const servicesMetric = snapshot.servicesCount === 0 ? "Nenhum" : `${snapshot.activeServicesCount} ativos`;
 
   return (
-    <main className="space-y-8 sm:space-y-10" data-testid="dashboard-home">
+    <main className="space-y-9 sm:space-y-11" data-testid="dashboard-home">
       <DashboardHero hasBusinessProfile={snapshot.hasBusinessProfile} />
 
       <section className="space-y-4" aria-label="Resumo operacional" data-testid="dashboard-operational-summary">
         <header>
+          <p className="text-xs font-semibold tracking-[0.12em] text-[#64748B] uppercase">Controle da operação</p>
           <h2 className="text-[22px] font-semibold tracking-tight text-[#0F172A]">Resumo operacional</h2>
           <p className="mt-1 text-sm text-[#64748B]">Leitura rápida do estado atual da operação.</p>
         </header>
@@ -235,7 +236,7 @@ export function InternalDashboardHome() {
           <article className="rounded-[20px] border border-[#E2E8F0] bg-white p-5 shadow-[0_14px_34px_-28px_rgba(15,23,42,0.4)]">
             <div className="flex items-center justify-between gap-2">
               <p className="text-sm font-medium text-[#475569]">Lembretes pendentes</p>
-              <BellRing className="h-4 w-4 text-[#6366F1]" aria-hidden="true" />
+              <BellRing className="h-4 w-4 text-[#0EA5A4]" aria-hidden="true" />
             </div>
             <p className="mt-2 text-2xl font-semibold text-[#0F172A]">{snapshot.pendingRemindersCount}</p>
             <p className="mt-1 text-sm text-[#64748B]">Follow-ups e tarefas ainda não concluídos.</p>
@@ -254,6 +255,7 @@ export function InternalDashboardHome() {
 
       <section className="space-y-4" aria-label="Próximas ações" data-testid="dashboard-next-actions">
         <header>
+          <p className="text-xs font-semibold tracking-[0.12em] text-[#64748B] uppercase">Prioridades</p>
           <h2 className="text-[22px] font-semibold tracking-tight text-[#0F172A]">Próximas ações</h2>
           <p className="mt-1 text-sm text-[#64748B]">Pendências priorizadas por vencimento para agir agora.</p>
         </header>
@@ -280,13 +282,18 @@ export function InternalDashboardHome() {
                       <p className="text-sm font-medium text-[#334155]">{formatMoneyFromCents(item.amountInCents)}</p>
                     ) : null}
                     <span
-                      className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
-                        item.isOverdue ? "bg-[#FFF7ED] text-[#C2410C]" : "bg-[#ECFEFF] text-[#0F766E]"
+                      className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${
+                        item.isOverdue
+                          ? "border-[#FED7AA] bg-[#FFF7ED] text-[#C2410C]"
+                          : "border-[#BAE6FD] bg-[#ECFEFF] text-[#0F766E]"
                       }`}
                     >
                       {item.badge}
                     </span>
-                    <Link href={item.href} className="text-sm font-medium text-[#0EA5A4] hover:underline">
+                    <Link
+                      href={item.href}
+                      className="inline-flex h-8 items-center rounded-lg border border-[#B6E9E8] bg-[#E9FAFA] px-3 text-sm font-semibold text-[#0B6D6D] transition-colors hover:bg-[#DDF4F3]"
+                    >
                       Abrir
                     </Link>
                   </div>
@@ -299,6 +306,7 @@ export function InternalDashboardHome() {
 
       <section className="space-y-4" aria-label="Acesso rápido">
         <header>
+          <p className="text-xs font-semibold tracking-[0.12em] text-[#64748B] uppercase">Atalhos</p>
           <h2 className="text-[22px] font-semibold tracking-tight text-[#0F172A]">Acesso rápido</h2>
           <p className="mt-1 text-sm text-[#64748B]">
             Atalhos para módulos principais com dados reais do workspace.

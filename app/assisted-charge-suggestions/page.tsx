@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function AssistedChargeSuggestionsPage() {
   return (
-    <main className="mx-auto w-full max-w-3xl space-y-8">
+    <main className="mx-auto w-full max-w-[1120px] space-y-8">
       <PageHeader
         title="Sugestões de cobrança"
         description="Revise sugestões derivadas dos dados atuais e confirme manualmente cada ação."

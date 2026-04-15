@@ -14,5 +14,9 @@ export const metadata: Metadata = {
 export default async function ClientDetailPage({ params }: ClientDetailPageProps) {
   const { clientId } = await params;
 
-  return <ClientDetailView clientId={clientId} />;
+  return (
+    <main className="mx-auto w-full max-w-[1120px] space-y-8">
+      <ClientDetailView clientId={clientId} />
+    </main>
+  );
 }

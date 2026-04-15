@@ -50,24 +50,24 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --background: #f2f6fa;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #0f766e;
+  --primary-foreground: #f8fafc;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted: #f8fafc;
+  --muted-foreground: #64748b;
+  --accent: #ecfeff;
+  --accent-foreground: #0f172a;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: #d9e3ee;
+  --input: #d0dbe8;
+  --ring: #14b8a6;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -127,5 +127,43 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer components {
+  .firmus-panel {
+    @apply rounded-[22px] border border-[#D9E3EE] bg-white p-6 shadow-[0_20px_46px_-36px_rgba(15,23,42,0.42)];
+  }
+
+  .firmus-list-card {
+    @apply rounded-[16px] border border-[#E2E8F0] bg-[#FCFEFF] px-4 py-3 shadow-[0_12px_28px_-30px_rgba(15,23,42,0.55)];
+  }
+
+  .firmus-empty-state {
+    @apply rounded-xl border border-dashed border-[#D4DEE8] bg-[#F8FBFF] px-4 py-5 text-sm text-[#64748B];
+  }
+
+  .firmus-input {
+    @apply h-10 rounded-lg border border-[#CBD5E1] bg-white px-3 text-sm text-[#0F172A] outline-none transition-colors focus-visible:border-[#14B8A6] focus-visible:ring-2 focus-visible:ring-[#99F6E4];
+  }
+
+  .firmus-textarea {
+    @apply rounded-lg border border-[#CBD5E1] bg-white px-3 py-2 text-sm text-[#0F172A] outline-none transition-colors focus-visible:border-[#14B8A6] focus-visible:ring-2 focus-visible:ring-[#99F6E4];
+  }
+
+  .firmus-subpanel {
+    @apply rounded-xl border border-[#E2E8F0] bg-[#F8FBFF] p-4;
+  }
+
+  .firmus-chip-success {
+    @apply border border-[#BBF7D0] bg-[#F0FDF4] text-[#166534];
+  }
+
+  .firmus-chip-warning {
+    @apply border border-[#FED7AA] bg-[#FFF7ED] text-[#C2410C];
+  }
+
+  .firmus-chip-info {
+    @apply border border-[#BAE6FD] bg-[#ECFEFF] text-[#0F766E];
   }
 }

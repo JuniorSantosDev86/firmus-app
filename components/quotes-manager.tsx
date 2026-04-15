@@ -353,7 +353,7 @@ export function QuotesManager() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <div className="mb-5 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-foreground">
@@ -373,7 +373,7 @@ export function QuotesManager() {
         </div>
 
         {store.quotes.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
+          <p className="firmus-empty-state">
             Crie seu primeiro orçamento para conectar clientes, serviços e preços em um único fluxo.
           </p>
         ) : (
@@ -384,7 +384,7 @@ export function QuotesManager() {
                 <li
                   key={quote.id}
                   data-testid={`quote-item-${quote.id}`}
-                  className="rounded-xl border border-border bg-background px-4 py-3"
+                  className="firmus-list-card"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div>
@@ -430,13 +430,13 @@ export function QuotesManager() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
           {editingQuoteId ? "Editar orçamento" : "Criar orçamento"}
         </h2>
 
         {!hasClients ? (
-          <p className="mt-5 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-5 text-sm text-muted-foreground">
+          <p className="mt-5 firmus-empty-state">
             Você precisa de pelo menos um cliente antes de criar orçamentos.{" "}
             <Link href="/clients" className="underline underline-offset-4 hover:no-underline">
               Abrir clientes
@@ -456,7 +456,7 @@ export function QuotesManager() {
                   required
                   value={formValues.clientId}
                   onChange={(event) => updateField("clientId", event.target.value)}
-                  className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                  className="firmus-input"
                 >
                   {clients.map((client) => (
                     <option key={client.id} value={client.id}>
@@ -477,7 +477,7 @@ export function QuotesManager() {
                   onChange={(event) =>
                     updateField("status", event.target.value as QuoteStatus)
                   }
-                  className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                  className="firmus-input"
                 >
                   {STATUS_OPTIONS.map((status) => (
                     <option key={status} value={status}>
@@ -498,7 +498,7 @@ export function QuotesManager() {
                   required
                   value={formValues.issueDate}
                   onChange={(event) => updateField("issueDate", event.target.value)}
-                  className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                  className="firmus-input"
                 />
               </div>
 
@@ -512,7 +512,7 @@ export function QuotesManager() {
                   type="date"
                   value={formValues.validUntil}
                   onChange={(event) => updateField("validUntil", event.target.value)}
-                  className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                  className="firmus-input"
                 />
               </div>
             </div>
@@ -526,7 +526,7 @@ export function QuotesManager() {
               </div>
 
               {services.length === 0 ? (
-                <p className="rounded-lg border border-dashed border-border bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
+                <p className="rounded-xl border border-dashed border-[#D4DEE8] bg-[#F8FBFF] px-3 py-2 text-xs text-muted-foreground">
                   Nenhum serviço disponível ainda. Você ainda pode preencher descrição e preço manualmente.
                 </p>
               ) : null}
@@ -535,7 +535,7 @@ export function QuotesManager() {
                 {preparedItems.map((item, index) => (
                   <div
                     key={item.id ?? `new-item-${index}`}
-                    className="rounded-xl border border-border bg-background p-4"
+                    className="firmus-subpanel"
                   >
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="grid gap-2 sm:col-span-2">
@@ -547,7 +547,7 @@ export function QuotesManager() {
                           onChange={(event) =>
                             handleServiceSelection(index, event.target.value)
                           }
-                          className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                          className="firmus-input"
                         >
                           <option value="">Item manual</option>
                           {services.map((service) => (
@@ -568,7 +568,7 @@ export function QuotesManager() {
                           onChange={(event) =>
                             updateItemField(index, "description", event.target.value)
                           }
-                          className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                          className="firmus-input"
                         />
                       </div>
 
@@ -584,7 +584,7 @@ export function QuotesManager() {
                           onChange={(event) =>
                             updateItemField(index, "quantity", event.target.value)
                           }
-                          className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                          className="firmus-input"
                         />
                       </div>
 
@@ -600,7 +600,7 @@ export function QuotesManager() {
                           onChange={(event) =>
                             updateItemField(index, "unitPrice", event.target.value)
                           }
-                          className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                          className="firmus-input"
                         />
                       </div>
                     </div>
@@ -624,7 +624,7 @@ export function QuotesManager() {
               </div>
             </div>
 
-            <div className="rounded-xl border border-border bg-background p-4">
+            <div className="firmus-subpanel">
               <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
                 <div className="grid gap-2">
                   <label htmlFor="discount" className="text-sm font-medium">
@@ -637,7 +637,7 @@ export function QuotesManager() {
                     placeholder="0.00"
                     value={formValues.discount}
                     onChange={(event) => updateField("discount", event.target.value)}
-                    className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-background transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                    className="firmus-input"
                   />
                 </div>
 

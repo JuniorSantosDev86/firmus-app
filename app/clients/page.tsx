@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ClientsPage() {
   return (
-    <main className="mx-auto w-full max-w-3xl space-y-8">
+    <main className="mx-auto w-full max-w-[1120px] space-y-8">
       <PageHeader
         title="Clientes"
         description="Mantenha sua base de clientes organizada para os próximos fluxos de serviços e orçamentos."

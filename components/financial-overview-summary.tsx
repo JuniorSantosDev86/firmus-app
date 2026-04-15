@@ -34,11 +34,11 @@ export function FinancialOverviewSummary() {
   }, []);
 
   return (
-    <section className="rounded-2xl border border-border bg-card p-6">
+    <section className="firmus-panel">
       <div className="grid gap-3 sm:grid-cols-3">
         <article
           data-testid="overview-available-today"
-          className="rounded-xl border border-border bg-background px-4 py-4"
+          className="firmus-subpanel"
         >
           <p className="text-sm text-muted-foreground">Disponível hoje</p>
           <p className="mt-2 text-xl font-semibold text-foreground">
@@ -51,7 +51,7 @@ export function FinancialOverviewSummary() {
 
         <article
           data-testid="overview-receivable-7-days"
-          className="rounded-xl border border-border bg-background px-4 py-4"
+          className="firmus-subpanel"
         >
           <p className="text-sm text-muted-foreground">A receber em 7 dias</p>
           <p className="mt-2 text-xl font-semibold text-foreground">
@@ -64,7 +64,7 @@ export function FinancialOverviewSummary() {
 
         <article
           data-testid="overview-overdue"
-          className="rounded-xl border border-border bg-background px-4 py-4"
+          className="firmus-subpanel"
         >
           <p className="text-sm text-muted-foreground">Valor em atraso</p>
           <p className="mt-2 text-xl font-semibold text-foreground">

@@ -38,7 +38,7 @@ export function ActivitySection({ events }: ActivitySectionProps) {
       </header>
 
       {events.length > 0 ? (
-        <div className="rounded-[20px] border border-[#E2E8F0] bg-white shadow-[0_14px_34px_-30px_rgba(15,23,42,0.45)]">
+        <div className="rounded-[20px] border border-[#D9E3EE] bg-white shadow-[0_20px_46px_-34px_rgba(15,23,42,0.45)]">
           <ul className="divide-y divide-[#E2E8F0]">
             {events.map((event) => (
               <li
@@ -62,7 +62,7 @@ export function ActivitySection({ events }: ActivitySectionProps) {
           </ul>
         </div>
       ) : (
-        <div className="rounded-[20px] border border-[#E2E8F0] bg-white px-6 py-8 text-center shadow-[0_14px_34px_-30px_rgba(15,23,42,0.45)]">
+        <div className="rounded-[20px] border border-[#D9E3EE] bg-white px-6 py-8 text-center shadow-[0_20px_46px_-34px_rgba(15,23,42,0.45)]">
           <h3 className="text-lg font-semibold text-[#0F172A]">Sua linha do tempo vai aparecer aqui</h3>
           <p className="mt-2 text-sm text-[#64748B]">
             Crie clientes, serviços ou orçamentos para começar a acompanhar as atividades recentes.

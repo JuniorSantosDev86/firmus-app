@@ -122,7 +122,7 @@ export function TemplatesManager() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-semibold tracking-tight text-foreground">
             {editingId ? "Editar modelo" : "Novo modelo"}
@@ -145,7 +145,7 @@ export function TemplatesManager() {
                 name="template-name"
                 value={formValues.name}
                 onChange={(event) => updateField("name", event.target.value)}
-                className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+                className="firmus-input"
                 placeholder="Ex.: Follow-up de aprovação"
                 required
               />
@@ -160,7 +160,7 @@ export function TemplatesManager() {
                 name="template-category"
                 value={formValues.category}
                 onChange={(event) => updateField("category", event.target.value as TemplateCategory)}
-                className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+                className="firmus-input"
               >
                 {TEMPLATE_CATEGORY_ORDER.map((category) => (
                   <option key={category} value={category}>
@@ -179,7 +179,7 @@ export function TemplatesManager() {
                 name="template-content"
                 value={formValues.content}
                 onChange={(event) => updateField("content", event.target.value)}
-                className="min-h-28 rounded-md border border-input bg-background px-3 py-2 text-sm"
+                className="firmus-textarea min-h-28"
                 placeholder="Escreva a mensagem base para reutilizar no dia a dia."
                 required
               />
@@ -190,7 +190,7 @@ export function TemplatesManager() {
         </form>
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="firmus-panel">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-semibold tracking-tight text-foreground">Modelos</h2>
 
@@ -205,7 +205,7 @@ export function TemplatesManager() {
               onChange={(event) =>
                 setCategoryFilter(event.target.value as "all" | TemplateCategory)
               }
-              className="h-9 rounded-md border border-input bg-background px-3 text-sm"
+              className="firmus-input h-9"
             >
               <option value="all">Todas</option>
               {TEMPLATE_CATEGORY_ORDER.map((category) => (
@@ -232,7 +232,7 @@ export function TemplatesManager() {
                     {group.items.map((template) => (
                       <li
                         key={template.id}
-                        className="rounded-xl border border-border bg-background px-4 py-3"
+                        className="firmus-list-card"
                       >
                         <div className="flex flex-wrap items-start justify-between gap-3">
                           <div>

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ChargesPage() {
   return (
-    <main className="mx-auto w-full max-w-3xl space-y-8">
+    <main className="mx-auto w-full max-w-[1120px] space-y-8">
       <PageHeader
         title="Cobranças"
         description="Registre valores esperados de clientes com vencimento e status."

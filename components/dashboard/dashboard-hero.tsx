@@ -9,19 +9,19 @@ type DashboardHeroProps = {
 
 export function DashboardHero({ hasBusinessProfile }: DashboardHeroProps) {
   return (
-    <section className="relative overflow-hidden rounded-[28px] border border-[#CBD5E1] bg-gradient-to-br from-[#CFFAFE] via-[#F8FAFC] to-[#DBEAFE] px-6 py-10 sm:px-8 lg:px-12 lg:py-12">
+    <section className="relative overflow-hidden rounded-[28px] border border-[#D9E3EE] bg-gradient-to-br from-[#F5FAFF] via-[#F8FBFF] to-[#EEF7FF] px-6 py-10 shadow-[0_24px_52px_-40px_rgba(15,23,42,0.48)] sm:px-8 lg:px-12 lg:py-11">
       <div
-        className="absolute -left-20 top-8 h-80 w-80 rounded-full bg-[#99F6E4]/50 blur-3xl"
+        className="absolute -left-20 top-8 h-80 w-80 rounded-full bg-[#BFF7F0]/45 blur-3xl"
         aria-hidden="true"
       />
       <div
-        className="absolute -right-16 -top-10 h-72 w-72 rounded-full bg-[#DBEAFE]/70 blur-3xl"
+        className="absolute -right-16 -top-10 h-72 w-72 rounded-full bg-[#DBEAFE]/50 blur-3xl"
         aria-hidden="true"
       />
 
       <div className="relative grid gap-10 lg:grid-cols-[1.25fr_1fr] lg:items-center">
         <div className="space-y-5">
-          <div className="inline-flex items-center rounded-full border border-[#99F6E4] bg-white/80 px-3 py-1 text-xs font-medium text-[#087C7B]">
+          <div className="inline-flex items-center rounded-full border border-[#BAE6E4] bg-white px-3 py-1 text-xs font-semibold text-[#0B6D6D]">
             Painel interno de operação
           </div>
           <h1 className="max-w-xl text-4xl font-semibold tracking-tight text-[#0F172A] lg:text-5xl">
@@ -37,7 +37,7 @@ export function DashboardHero({ hasBusinessProfile }: DashboardHeroProps) {
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <Link
               href="/quotes"
-              className="inline-flex h-11 items-center justify-center rounded-xl bg-[#0EA5A4] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#0B8E8D]"
+            className="inline-flex h-11 items-center justify-center rounded-xl bg-[#0F766E] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#0D5F59]"
               data-testid="hero-primary-action"
             >
               Ir para orçamentos
@@ -45,8 +45,8 @@ export function DashboardHero({ hasBusinessProfile }: DashboardHeroProps) {
             <Link
               href="/business-profile"
               className={cn(
-                "inline-flex h-11 items-center justify-center rounded-xl border border-[#CBD5E1] bg-white px-5 text-sm font-medium text-[#334155] transition-colors",
-                "hover:border-[#94A3B8] hover:bg-[#F8FAFC]"
+                "inline-flex h-11 items-center justify-center rounded-xl border border-[#D1DDE9] bg-white px-5 text-sm font-medium text-[#334155] transition-colors",
+                "hover:border-[#9FB1C4] hover:bg-[#F8FAFC]"
               )}
               data-testid="hero-secondary-action"
             >
@@ -56,10 +56,7 @@ export function DashboardHero({ hasBusinessProfile }: DashboardHeroProps) {
         </div>
 
         <div className="relative h-[280px] lg:h-[300px]">
-          <div
-            className="absolute inset-2 rounded-[28px] bg-gradient-to-br from-[#ECFEFF]/70 via-white/35 to-[#DBEAFE]/65"
-            aria-hidden="true"
-          />
+          <div className="absolute inset-2 rounded-[28px] bg-white/55" aria-hidden="true" />
           <div className="absolute right-4 top-4 rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs font-medium text-[#475569]">
             Workspace
           </div>
