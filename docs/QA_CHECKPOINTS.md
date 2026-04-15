@@ -2188,6 +2188,40 @@ Notes:
 - PDF route remained document-only.
 - Public bio page remained minimal and professional.
 
+### Block 21 — Automation Rules Foundation
+Status: Completed and approved.
+
+Delivered:
+- automation rule domain model
+- automation rule storage helper
+- automation rule service
+- automation rule evaluator
+- internal automation rules route
+- automation rules manager UI
+- navigation entry for automation rules
+- deterministic evaluation for:
+  - timeline-event triggers
+  - derived operational conditions
+- inspectable match output
+- Cypress coverage for:
+  - rule creation
+  - persistence
+  - activation/deactivation
+  - deterministic evaluation
+
+Validation:
+- manual QA approved
+- Cypress coverage added and approved
+- included in final all-green full suite run
+- `npm run lint` passed
+- `npm run build` passed
+
+Notes:
+- Block 21 was implemented as a deterministic automation foundation, not as a hidden execution engine.
+- No scheduler, queue, worker, backend expansion, AI decision-making, or workflow builder was introduced.
+- The block prepared continuity for Block 22 without prematurely executing automatic reminder creation.
+- Evaluation remained explicit, inspectable, and based on real events and real derived conditions.
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:

@@ -671,12 +671,32 @@ Resume official roadmap at:
 ## Phase 4 — Intelligence and Automation
 
 ### Block 21 — Automation Rules Foundation
-**Status:** Pending  
+**Status:** Completed  
 **Objective:** Create the first rule-based automation layer.
+
+**Delivered:**
+- automation rule domain model
+- automation rule storage helper
+- automation rule service
+- automation rule evaluator
+- internal automation rules route
+- automation rules manager UI
+- navigation entry for automation rules
+- deterministic evaluation for:
+  - timeline-event triggers
+  - derived operational conditions
+- inspectable match output
+- Cypress coverage for:
+  - rule creation
+  - persistence
+  - activation/deactivation
+  - deterministic evaluation
+
+**Validation status:** Approved
 
 ### Block 22 — Automatic Reminder Creation
 **Status:** Pending  
-**Objective:** Generate reminders automatically from events and due dates.
+**Objective:** Use the automation foundation to create reminders automatically from validated rule matches.
 
 ### Block 23 — Simple Reactivation Radar
 **Status:** Pending  
@@ -780,10 +800,9 @@ Resume official roadmap at:
 # Current Status
 
 **Current technical exception:** Product Shell and Control Tower completed  
-**Current official roadmap block:** Block 21 — Automation Rules Foundation  
+**Current official roadmap block:** Block 22 — Automatic Reminder Creation  
 **Overall project status:** In progress
 
-- Block 12 — Templates completed and approved.
 - Block 13 — Weekly Summary completed and approved.
 - Block 14 — Text-Based Assisted Input completed and approved.
 - Block 15 — Assisted Charge Suggestions completed and approved.
@@ -792,9 +811,10 @@ Resume official roadmap at:
 - Block 18 — Quote Approval Actions completed and approved.
 - Block 19 — Basic Bio Link completed and approved.
 - Block 20 — Public Touchpoint Polish completed and approved.
-- Assisted operations layer is functionally complete for the current roadmap slice.
-- The public-growth layer is now completed through its current planned polish milestone.
-- The next official implementation target is Block 21 — Automation Rules Foundation.
+- Block 21 — Automation Rules Foundation completed and approved.
+- The public-growth layer is completed through its current planned milestone.
+- The intelligence-and-automation layer has now started with a validated deterministic rules foundation.
+- The next official implementation target is Block 22 — Automatic Reminder Creation.
 
 ---
 

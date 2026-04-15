@@ -10,3 +10,4 @@ export * from "@/lib/domain/reminder";
 export * from "@/lib/domain/template";
 export * from "@/lib/domain/timeline-event";
 export * from "@/lib/domain/weekly-summary";
+export * from "@/lib/domain/automation-rule";

@@ -4,6 +4,7 @@ import {
   Bell,
   Bot,
   Building2,
+  Cpu,
   ClipboardList,
   FileText,
   HandCoins,
@@ -107,6 +108,14 @@ export const PRIMARY_NAVIGATION: NavigationItem[] = [
     icon: Lightbulb,
     group: "inteligencia",
     testId: "nav-assisted-charge-suggestions",
+  },
+  {
+    id: "automation-rules",
+    label: "Regras de automação",
+    href: "/automation-rules",
+    icon: Cpu,
+    group: "inteligencia",
+    testId: "nav-automation-rules",
   },
   {
     id: "weekly-summary",
