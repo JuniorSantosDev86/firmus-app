@@ -10,6 +10,8 @@ export type CreateReminderInput = {
   chargeId?: string;
   quoteId?: string;
   sourceType?: ReminderSourceType;
+  sourceRuleId?: string;
+  sourceFingerprint?: string;
 };
 
 export type UpdateReminderPatch = {
@@ -20,6 +22,8 @@ export type UpdateReminderPatch = {
   chargeId?: string;
   quoteId?: string;
   sourceType?: ReminderSourceType;
+  sourceRuleId?: string;
+  sourceFingerprint?: string;
   status?: ReminderStatus;
 };
 
@@ -28,6 +32,7 @@ const SOURCE_TYPES: ReadonlySet<ReminderSourceType> = new Set([
   "charge",
   "quote",
   "client_followup",
+  "automation_rule",
 ]);
 
 function generateReminderId(): string {
@@ -137,6 +142,16 @@ function normalizeReminder(raw: unknown): Reminder | null {
     reminder.quoteId = quoteId;
   }
 
+  const sourceRuleId = asOptionalString(data.sourceRuleId);
+  if (sourceRuleId !== undefined) {
+    reminder.sourceRuleId = sourceRuleId;
+  }
+
+  const sourceFingerprint = asOptionalString(data.sourceFingerprint);
+  if (sourceFingerprint !== undefined) {
+    reminder.sourceFingerprint = sourceFingerprint;
+  }
+
   if (status === "done") {
     reminder.completedAt = asIsoDate(data.completedAt) ?? reminder.updatedAt;
   }
@@ -222,6 +237,16 @@ export function createReminder(input: CreateReminderInput): Reminder | null {
     reminder.quoteId = quoteId;
   }
 
+  const sourceRuleId = asOptionalString(input.sourceRuleId);
+  if (sourceRuleId !== undefined) {
+    reminder.sourceRuleId = sourceRuleId;
+  }
+
+  const sourceFingerprint = asOptionalString(input.sourceFingerprint);
+  if (sourceFingerprint !== undefined) {
+    reminder.sourceFingerprint = sourceFingerprint;
+  }
+
   saveReminders([reminder, ...existing]);
   return reminder;
 }
@@ -284,6 +309,24 @@ export function updateReminder(id: string, patch: UpdateReminderPatch): Reminder
     updated.quoteId = nextQuoteId;
   } else {
     delete updated.quoteId;
+  }
+
+  const nextSourceRuleId =
+    patch.sourceRuleId === undefined ? target.sourceRuleId : asOptionalString(patch.sourceRuleId);
+  if (nextSourceRuleId !== undefined) {
+    updated.sourceRuleId = nextSourceRuleId;
+  } else {
+    delete updated.sourceRuleId;
+  }
+
+  const nextSourceFingerprint =
+    patch.sourceFingerprint === undefined
+      ? target.sourceFingerprint
+      : asOptionalString(patch.sourceFingerprint);
+  if (nextSourceFingerprint !== undefined) {
+    updated.sourceFingerprint = nextSourceFingerprint;
+  } else {
+    delete updated.sourceFingerprint;
   }
 
   if (target.status !== "done" && nextStatus === "done") {

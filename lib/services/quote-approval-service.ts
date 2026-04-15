@@ -1,5 +1,6 @@
 import type { Quote } from "@/lib/domain";
 import { markQuoteAsApproved, readQuoteStore } from "@/lib/quote-storage";
+import { executeAutomationRulesForEvent } from "@/lib/services/automation-rule-executor";
 import { createTimelineEvent } from "@/lib/services/timeline";
 
 type QuoteApprovalFailureReason = "not_found" | "not_allowed";
@@ -63,7 +64,7 @@ export function approveQuoteByPublicId(publicId: string): QuoteApprovalResult {
     };
   }
 
-  createTimelineEvent({
+  const event = createTimelineEvent({
     type: "quote_approved",
     entityType: "quote",
     entityId: approvedQuote.id,
@@ -71,6 +72,7 @@ export function approveQuoteByPublicId(publicId: string): QuoteApprovalResult {
       approvedAt: approvedQuote.approvedAt ?? null,
     },
   });
+  executeAutomationRulesForEvent(event);
 
   return {
     ok: true,

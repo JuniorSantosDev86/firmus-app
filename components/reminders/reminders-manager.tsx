@@ -127,6 +127,14 @@ function ReminderItem({
           >
             {dueLabel}
           </span>
+          {reminder.sourceType === "automation_rule" ? (
+            <p
+              className="mt-2 text-xs font-medium text-muted-foreground"
+              data-testid={`reminder-automation-source-${reminder.id}`}
+            >
+              Gerado por automação
+            </p>
+          ) : null}
           {clientName ? (
             <p className="mt-2 text-xs text-muted-foreground">Cliente: {clientName}</p>
           ) : null}

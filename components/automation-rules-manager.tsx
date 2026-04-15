@@ -7,13 +7,17 @@ import {
   AUTOMATION_ACTION_TYPES,
   AUTOMATION_DERIVED_TRIGGER_TYPES,
   AUTOMATION_EVENT_TRIGGER_TYPES,
+  type AutomationRuleActionType,
   type AutomationDerivedTriggerType,
   type AutomationEventTriggerType,
   type AutomationRule,
   type AutomationRuleEvaluationResult,
-  type AutomationRuleActionType,
 } from "@/lib/domain/automation-rule";
 import { evaluateAutomationRules } from "@/lib/services/automation-rule-evaluator";
+import {
+  executeAutomationRuleMatches,
+  type AutomationRuleExecutionResult,
+} from "@/lib/services/automation-rule-executor";
 import {
   createAutomationRule,
   listAutomationRules,
@@ -32,7 +36,7 @@ const DERIVED_LABELS: Record<AutomationDerivedTriggerType, string> = {
 };
 
 const ACTION_LABELS: Record<AutomationRuleActionType, string> = {
-  create_reminder_candidate: "Criar candidato de lembrete",
+  create_reminder_candidate: "Criar lembrete real",
   create_reminder_preview: "Gerar prévia de lembrete",
   mark_rule_match_for_review: "Marcar correspondência para revisão",
 };
@@ -69,6 +73,15 @@ const INITIAL_EVALUATION: AutomationRuleEvaluationResult = {
   matches: [],
 };
 
+const INITIAL_EXECUTION_RESULT: AutomationRuleExecutionResult = {
+  executedAt: "",
+  totalMatches: 0,
+  createdCount: 0,
+  duplicateCount: 0,
+  nonExecutableCount: 0,
+  outcomes: [],
+};
+
 function formatDateTime(value: string): string {
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) {
@@ -100,6 +113,8 @@ export function AutomationRulesManager() {
   const [formValues, setFormValues] = useState<RuleFormValues>(INITIAL_FORM_VALUES);
   const [evaluation, setEvaluation] =
     useState<AutomationRuleEvaluationResult>(INITIAL_EVALUATION);
+  const [executionResult, setExecutionResult] =
+    useState<AutomationRuleExecutionResult>(INITIAL_EXECUTION_RESULT);
 
   function refreshRules() {
     setRules(listAutomationRules());
@@ -167,6 +182,12 @@ export function AutomationRulesManager() {
 
   function handleEvaluateNow() {
     setEvaluation(evaluateAutomationRules());
+  }
+
+  function handleExecuteMatchesNow() {
+    const currentEvaluation = evaluateAutomationRules();
+    setEvaluation(currentEvaluation);
+    setExecutionResult(executeAutomationRuleMatches(currentEvaluation.matches));
   }
 
   return (
@@ -326,6 +347,13 @@ export function AutomationRulesManager() {
           >
             Avaliar agora
           </Button>
+          <Button
+            type="button"
+            onClick={handleExecuteMatchesNow}
+            data-testid="automation-rules-execute-button"
+          >
+            Executar correspondências
+          </Button>
         </div>
 
         {rules.length === 0 ? (
@@ -379,6 +407,13 @@ export function AutomationRulesManager() {
         <p className="mt-1 text-xs text-muted-foreground">
           Última avaliação: {formatDateTime(evaluation.evaluatedAt)}
         </p>
+        <div className="mt-3 rounded-lg border border-border/70 bg-background/70 px-3 py-2 text-xs text-muted-foreground" data-testid="automation-rules-execution-summary">
+          <p>Última execução: {formatDateTime(executionResult.executedAt)}</p>
+          <p>
+            Criados: {executionResult.createdCount} | Duplicados: {executionResult.duplicateCount} |
+            Não executáveis: {executionResult.nonExecutableCount}
+          </p>
+        </div>
 
         {evaluation.matches.length === 0 ? (
           <p className="mt-4 text-sm text-muted-foreground" data-testid="automation-rules-empty-matches">

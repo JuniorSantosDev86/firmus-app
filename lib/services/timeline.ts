@@ -16,7 +16,7 @@ function generateTimelineEventId(): string {
   return `timeline_${Date.now()}_${Math.floor(Math.random() * 10_000)}`;
 }
 
-export function createTimelineEvent(params: CreateTimelineEventParams): void {
+export function createTimelineEvent(params: CreateTimelineEventParams): TimelineEvent {
   const event: TimelineEvent = {
     id: generateTimelineEventId(),
     type: params.type,
@@ -30,4 +30,5 @@ export function createTimelineEvent(params: CreateTimelineEventParams): void {
   }
 
   addTimelineEvent(event);
+  return event;
 }

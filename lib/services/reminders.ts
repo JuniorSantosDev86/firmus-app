@@ -118,6 +118,8 @@ export function createReminder(input: CreateReminderInput): Reminder | null {
       clientId: created.clientId,
       chargeId: created.chargeId,
       sourceType: created.sourceType,
+      sourceRuleId: created.sourceRuleId,
+      sourceFingerprint: created.sourceFingerprint,
     },
   });
 

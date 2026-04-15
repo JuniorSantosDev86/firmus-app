@@ -695,12 +695,35 @@ Resume official roadmap at:
 **Validation status:** Approved
 
 ### Block 22 — Automatic Reminder Creation
-**Status:** Pending  
-**Objective:** Use the automation foundation to create reminders automatically from validated rule matches.
+**Status:** Completed  
+**Objective:** Generate reminders automatically from events and due dates.
+
+**Delivered:**
+- automation rule executor
+- automation execution-log storage for deterministic deduplication
+- real reminder creation for supported automation-rule matches
+- event-based automatic execution for:
+  - charge_created
+  - charge_paid
+  - quote_approved
+- controlled derived-condition execution through explicit match execution
+- minimal reminder source metadata for automation origin
+- timeline integration with `reminder_created` only on real reminder creation
+- execution summary inside Automation Rules UI
+- automation-origin badge inside Reminders UI
+- Cypress coverage for:
+  - event-based automatic reminder creation
+  - duplicate protection
+  - inactive-rule safeguards
+  - preview/no-op action safeguards
+  - persistence after reload
+
+**Validation status:** Approved
 
 ### Block 23 — Simple Reactivation Radar
 **Status:** Pending  
 **Objective:** Identify inactive clients and support revenue recovery.
+
 
 ### Block 24 — Activity Logs
 **Status:** Pending  
@@ -800,10 +823,9 @@ Resume official roadmap at:
 # Current Status
 
 **Current technical exception:** Product Shell and Control Tower completed  
-**Current official roadmap block:** Block 22 — Automatic Reminder Creation  
+**Current official roadmap block:** Block 23 — Simple Reactivation Radar  
 **Overall project status:** In progress
 
-- Block 13 — Weekly Summary completed and approved.
 - Block 14 — Text-Based Assisted Input completed and approved.
 - Block 15 — Assisted Charge Suggestions completed and approved.
 - Block 16 — Assisted Input as Real Operational Entry Point completed and approved.
@@ -812,9 +834,10 @@ Resume official roadmap at:
 - Block 19 — Basic Bio Link completed and approved.
 - Block 20 — Public Touchpoint Polish completed and approved.
 - Block 21 — Automation Rules Foundation completed and approved.
+- Block 22 — Automatic Reminder Creation completed and approved.
 - The public-growth layer is completed through its current planned milestone.
-- The intelligence-and-automation layer has now started with a validated deterministic rules foundation.
-- The next official implementation target is Block 22 — Automatic Reminder Creation.
+- The intelligence-and-automation layer now includes a validated deterministic rules foundation plus real automatic reminder creation.
+- The next official implementation target is Block 23 — Simple Reactivation Radar.
 
 ---
 

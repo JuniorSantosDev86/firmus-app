@@ -1,4 +1,5 @@
 import type { Charge, ChargeStatus } from "@/lib/domain";
+import { executeAutomationRulesForEvent } from "@/lib/services/automation-rule-executor";
 import { createTimelineEvent } from "@/lib/services/timeline";
 
 const STORAGE_KEY = "firmus.charges";
@@ -163,19 +164,21 @@ export function upsertCharge(input: ChargeInput, chargeId?: string): Charge[] {
   saveCharges(normalized);
 
   if (!isUpdate) {
-    createTimelineEvent({
+    const event = createTimelineEvent({
       type: "charge_created",
       entityType: "charge",
       entityId: nextCharge.id,
     });
+    executeAutomationRulesForEvent(event);
   }
 
   if (existingCharge?.status === "pending" && nextCharge.status === "paid") {
-    createTimelineEvent({
+    const event = createTimelineEvent({
       type: "charge_paid",
       entityType: "charge",
       entityId: nextCharge.id,
     });
+    executeAutomationRulesForEvent(event);
   }
 
   return normalized;
