@@ -12,6 +12,7 @@ import {
   Lightbulb,
   MessageSquareText,
   ReceiptText,
+  ScrollText,
   Target,
   Users,
 } from "lucide-react";
@@ -85,6 +86,14 @@ export const PRIMARY_NAVIGATION: NavigationItem[] = [
     icon: Bell,
     group: "operacao",
     testId: "nav-reminders",
+  },
+  {
+    id: "activity-logs",
+    label: "Logs de atividade",
+    href: "/activity-logs",
+    icon: ScrollText,
+    group: "operacao",
+    testId: "nav-activity-logs",
   },
   {
     id: "reactivation-radar",

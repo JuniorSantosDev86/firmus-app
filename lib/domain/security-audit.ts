@@ -5,7 +5,13 @@ export type SecurityAuditAction =
   | "private_route_access_denied"
   | "private_api_access_denied"
   | "privacy_foundation_review_recorded"
-  | "security_config_error";
+  | "security_config_error"
+  | "automation_rule_created"
+  | "automation_rule_enabled"
+  | "automation_rule_disabled"
+  | "automation_reminder_created"
+  | "quote_approved"
+  | "charge_marked_paid";
 
 export type SecurityAuditActorType = "owner" | "anonymous" | "system";
 

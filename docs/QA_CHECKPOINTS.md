@@ -2482,6 +2482,122 @@ Validated items:
 - It does not close all future go-live obligations by itself, but it correctly creates the technical and operational foundation for the remaining security, logs, observability, and privacy work.
 - The next official step is Block 25 — Activity Logs.
 
+### Block 25 — Activity Logs
+**Status:** Completed  
+**Objective:** Track important product actions internally.
+
+**Delivered:**
+- internal Activity Logs page
+- protected internal route:
+  - `/activity-logs`
+- protected internal API endpoint:
+  - `/api/internal/activity-logs`
+- explicit activity log domain model with:
+  - category
+  - status
+  - actor
+  - entity reference
+  - readable message
+  - timestamp
+- activity log repository reusing the server-side audit source introduced in Block 24
+- activity log service with:
+  - normalization from audit records
+  - PT-BR readable messages
+  - reverse chronological ordering
+  - category filtering
+  - simple text search
+  - limit/hasMore behavior
+- internal navigation entry:
+  - `Logs de atividade`
+- Activity Logs UI with:
+  - page header
+  - category filter
+  - text search
+  - reverse chronological feed
+  - empty state
+  - load more behavior
+  - actor/entity context
+  - status/category badges
+- helper coverage for:
+  - category mapping
+  - message formatting
+  - status mapping
+  - text search
+  - reverse sorting
+  - filtering
+- integration coverage for:
+  - protected read access
+  - append/read behavior over the audit-backed source
+  - normalization into ActivityLogEntry shape
+  - pagination/limit behavior
+  - filtered server-side reads
+- visible flow coverage for:
+  - route access
+  - empty state
+  - rendering records
+  - category filter
+  - text search
+  - reverse chronological order
+  - auth protection
+  - navigation entry behavior
+
+### Validation summary
+
+#### 1. Product behavior
+**Status:** Passed
+
+Validated items:
+- Activity Logs page loads as a protected internal surface
+- Feed is readable and useful in PT-BR
+- Logs are shown in reverse chronological order
+- Filters and text search work as expected
+- Empty state is safe and coherent
+
+#### 2. Architecture and source-of-truth
+**Status:** Passed
+
+Validated items:
+- Logs are read from a server-side protected source
+- Block 25 reuses the Block 24 audit foundation instead of creating a conflicting source
+- Activity trail remains append-oriented
+- No editable/deletable UI was introduced
+
+#### 3. Scope discipline
+**Status:** Passed
+
+Validated items:
+- No observability dashboard introduced
+- No alerting/metrics/charts introduced
+- No export/reporting layer introduced
+- No RBAC or unrelated auth expansion introduced
+- No unrelated feature refactor introduced
+
+#### 4. Technical validation
+**Status:** Passed
+
+Validated items:
+- lint/build validated during implementation
+- manual QA approved
+- helper/unit coverage added
+- API/integration coverage added
+- visible Cypress coverage added
+- block approved after final test pass confirmation
+
+### Evidence
+- new internal page `/activity-logs`
+- new protected API `/api/internal/activity-logs`
+- server-side repository/service integration with Block 24 audit foundation
+- search/filter/order behaviors implemented
+- navigation entry added
+- focused test coverage added for helpers, API, and visible flow
+
+### Final QA decision
+**Approved**
+
+### Notes
+- Block 25 correctly transforms the Block 24 audit foundation into an operator-readable activity trail.
+- This block strengthens traceability and prepares the product well for Block 26 — Observability and Stability.
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:

@@ -773,8 +773,26 @@ Resume official roadmap at:
 
 
 ### Block 25 — Activity Logs
-**Status:** Pending  
+**Status:** Completed  
 **Objective:** Track important product actions internally.
+
+**Delivered:**
+- protected internal Activity Logs route
+- protected internal Activity Logs API
+- explicit activity log domain model
+- server-side repository and service reusing Block 24 audit foundation
+- readable PT-BR normalized messages
+- reverse chronological feed
+- category filter
+- text search
+- empty state
+- load more behavior
+- internal navigation entry
+- helper/unit coverage
+- API/integration coverage
+- visible E2E coverage
+
+**Validation status:** Approved
 
 ### Block 26 — Observability and Stability
 **Status:** Pending  
@@ -869,7 +887,7 @@ Resume official roadmap at:
 
 # Current Status
 
-**Current official roadmap block:** Block 25 — Activity Logs  
+**Current official roadmap block:** Block 26 — Observability and Stability  
 **Overall project status:** In progress
 
 - Block 14 — Text-Based Assisted Input completed and approved.
@@ -883,19 +901,27 @@ Resume official roadmap at:
 - Block 22 — Automatic Reminder Creation completed and approved.
 - Block 23 — Simple Reactivation Radar completed and approved.
 - Block 24 — Security & LGPD Foundation completed and approved.
+- Block 25 — Activity Logs completed and approved.
 - The public-growth layer is completed through its current planned milestone.
 - The intelligence-and-automation layer now includes:
   - deterministic automation rules
   - automatic reminder creation
   - deterministic reactivation radar
+  - protected internal activity logs
 - The MVP now has a minimum security/privacy foundation with:
   - authentication and session boundary
   - public vs private route separation
   - protected internal security/privacy actions
   - security audit foundation
   - privacy/LGPD foundation
+- The MVP now also has a protected internal traceability surface with:
+  - activity logs
+  - category filtering
+  - text search
+  - reverse chronological ordering
+  - server-side protected log source
 - The desktop sidebar navigation remains completed and stable.
-- The next official implementation target is Block 25 — Activity Logs.
+- The next official implementation target is Block 26 — Observability and Stability.
 ---
 
 # Notes
