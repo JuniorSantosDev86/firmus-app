@@ -12,6 +12,7 @@ import {
   Lightbulb,
   MessageSquareText,
   ReceiptText,
+  Target,
   Users,
 } from "lucide-react";
 
@@ -84,6 +85,14 @@ export const PRIMARY_NAVIGATION: NavigationItem[] = [
     icon: Bell,
     group: "operacao",
     testId: "nav-reminders",
+  },
+  {
+    id: "reactivation-radar",
+    label: "Radar de reativação",
+    href: "/reactivation-radar",
+    icon: Target,
+    group: "operacao",
+    testId: "nav-reactivation-radar",
   },
   {
     id: "templates",

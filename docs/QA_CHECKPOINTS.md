@@ -2222,6 +2222,156 @@ Notes:
 - The block prepared continuity for Block 22 without prematurely executing automatic reminder creation.
 - Evaluation remained explicit, inspectable, and based on real events and real derived conditions.
 
+### Block 22 — Automatic Reminder Creation
+Status: Completed and approved.
+
+Delivered:
+- automation rule executor
+- automation execution-log storage for deterministic deduplication
+- real reminder creation for supported automation-rule matches
+- event-based automatic execution for:
+  - charge_created
+  - charge_paid
+  - quote_approved
+- controlled derived-condition execution through explicit match execution
+- minimal reminder source metadata for automation origin
+- timeline integration with `reminder_created` only on real reminder creation
+- execution summary inside Automation Rules UI
+- automation-origin badge inside Reminders UI
+- Cypress coverage for:
+  - event-based automatic reminder creation
+  - duplicate protection
+  - inactive-rule safeguards
+  - preview/no-op action safeguards
+  - persistence after reload
+
+Validation:
+- manual QA approved
+- Cypress coverage added and approved
+- included in final all-green full suite run
+- `npm run lint` passed
+- `npm run build` passed
+
+Notes:
+- Block 22 was implemented as a deterministic execution layer on top of the Block 21 automation foundation.
+- Reminder creation remained inside the real reminders slice.
+- Duplicate protection was implemented through execution fingerprints, not UI heuristics.
+- No scheduler, queue, worker, backend expansion, outbound channel, or AI decision layer was introduced.
+- The block did not consume Block 23 or later scope.
+
+### Block 23 — Simple Reactivation Radar
+**Status:** Completed  
+**Objective:** Identify inactive clients and support revenue recovery.
+
+**Delivered:**
+- reactivation radar derived domain model
+- central reactivation radar service
+- deterministic eligibility computation from:
+  - clients
+  - quotes
+  - charges
+  - reminders
+  - timeline events
+- explicit opportunity classification with:
+  - `win_back`
+  - `stalled_follow_up`
+- visible reason labeling for surfaced candidates
+- conservative exclusion rules for:
+  - recent activity
+  - active collection/payment follow-up
+  - equivalent active follow-up reminder
+  - weak or non-meaningful commercial history
+- deterministic priority ordering
+- dedicated internal route:
+  - `/reactivation-radar`
+- internal navigation entry:
+  - `Radar de reativação`
+- lightweight manager UI with:
+  - Todos filter
+  - Win-back filter
+  - Follow-up filter
+  - empty state
+  - candidate list
+  - visible inactivity context
+  - open-client CTA
+  - create-reactivation-reminder CTA
+- reminder creation reusing the existing reminder infrastructure
+- duplicate-equivalent reminder protection using deterministic fingerprint/context checks
+- no dedicated persistence layer for the radar
+- Cypress coverage for:
+  - empty state
+  - win-back detection
+  - stalled follow-up detection
+  - exclusion of recent activity
+  - exclusion of already-covered follow-up cases
+  - exclusion of active collection cases
+  - reminder creation from radar
+  - reminder persistence after reload
+  - deterministic ordering
+  - navigation to client detail
+
+### Validation summary
+
+#### 1. Product behavior
+**Status:** Passed
+
+Validated items:
+- Radar renders as an internal operational surface
+- Only two opportunity kinds are surfaced:
+  - win_back
+  - stalled_follow_up
+- Each surfaced item explains why it appears
+- Candidate prioritization feels deterministic and coherent
+- Radar remains lightweight and action-oriented
+
+#### 2. Scope discipline
+**Status:** Passed
+
+Validated items:
+- No backend or API routes introduced
+- No auth or database work introduced
+- No AI behavior introduced
+- No outbound automation introduced
+- No analytics dashboard or chart layer introduced
+- No dedicated radar storage introduced
+- No unrelated refactor introduced
+
+#### 3. Reminder integration
+**Status:** Passed
+
+Validated items:
+- Reactivation reminder is created through the real reminder flow
+- Existing reminder infrastructure was reused
+- Duplicate-equivalent reminder creation is blocked safely
+- Reminder creation removes or neutralizes the surfaced candidate as expected
+- Existing timeline/reminder behavior remained coherent
+
+#### 4. Technical validation
+**Status:** Passed
+
+Validated items:
+- Local lint validation passed
+- Manual QA approved
+- Full local Cypress suite passed
+- Dedicated radar spec passed with 10 green tests
+- Full suite finished green with 17 specs and 57 tests
+
+### Evidence
+- New internal route for reactivation radar added
+- Navigation entry added to the internal shell
+- Derived radar service implemented with conservative eligibility rules
+- No new persistence layer introduced for radar state
+- Reminder creation integrated through existing services
+- Full Cypress run green, including `reactivation-radar.cy.ts`
+
+### Final QA decision
+**Approved**
+
+### Notes
+- Block 23 correctly extends the automation layer without turning Firmus into a CRM or analytics product.
+- The implementation stayed deterministic, explainable, and small.
+- This block strengthens operational leverage while preserving scope discipline for the next roadmap step.
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:

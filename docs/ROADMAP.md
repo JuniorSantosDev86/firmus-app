@@ -721,15 +721,65 @@ Resume official roadmap at:
 **Validation status:** Approved
 
 ### Block 23 — Simple Reactivation Radar
-**Status:** Pending  
+**Status:** Completed  
 **Objective:** Identify inactive clients and support revenue recovery.
 
+**Delivered:**
+- reactivation radar derived domain model
+- central reactivation radar service
+- deterministic candidate computation from existing entities
+- explicit opportunity classification:
+  - `win_back`
+  - `stalled_follow_up`
+- conservative exclusion rules for:
+  - recent activity
+  - active collection/payment follow-up
+  - existing equivalent follow-up reminder
+  - weak commercial history
+- deterministic priority ordering
+- dedicated internal reactivation radar route
+- internal navigation entry
+- lightweight operational UI with:
+  - filters
+  - empty state
+  - visible reason labels
+  - inactivity context
+  - open-client action
+  - create-reactivation-reminder action
+- reminder creation reusing the existing reminder infrastructure
+- Cypress coverage for the radar flow and safeguards
 
-### Block 24 — Activity Logs
+**Validation status:** Approved
+
+
+
+### Block 24 — Security & LGPD Foundation
+**Status:** Pending  
+**Objective:** Establish the minimum security, privacy, and compliance foundation required before real-world go-live.
+
+### Expected scope
+- authentication and authorization foundation for protected operational areas
+- safe route protection strategy for internal versus public surfaces
+- secure handling pattern for secrets and sensitive configuration
+- baseline protection for critical business and client data
+- audit-log foundation for relevant sensitive actions
+- minimum LGPD-oriented documentation and operational safeguards
+- secure backend direction for future critical data flows
+
+### Out of scope
+- full enterprise IAM
+- complex role matrix beyond MVP needs
+- full legal consultancy replacement
+- advanced SIEM stack
+- complete privacy program automation
+- broad infrastructure redesign unrelated to security hardening
+
+
+### Block 25 — Activity Logs
 **Status:** Pending  
 **Objective:** Track important product actions internally.
 
-### Block 25 — Observability and Stability
+### Block 26 — Observability and Stability
 **Status:** Pending  
 **Objective:** Improve reliability before further expansion.
 
@@ -737,15 +787,15 @@ Resume official roadmap at:
 
 ## Phase 5 — Expansion, Fiscal Compliance, and Monetization Readiness
 
-### Block 26 — Improved Text Parsing
+### Block 27 — Improved Text Parsing
 **Status:** Pending  
 **Objective:** Increase the quality of structured input interpretation.
 
-### Block 27 — Outbound Channel Abstraction
+### Block 28 — Outbound Channel Abstraction
 **Status:** Pending  
 **Objective:** Prepare the system for future external channels.
 
-### Block 28 — NFSe Foundation
+### Block 29 — NFSe Foundation
 **Status:** Pending  
 **Objective:** Prepare the minimum fiscal layer required for service invoice issuance.
 
@@ -767,7 +817,7 @@ Resume official roadmap at:
 
 ---
 
-### Block 29 — NFSe Issuance Integration
+### Block 30 — NFSe Issuance Integration
 **Status:** Pending  
 **Objective:** Emit NFS-e through the selected official-compatible integration path.
 
@@ -786,7 +836,7 @@ Resume official roadmap at:
 
 ---
 
-### Block 30 — DAS Companion and Official Channel Handoff
+### Block 31 — DAS Companion and Official Channel Handoff
 **Status:** Pending  
 **Objective:** Help the MEI stay compliant with DAS obligations without pretending to replace the official payment channels.
 
@@ -806,15 +856,15 @@ Resume official roadmap at:
 
 ---
 
-### Block 31 — Feature Flags and Plan Limits
+### Block 32 — Feature Flags and Plan Limits
 **Status:** Pending  
 **Objective:** Prepare technical support for Free / Plus / Pro plans.
 
-### Block 32 — Improved Onboarding
+### Block 33 — Improved Onboarding
 **Status:** Pending  
 **Objective:** Make the first user experience faster and more guided.
 
-### Block 33 — MVP Hardening
+### Block 34 — MVP Hardening
 **Status:** Pending  
 **Objective:** Stabilize the expanded MVP before beta usage.
 
@@ -823,7 +873,7 @@ Resume official roadmap at:
 # Current Status
 
 **Current technical exception:** Product Shell and Control Tower completed  
-**Current official roadmap block:** Block 23 — Simple Reactivation Radar  
+**Current official roadmap block:** Block 24 — Security & LGPD Foundation  
 **Overall project status:** In progress
 
 - Block 14 — Text-Based Assisted Input completed and approved.
@@ -835,9 +885,14 @@ Resume official roadmap at:
 - Block 20 — Public Touchpoint Polish completed and approved.
 - Block 21 — Automation Rules Foundation completed and approved.
 - Block 22 — Automatic Reminder Creation completed and approved.
+- Block 23 — Simple Reactivation Radar completed and approved.
 - The public-growth layer is completed through its current planned milestone.
-- The intelligence-and-automation layer now includes a validated deterministic rules foundation plus real automatic reminder creation.
-- The next official implementation target is Block 23 — Simple Reactivation Radar.
+- The intelligence-and-automation layer now includes:
+  - deterministic automation rules
+  - real automatic reminder creation
+  - deterministic reactivation radar
+- The desktop sidebar navigation is completed and should no longer be treated as pending.
+- The next official implementation target is Block 24 — Security & LGPD Foundation.
 
 ---
 
@@ -850,3 +905,6 @@ Resume official roadmap at:
 - The shell work is an intentional technical exception outside the official growth-layer numbering.
 - NFSe is now explicitly inside the MVP roadmap as part of fiscal compliance readiness.
 - DAS is included as a compliance-assistance workflow, not as a native payment rail.
+- Block 23 was validated manually and through the full local Cypress run.
+- The full local Cypress suite is green with 17 specs and 57 passing tests.
+- The project remains aligned with the layered roadmap and strict scope discipline.
