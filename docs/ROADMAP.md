@@ -754,25 +754,22 @@ Resume official roadmap at:
 
 
 ### Block 24 — Security & LGPD Foundation
-**Status:** Pending  
-**Objective:** Establish the minimum security, privacy, and compliance foundation required before real-world go-live.
+**Status:** Completed  
+**Objective:** Establish the minimum security and privacy foundation required before real go-live exposure.
 
-### Expected scope
-- authentication and authorization foundation for protected operational areas
-- safe route protection strategy for internal versus public surfaces
-- secure handling pattern for secrets and sensitive configuration
-- baseline protection for critical business and client data
-- audit-log foundation for relevant sensitive actions
-- minimum LGPD-oriented documentation and operational safeguards
-- secure backend direction for future critical data flows
+**Delivered:**
+- owner authentication flow
+- login/logout/session protection
+- protected internal routes by default
+- explicit public/private route separation
+- initial server-side trust boundary for sensitive security/privacy actions
+- centralized security/env baseline
+- minimal security audit foundation
+- minimal privacy/LGPD foundation
+- internal privacy/security status surface
+- Cypress coverage for auth, logout, route protection, public/private separation, and protected privacy/security actions
 
-### Out of scope
-- full enterprise IAM
-- complex role matrix beyond MVP needs
-- full legal consultancy replacement
-- advanced SIEM stack
-- complete privacy program automation
-- broad infrastructure redesign unrelated to security hardening
+**Validation status:** Approved
 
 
 ### Block 25 — Activity Logs
@@ -872,13 +869,12 @@ Resume official roadmap at:
 
 # Current Status
 
-**Current technical exception:** Product Shell and Control Tower completed  
-**Current official roadmap block:** Block 24 — Security & LGPD Foundation  
+**Current official roadmap block:** Block 25 — Activity Logs  
 **Overall project status:** In progress
 
 - Block 14 — Text-Based Assisted Input completed and approved.
 - Block 15 — Assisted Charge Suggestions completed and approved.
-- Block 16 — Assisted Input as Real Operational Entry Point completed and approved.
+- Block 16 — Public Quote Page completed and approved.
 - Block 17 — Premium Quote PDF completed and approved.
 - Block 18 — Quote Approval Actions completed and approved.
 - Block 19 — Basic Bio Link completed and approved.
@@ -886,14 +882,20 @@ Resume official roadmap at:
 - Block 21 — Automation Rules Foundation completed and approved.
 - Block 22 — Automatic Reminder Creation completed and approved.
 - Block 23 — Simple Reactivation Radar completed and approved.
+- Block 24 — Security & LGPD Foundation completed and approved.
 - The public-growth layer is completed through its current planned milestone.
 - The intelligence-and-automation layer now includes:
   - deterministic automation rules
-  - real automatic reminder creation
+  - automatic reminder creation
   - deterministic reactivation radar
-- The desktop sidebar navigation is completed and should no longer be treated as pending.
-- The next official implementation target is Block 24 — Security & LGPD Foundation.
-
+- The MVP now has a minimum security/privacy foundation with:
+  - authentication and session boundary
+  - public vs private route separation
+  - protected internal security/privacy actions
+  - security audit foundation
+  - privacy/LGPD foundation
+- The desktop sidebar navigation remains completed and stable.
+- The next official implementation target is Block 25 — Activity Logs.
 ---
 
 # Notes

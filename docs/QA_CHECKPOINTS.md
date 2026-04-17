@@ -2372,6 +2372,116 @@ Validated items:
 - The implementation stayed deterministic, explainable, and small.
 - This block strengthens operational leverage while preserving scope discipline for the next roadmap step.
 
+### Block 24 — Security & LGPD Foundation
+**Status:** Completed  
+**Objective:** Establish the minimum security and privacy foundation required before real go-live exposure.
+
+**Delivered:**
+- minimal owner authentication flow
+- explicit login page
+- logout flow with redirect behavior corrected
+- signed session model with secure cookie handling
+- private/public route boundary enforcement
+- protected internal routes by default
+- explicit public route allowlist for:
+  - `/login`
+  - `/public/bio`
+  - `/public/quotes/*`
+- initial server-side trust boundary for sensitive security/privacy actions
+- protected internal endpoints for privacy foundation
+- centralized environment/security baseline
+- secret/env validation foundation
+- minimal security audit domain and append-oriented service
+- audited security-sensitive actions for:
+  - login success
+  - login failure
+  - logout
+  - denied private route access
+  - denied private API access
+  - privacy review registration
+  - security config error
+- privacy/LGPD foundation domain and service
+- internal privacy foundation status surface in Business Profile
+- minimal protected bootstrap/status validation flow
+- Cypress coverage for:
+  - unauthenticated redirect from private routes
+  - valid login
+  - invalid login
+  - protected route access after authentication
+  - logout invalidation
+  - public route accessibility without authentication
+  - public route isolation from internal shell
+  - protected privacy review action
+  - fail-safe bootstrap status
+  - security audit event generation
+  - privacy foundation status load
+  - public/private separation regression
+
+### Validation summary
+
+#### 1. Authentication and session boundary
+**Status:** Passed
+
+Validated items:
+- Internal routes now require authentication
+- Valid login flow works correctly
+- Invalid login fails safely
+- Logout invalidates private access
+- Redirect behavior after logout is correct
+
+#### 2. Public vs private separation
+**Status:** Passed
+
+Validated items:
+- Explicit public routes remain reachable without auth
+- Private routes redirect correctly when unauthenticated
+- Public routes do not render the internal shell
+- No accidental exposure of internal UI on public surfaces
+
+#### 3. Security/privacy foundation
+**Status:** Passed
+
+Validated items:
+- Security audit foundation records expected events
+- Privacy/LGPD foundation status loads correctly
+- Sensitive privacy review action is protected server-side
+- Environment/security bootstrap behavior is covered
+- Business Profile now exposes a minimal internal privacy/security surface
+
+#### 4. Scope discipline
+**Status:** Passed
+
+Validated items:
+- No RBAC matrix introduced
+- No SSO/OAuth/MFA introduced
+- No full compliance center introduced
+- No full migration of all product data to backend introduced
+- No unrelated architecture refactor introduced
+
+#### 5. Technical validation
+**Status:** Passed
+
+Validated items:
+- Manual QA approved
+- Local Cypress suite fully green
+- `security-foundation.cy.ts` passed completely
+- Full local suite finished green with 18 specs and 69 tests
+
+### Evidence
+- Authentication/session flow introduced
+- Protected route boundary introduced
+- Security/privacy foundations added
+- Public/private separation validated
+- Full Cypress run green with 18 specs / 69 tests
+
+### Final QA decision
+**Approved**
+
+### Notes
+- Block 24 establishes the minimum serious trust boundary for the MVP.
+- It does not close all future go-live obligations by itself, but it correctly creates the technical and operational foundation for the remaining security, logs, observability, and privacy work.
+- The next official step is Block 25 — Activity Logs.
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:

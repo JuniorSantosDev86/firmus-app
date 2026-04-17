@@ -5,6 +5,10 @@ function isoDate(daysFromToday: number): string {
 }
 
 describe("Financial Overview", () => {
+  beforeEach(() => {
+    cy.loginFirmus();
+  });
+
   it("shows derived totals for available today, next 7 days, and overdue", () => {
     cy.visit("/financial-overview", {
       onBeforeLoad(win) {

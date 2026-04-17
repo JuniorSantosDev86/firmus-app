@@ -1,6 +1,10 @@
 const FIXED_NOW = Date.UTC(2026, 3, 10, 12, 0, 0);
 
 describe("Charges", () => {
+  beforeEach(() => {
+    cy.loginFirmus();
+  });
+
   it("creates, edits, marks as paid, and deletes a charge", () => {
     cy.clock(FIXED_NOW, ["Date"]);
 

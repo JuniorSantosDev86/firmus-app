@@ -40,6 +40,10 @@ function assertChargeSectionAmount(
 }
 
 describe("Weekly Summary", () => {
+  beforeEach(() => {
+    cy.loginFirmus();
+  });
+
   it("renders deterministic summary from controlled stored data", () => {
     cy.clock(FIXED_NOW, ["Date"]);
 

@@ -1,4 +1,8 @@
 describe("Services", () => {
+  beforeEach(() => {
+    cy.loginFirmus();
+  });
+
   it("creates, edits, and deletes a service", () => {
     cy.visit("/");
     cy.clearFirmusStorage();

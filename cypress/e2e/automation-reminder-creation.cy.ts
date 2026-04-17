@@ -25,6 +25,10 @@ function seedBaseStorage(win: Window): void {
 }
 
 describe("Automatic reminder creation", () => {
+  beforeEach(() => {
+    cy.loginFirmus();
+  });
+
   it("creates real reminders automatically from event-based rules and protects duplicates", () => {
     cy.clock(FIXED_NOW, ["Date"]);
 

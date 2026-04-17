@@ -1,4 +1,8 @@
 describe("Templates", () => {
+  beforeEach(() => {
+    cy.loginFirmus();
+  });
+
   it("loads templates screen with safe empty state", () => {
     cy.visit("/");
     cy.clearFirmusStorage();

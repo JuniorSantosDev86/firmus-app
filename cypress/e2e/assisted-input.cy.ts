@@ -63,6 +63,10 @@ function readStoredQuoteStore(
 }
 
 describe("Assisted Input", () => {
+  beforeEach(() => {
+    cy.loginFirmus();
+  });
+
   it("loads safely with guidance", () => {
     cy.clock(FIXED_NOW, ["Date"]);
 

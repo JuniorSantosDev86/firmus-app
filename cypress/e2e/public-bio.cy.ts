@@ -79,6 +79,7 @@ describe("Public Bio Link - Block 19", () => {
   });
 
   it("exposes the internal entry point from business profile", () => {
+    cy.loginFirmus();
     cy.visit("/business-profile");
     cy.getByTestId("open-public-bio-link")
       .should("be.visible")

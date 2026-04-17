@@ -1,4 +1,8 @@
 describe("Business Profile", () => {
+  beforeEach(() => {
+    cy.loginFirmus();
+  });
+
   it("creates, edits, and persists the profile", () => {
     cy.visit("/");
     cy.clearFirmusStorage();

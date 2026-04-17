@@ -1,4 +1,8 @@
 describe("Quotes", () => {
+  beforeEach(() => {
+    cy.loginFirmus();
+  });
+
   function quoteItemByIndex(index: number) {
     return cy.get("form").find(".firmus-subpanel").eq(index);
   }

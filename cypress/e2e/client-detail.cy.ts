@@ -5,6 +5,10 @@ function isoDate(daysFromToday: number): string {
 }
 
 describe("Client Detail", () => {
+  beforeEach(() => {
+    cy.loginFirmus();
+  });
+
   it("loads valid client detail and renders only related quotes, charges, and timeline", () => {
     cy.visit("/clients/client-1", {
       onBeforeLoad(win) {

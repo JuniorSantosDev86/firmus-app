@@ -137,6 +137,10 @@ function seedRadarStorage(
 }
 
 describe("Reactivation radar", () => {
+  beforeEach(() => {
+    cy.loginFirmus();
+  });
+
   it("renders empty state when no eligible candidates exist", () => {
     cy.clock(FIXED_NOW, ["Date"]);
 

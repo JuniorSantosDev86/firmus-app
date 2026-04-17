@@ -1,6 +1,10 @@
 const FIXED_NOW = Date.UTC(2026, 3, 15, 12, 0, 0);
 
 describe("Automation rules", () => {
+  beforeEach(() => {
+    cy.loginFirmus();
+  });
+
   it("creates rules, persists state, toggles activation, and evaluates deterministic matches", () => {
     cy.clock(FIXED_NOW, ["Date"]);
 

@@ -16,12 +16,13 @@ type AppShellProps = {
 export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isAuthSurface = pathname === "/login" || pathname.startsWith("/login/");
   const isPublicGrowthSurface =
     pathname.startsWith("/public/quotes/") ||
     pathname === "/public/bio" ||
     pathname.startsWith("/public/bio/");
 
-  if (isPublicGrowthSurface) {
+  if (isAuthSurface || isPublicGrowthSurface) {
     return <div className="min-h-screen bg-[#F2F6FA]">{children}</div>;
   }
 
@@ -36,6 +37,15 @@ export function AppShell({ children }: AppShellProps) {
               <div className="rounded-full border border-[#DCE5EF] bg-white px-3 py-1 text-xs font-medium text-[#64748B]">
                 Workspace interno
               </div>
+              <form action="/api/auth/logout" method="post">
+                <button
+                  type="submit"
+                  className="inline-flex h-9 items-center rounded-lg border border-[#DCE5EF] bg-white px-3 text-sm font-medium text-[#334155] hover:bg-[#F8FAFC]"
+                  data-testid="logout-button"
+                >
+                  Sair
+                </button>
+              </form>
               <div
                 className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#0EA5A4] to-[#0284C7] text-xs font-semibold text-white"
                 aria-label="Usuário atual"
@@ -73,6 +83,17 @@ export function AppShell({ children }: AppShellProps) {
                 <Menu className="h-4 w-4" aria-hidden="true" />
                 Menu
               </button>
+            </div>
+            <div className="mx-auto mt-2 flex w-full max-w-[1320px] justify-end">
+              <form action="/api/auth/logout" method="post">
+                <button
+                  type="submit"
+                  className="inline-flex h-8 items-center rounded-lg border border-[#DCE5EF] bg-white px-3 text-xs font-semibold text-[#334155]"
+                  data-testid="logout-button-mobile"
+                >
+                  Sair
+                </button>
+              </form>
             </div>
           </header>
 

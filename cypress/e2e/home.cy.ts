@@ -1,4 +1,8 @@
 describe("Home page", () => {
+  beforeEach(() => {
+    cy.loginFirmus();
+  });
+
   it("renders desktop shell with sidebar navigation", () => {
     cy.viewport(1366, 900);
     cy.visit("/");

@@ -1,4 +1,8 @@
 describe("Clients", () => {
+  beforeEach(() => {
+    cy.loginFirmus();
+  });
+
   function fillQuoteItemByIndex(index: number, values: {
     description: string;
     quantity: string;

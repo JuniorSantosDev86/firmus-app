@@ -82,6 +82,10 @@ function readStored<T>(win: Window, key: string): T | null {
 }
 
 describe("Assisted Charge Suggestions", () => {
+  beforeEach(() => {
+    cy.loginFirmus();
+  });
+
   it("loads safely", () => {
     cy.clock(FIXED_NOW, ["Date"]);
 
