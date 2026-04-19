@@ -123,6 +123,10 @@ export function AssistedInputManager() {
     () => getUniqueWarnings(draftValidation.warnings),
     [draftValidation.warnings]
   );
+  const missingFields = useMemo(
+    () => getUniqueWarnings(interpretation?.parsedIntent.missingFields ?? []),
+    [interpretation?.parsedIntent.missingFields]
+  );
 
   function handleInterpret() {
     const next = interpretAssistedInput(textInput);
@@ -222,10 +226,18 @@ export function AssistedInputManager() {
             <p>
               Título:{" "}
               <span className="font-medium text-foreground">
-                {interpretation.parsedIntent.extractedFields.reminderTitle ?? "—"}
+                {interpretation.parsedIntent.extractedFields.titleCandidate ??
+                  interpretation.parsedIntent.extractedFields.reminderTitle ??
+                  "—"}
               </span>
             </p>
           </div>
+
+          {missingFields.length > 0 ? (
+            <p className="mt-3 text-sm text-[#C2410C]">
+              Campos pendentes: {missingFields.join(", ")}.
+            </p>
+          ) : null}
 
           {interpretationWarnings.length > 0 ? (
             <ul className="mt-4 space-y-1 text-sm text-[#C2410C]">

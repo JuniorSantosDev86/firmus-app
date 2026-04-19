@@ -1,6 +1,6 @@
-import type { ParsedAssistedIntent } from "@/lib/domain/assisted-input";
-import type { Client } from "@/lib/domain/client";
-import type { AssistedActionDraft } from "@/lib/assisted-input/types";
+import type { ParsedAssistedIntent } from "../domain/assisted-input";
+import type { Client } from "../domain/client";
+import type { AssistedActionDraft } from "./types";
 
 function normalizeText(value: string): string {
   return value
@@ -49,7 +49,7 @@ export function buildAssistedActionDraft(
         clientId: matchedClient?.id,
         amountInCents: parsedIntent.extractedFields.amountInCents,
         validUntil: parsedIntent.extractedFields.dueDate,
-        title: parsedIntent.extractedFields.reminderTitle,
+        title: parsedIntent.extractedFields.titleCandidate,
       },
     };
   }
@@ -60,9 +60,10 @@ export function buildAssistedActionDraft(
       title: "Criar lembrete",
       description: "Lembrete será criado apenas após sua confirmação.",
       payload: {
-        title: parsedIntent.extractedFields.reminderTitle ?? parsedIntent.rawText.trim(),
+        title: parsedIntent.extractedFields.titleCandidate,
         dueDate: parsedIntent.extractedFields.dueDate,
         clientId: matchedClient?.id,
+        description: parsedIntent.extractedFields.descriptionCandidate,
       },
     };
   }

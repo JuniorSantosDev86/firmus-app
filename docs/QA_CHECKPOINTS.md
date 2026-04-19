@@ -2666,6 +2666,87 @@ Files added or modified:
 Verdict:
 Approved
 
+### Block 27 — Improved Text Parsing
+Status: Approved
+
+Objective:
+Improve Firmus assisted-input parsing so PT-BR text is interpreted more reliably, more deterministically, and more safely before confirmation.
+
+What was implemented:
+- Refined deterministic parsing pipeline for assisted input
+- Parser helper split under `lib/services/text-input-parser/` with focused responsibilities:
+  - normalization
+  - intent detection
+  - amount extraction
+  - date extraction
+  - text field extraction
+  - warning/missing-field shaping
+- Stronger intent classification for:
+  - quote
+  - charge
+  - reminder
+  - safe ambiguity fallback
+- Improved extraction for:
+  - amount
+  - due date / relative date
+  - client reference
+  - title / description candidates
+- Explicit `missingFields` output in parser result
+- Explicit parser warning shaping
+- Safer draft building and confirmation flow preservation
+- Assisted input UI updated only as needed to expose pending fields more clearly
+- Added parser-focused Cypress coverage:
+  - unit parser coverage
+  - parsing integration coverage
+  - visible assisted-input flow coverage
+
+Architecture validation:
+- Parsing orchestration remained in the service layer
+- UI continued consuming structured interpretation/draft output instead of owning parser logic
+- No unrelated routes or product slices were refactored
+- Confirmation-before-creation behavior remained intact
+- Scope stayed within parsing reliability and draft safety
+
+Validation performed:
+- `npm run lint`
+- Full Cypress regression suite passed
+- Block-specific parser/unit/integration coverage passed
+- Manual QA completed with realistic PT-BR phrases
+
+Manual QA checklist completed:
+- quote parsing with amount, client, title/context and inferred date
+- charge parsing with explicit and relative dates
+- reminder parsing with today / tomorrow / day-after-tomorrow / in-X-days phrasing
+- safe ambiguity fallback for incomplete or mixed instructions
+- required-field blocking when confirmation should not be allowed
+- confirmation flow still required before real entity creation
+- no regression in visible assisted-input flow
+
+Approval notes:
+- Block 27 materially improved PT-BR parsing reliability without turning the feature into a chatbot or black-box AI layer.
+- Parsing became more inspectable and safer through explicit missing-field and warning output.
+- The system is more trustworthy in assisted-input flows than before this block.
+
+Files added or modified:
+- `components/assisted-input/assisted-input-manager.tsx`
+- `cypress/e2e/assisted-input.cy.ts`
+- `cypress/e2e/assisted-input-parsing-integration.cy.ts`
+- `cypress/e2e/text-input-parser-helpers.cy.ts`
+- `lib/assisted-input/draft-builders.ts`
+- `lib/assisted-input/validators.ts`
+- `lib/domain/assisted-input.ts`
+- `lib/services/text-input-parser/index.ts`
+- `lib/services/text-input-parser/types.ts`
+- `lib/services/text-input-parser/normalization.ts`
+- `lib/services/text-input-parser/intent-detection.ts`
+- `lib/services/text-input-parser/amount-extraction.ts`
+- `lib/services/text-input-parser/date-extraction.ts`
+- `lib/services/text-input-parser/text-field-extraction.ts`
+- `lib/services/text-input-parser/warning-shaping.ts`
+
+Verdict:
+Approved
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:

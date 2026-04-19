@@ -1,7 +1,7 @@
 import type {
   AssistedActionDraft,
   AssistedDraftValidation,
-} from "@/lib/assisted-input/types";
+} from "./types";
 
 export function validateAssistedActionDraft(
   draftAction: AssistedActionDraft
@@ -41,11 +41,16 @@ export function validateAssistedActionDraft(
 
   if (draftAction.actionType === "create_quote") {
     const clientId = (draftAction.payload.clientId ?? "").trim();
+    const amountInCents = draftAction.payload.amountInCents;
     const title = (draftAction.payload.title ?? "").trim();
 
     const warnings: string[] = [];
     if (clientId.length === 0) {
       warnings.push("Selecione um cliente para criar o orçamento.");
+    }
+
+    if (!Number.isFinite(amountInCents) || (amountInCents ?? 0) <= 0) {
+      warnings.push("Informe um valor válido para o orçamento.");
     }
 
     if (title.length === 0) {

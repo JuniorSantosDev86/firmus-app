@@ -810,9 +810,17 @@ Delivered:
 
 ## Phase 5 — Expansion, Fiscal Compliance, and Monetization Readiness
 
-### Block 27 — Improved Text Parsing
-**Status:** Pending  
-**Objective:** Increase the quality of structured input interpretation.
+#### Block 27 — Improved Text Parsing
+Status: Completed and approved.
+
+Delivered:
+- deterministic parser hardening for PT-BR assisted input
+- stronger intent classification for quote, charge, and reminder
+- improved amount/date/client/title extraction
+- explicit missing-field and warning shaping
+- safer draft interpretation before confirmation
+- parser-focused automated validation
+- no scope drift into chatbot or external-channel behavior
 
 ### Block 28 — Outbound Channel Abstraction
 **Status:** Pending  
@@ -895,33 +903,33 @@ Delivered:
 
 ## Current Status
 
-Firmus has completed and approved Block 26 — Observability and Stability.
+Firmus has completed and approved Block 27 — Improved Text Parsing.
 
 The product now includes:
 - stabilized desktop sidebar navigation
 - stabilized mobile drawer/topbar navigation
 - protected server-side activity logs
-- minimal protected observability/stability baseline
-- internal health, backup, and restore endpoints
-- controlled failure handling for observability operations
-- block-level runbook support for recovery and diagnostics
+- protected observability/stability baseline
+- improved deterministic PT-BR assisted-input parsing
+- explicit missing-field and warning shaping in assisted interpretation
+- parser integration coverage plus visible assisted-input regression coverage
 
 The current official next step is:
-- Block 27 — Improved Text Parsing
+- Block 28 — Outbound Channel Abstraction
 
 Execution state:
-- Block 26 is complete, validated, and approved
-- the codebase is stable enough to continue
-- regression validation has been completed successfully
+- Block 27 is complete, validated, and approved
+- the assisted-input layer is stronger and safer than before
+- confirmation-before-creation remains preserved
+- regression validation passed
 - scope discipline was preserved
-- no unrelated UI expansion was introduced
+- no unrelated product expansion was introduced
 
 Immediate next focus:
-- strengthen structured text parsing
-- improve deterministic intent interpretation
-- preserve PT-BR realism in parsing scenarios
-- continue following the block-by-block test strategy already defined from Block 24 onward
-
+- abstract outbound channel concerns cleanly
+- keep channel-specific behavior out of core domain logic
+- preserve deterministic internal flows before external expansion
+- continue following the block-by-block testing strategy already defined from Block 24 onward
 # Notes
 
 - This roadmap is a living document.

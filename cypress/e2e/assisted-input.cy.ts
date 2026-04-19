@@ -126,10 +126,10 @@ describe("Assisted Input", () => {
     cy.contains("p", "Vencimento: 2026-04-25").should("be.visible");
     cy.contains("p", "Título: manutenção de ar condicionado").should("be.visible");
     cy.contains("p", /^Confiança:\s+(high|medium)$/).should("be.visible");
-    cy.contains("li", "O mês do vencimento foi inferido automaticamente. Confirme antes de criar.").should(
+    cy.contains("li", "O mês da data foi inferido automaticamente. Confirme antes de criar.").should(
       "be.visible"
     );
-    cy.contains("li", "Não identifiquei o valor com segurança.").should("not.exist");
+    cy.contains("li", "Campos pendentes para confirmação").should("not.exist");
   });
 
   it("parses charge intent with tomorrow due date", () => {
@@ -213,7 +213,9 @@ describe("Assisted Input", () => {
     cy.contains("p", "Cliente: João").should("be.visible");
     cy.contains("p", "Valor: —").should("be.visible");
     cy.contains("p", /^Confiança:\s+(medium|low)$/).should("be.visible");
-    cy.contains("li", "Não identifiquei o valor com segurança.").should("be.visible");
+    cy.contains("li", "Campos pendentes para confirmação: valor, título/contexto.").should(
+      "be.visible"
+    );
   });
 
   it("does not confuse day-of-month with amount", () => {

@@ -15,9 +15,12 @@ export type ParsedAssistedIntent = {
     clientNameCandidate?: string;
     amountInCents?: number;
     dueDate?: string;
+    titleCandidate?: string;
+    descriptionCandidate?: string;
     reminderTitle?: string;
     templateCategory?: string;
   };
+  missingFields: string[];
   warnings: string[];
 };
 
