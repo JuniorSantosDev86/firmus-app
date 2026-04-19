@@ -794,9 +794,17 @@ Resume official roadmap at:
 
 **Validation status:** Approved
 
-### Block 26 — Observability and Stability
-**Status:** Pending  
-**Objective:** Improve reliability before further expansion.
+
+#### Block 26 — Observability and Stability
+Status: Completed and approved.
+
+Delivered:
+- minimal protected observability baseline
+- internal health, backup, and restore capabilities
+- controlled failure handling
+- restore confidence path
+- block-level automated validation
+- minimal operational runbook
 
 ---
 
@@ -885,44 +893,34 @@ Resume official roadmap at:
 
 ---
 
-# Current Status
+## Current Status
 
-**Current official roadmap block:** Block 26 — Observability and Stability  
-**Overall project status:** In progress
+Firmus has completed and approved Block 26 — Observability and Stability.
 
-- Block 14 — Text-Based Assisted Input completed and approved.
-- Block 15 — Assisted Charge Suggestions completed and approved.
-- Block 16 — Public Quote Page completed and approved.
-- Block 17 — Premium Quote PDF completed and approved.
-- Block 18 — Quote Approval Actions completed and approved.
-- Block 19 — Basic Bio Link completed and approved.
-- Block 20 — Public Touchpoint Polish completed and approved.
-- Block 21 — Automation Rules Foundation completed and approved.
-- Block 22 — Automatic Reminder Creation completed and approved.
-- Block 23 — Simple Reactivation Radar completed and approved.
-- Block 24 — Security & LGPD Foundation completed and approved.
-- Block 25 — Activity Logs completed and approved.
-- The public-growth layer is completed through its current planned milestone.
-- The intelligence-and-automation layer now includes:
-  - deterministic automation rules
-  - automatic reminder creation
-  - deterministic reactivation radar
-  - protected internal activity logs
-- The MVP now has a minimum security/privacy foundation with:
-  - authentication and session boundary
-  - public vs private route separation
-  - protected internal security/privacy actions
-  - security audit foundation
-  - privacy/LGPD foundation
-- The MVP now also has a protected internal traceability surface with:
-  - activity logs
-  - category filtering
-  - text search
-  - reverse chronological ordering
-  - server-side protected log source
-- The desktop sidebar navigation remains completed and stable.
-- The next official implementation target is Block 26 — Observability and Stability.
----
+The product now includes:
+- stabilized desktop sidebar navigation
+- stabilized mobile drawer/topbar navigation
+- protected server-side activity logs
+- minimal protected observability/stability baseline
+- internal health, backup, and restore endpoints
+- controlled failure handling for observability operations
+- block-level runbook support for recovery and diagnostics
+
+The current official next step is:
+- Block 27 — Improved Text Parsing
+
+Execution state:
+- Block 26 is complete, validated, and approved
+- the codebase is stable enough to continue
+- regression validation has been completed successfully
+- scope discipline was preserved
+- no unrelated UI expansion was introduced
+
+Immediate next focus:
+- strengthen structured text parsing
+- improve deterministic intent interpretation
+- preserve PT-BR realism in parsing scenarios
+- continue following the block-by-block test strategy already defined from Block 24 onward
 
 # Notes
 

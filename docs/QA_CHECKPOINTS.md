@@ -2598,6 +2598,74 @@ Validated items:
 - Block 25 correctly transforms the Block 24 audit foundation into an operator-readable activity trail.
 - This block strengthens traceability and prepares the product well for Block 26 — Observability and Stability.
 
+### Block 26 — Observability and Stability
+Status: Approved
+
+Objective:
+Add a minimal observability/stability baseline that reduces operational blindness, improves recovery confidence, and keeps scope narrow.
+
+What was implemented:
+- Protected internal observability endpoints:
+  - `GET /api/internal/observability/health`
+  - `GET /api/internal/observability/backup`
+  - `POST /api/internal/observability/restore`
+- Dedicated orchestration service in `lib/services/observability-stability.ts`
+- Domain/helper layer for health reports, backup envelope validation, backup summaries, and controlled failures in `lib/domain/observability-stability.ts`
+- Controlled failure responses with safe `OBS_*` codes
+- Minimal operational runbook in `docs/BLOCK_26_RUNBOOK.md`
+- New automated coverage for:
+  - observability/stability integration API flow
+  - observability/stability helper logic
+
+Architecture validation:
+- Routes remained thin and protected behind existing auth boundaries
+- Observability logic was centralized in `lib/services`
+- Domain-safe helper/types were isolated from UI
+- No dashboard/admin UI was introduced
+- No scope drift into unrelated product slices
+- No mutation of timeline semantics
+- No mutation of activity log semantics beyond what already existed
+
+Validation performed:
+- `npm run lint`
+- Automated tests for the block
+- Full regression validation completed successfully
+- Manual QA completed for:
+  - protected access behavior
+  - healthy/degraded signal readability
+  - backup generation
+  - restore dry-run behavior
+  - applied restore behavior
+  - controlled failure response for invalid payload
+  - no regression in protected/internal flows
+
+Manual QA checklist completed:
+- Internal authenticated health endpoint responds correctly
+- Health output distinguishes healthy vs degraded state safely
+- Backup endpoint returns valid backup envelope and summary
+- Restore endpoint supports `dryRun: true` safely
+- Restore endpoint applies valid restore correctly
+- Invalid restore payload returns controlled failure response
+- Existing protected/internal flows remain stable after implementation
+
+Approval notes:
+- Block 26 delivered the intended minimum observability/stability baseline without overbuilding.
+- Recovery confidence improved through backup/restore path and post-restore verification.
+- The system is easier to inspect and reason about operationally than before this block.
+
+Files added or modified:
+- `app/api/internal/observability/health/route.ts`
+- `app/api/internal/observability/backup/route.ts`
+- `app/api/internal/observability/restore/route.ts`
+- `lib/services/observability-stability.ts`
+- `lib/domain/observability-stability.ts`
+- `cypress/e2e/observability-stability-api.cy.ts`
+- `cypress/e2e/observability-stability-helpers.cy.ts`
+- `docs/BLOCK_26_RUNBOOK.md`
+
+Verdict:
+Approved
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:
