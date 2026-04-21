@@ -80,6 +80,14 @@ export const PRIMARY_NAVIGATION: NavigationItem[] = [
     testId: "nav-charges",
   },
   {
+    id: "nfse",
+    label: "NFSe",
+    href: "/nfse",
+    icon: ReceiptText,
+    group: "operacao",
+    testId: "nav-nfse",
+  },
+  {
     id: "reminders",
     label: "Lembretes",
     href: "/reminders",

@@ -16,3 +16,4 @@ export * from "@/lib/domain/security-audit";
 export * from "@/lib/domain/privacy-foundation";
 export * from "@/lib/domain/activity-log";
 export * from "@/lib/domain/outbound";
+export * from "@/lib/domain/nfse";

@@ -2846,6 +2846,116 @@ Before approving the next block, preserve the same QA discipline:
 - integration tests protect server/service boundaries,
 - manual QA checks UX, wording, and operational clarity.
 
+## Block 29 — NFSe Foundation
+
+### Status
+Approved.
+
+### Goal of the block
+Create the internal fiscal foundation required for future NFSe issuance, without introducing real provider integration yet.
+
+### Scope delivered
+- Introduced a dedicated NFSe domain contract.
+- Added internal NFSe storage with safe persistence, normalization, sorting, and stable upsert behavior.
+- Added NFSe service layer for:
+  - fiscal readiness evaluation,
+  - draft validation,
+  - description/snapshot mapping,
+  - NFSe draft preparation from operational context.
+- Added Business Profile fiscal readiness support with minimal required fiscal fields:
+  - CNPJ,
+  - municipal registration,
+  - service city,
+  - tax regime.
+- Added fiscal readiness visibility inside Business Profile.
+- Added internal NFSe route/page and administrative manager UI.
+- Added minimal integration in Charges through the action:
+  - “Preparar NFSe”
+- Added deterministic NFSe draft creation from eligible paid charge context.
+- Added fiscal snapshots at preparation time:
+  - business snapshot,
+  - client snapshot,
+  - service snapshot.
+- Added fiscal input guardrails:
+  - CNPJ normalization/formatting,
+  - municipal registration max length,
+  - service city max length.
+- Fixed the helper-spec resolution/validation path until the NFSe block closed green in the suite.
+
+### Files introduced / touched
+- `lib/domain/nfse.ts`
+- `lib/domain/business-profile.ts`
+- `lib/domain/index.ts`
+- `lib/nfse-storage.ts`
+- `lib/business-profile-storage.ts`
+- `lib/services/nfse/nfse-readiness.ts`
+- `lib/services/nfse/nfse-validation.ts`
+- `lib/services/nfse/nfse-mappers.ts`
+- `lib/services/nfse/nfse-draft-builder.ts`
+- `components/nfse/nfse-readiness-card.tsx`
+- `components/nfse/nfse-manager.tsx`
+- `components/nfse/nfse-status-badge.tsx`
+- `components/nfse/nfse-empty-state.tsx`
+- `components/business-profile-form.tsx`
+- `components/charges-manager.tsx`
+- `app/nfse/page.tsx`
+- `lib/navigation.ts`
+- `cypress/e2e/nfse-foundation.cy.ts`
+- `cypress/e2e/nfse-foundation-helpers.cy.ts`
+- `cypress/e2e/business-profile.cy.ts`
+
+### Functional validation
+Validated successfully:
+- fiscal readiness is visible inside Business Profile;
+- missing fiscal requirements are surfaced clearly;
+- NFSe internal page renders correctly;
+- empty state works correctly;
+- paid charge can prepare an NFSe draft;
+- NFSe draft is persisted and listed internally;
+- draft status behaves deterministically (`draft` vs `ready`);
+- snapshots are stored at preparation time;
+- fiscal input guardrails work as expected.
+
+### Automated validation
+- Full Cypress suite passed.
+- No failing specs remaining.
+- NFSe helper spec passed.
+- NFSe visible flow spec passed.
+- Business Profile fiscal guardrail test passed.
+
+### Manual QA performed
+- Business Profile fiscal fields validated visually;
+- NFSe readiness state validated visually;
+- “Preparar NFSe” action validated from paid charge context;
+- NFSe page/list rendering validated manually;
+- fiscal input behavior manually validated after guardrails were added;
+- no visible regression detected in core operational flows.
+
+### Risks / reservations
+- This block does not perform real NFSe issuance yet.
+- Provider integration, official issuance flow, and external fiscal communication are intentionally left for the next block.
+- Fiscal data model is sufficient for foundation/MVP progression, but not yet a complete fiscal backoffice.
+
+### Acceptance verdict
+Approved.
+
+### Why this block matters
+This block makes Firmus fiscally prepared without contaminating the core with provider complexity too early.
+
+It creates the correct bridge between:
+- operational charge/payment context,
+- fiscal readiness,
+- internal NFSe preparation,
+- future issuance integration.
+
+### Follow-up reminder for next block
+Block 30 must keep the same discipline:
+- no contamination of the core with provider-specific chaos,
+- strong integration testing around issuance flow,
+- clear state transitions,
+- safe failure handling,
+- manual validation of operational clarity.
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:

@@ -15,6 +15,9 @@ import {
 import { readClients } from "@/lib/client-storage";
 import type { Charge, ChargeStatus, Client, Quote } from "@/lib/domain";
 import { readQuoteStore } from "@/lib/quote-storage";
+import { prepareNFSeDraftFromCharge } from "@/lib/services/nfse/nfse-draft-builder";
+import { NFSE_READINESS_FIELD_LABELS } from "@/lib/services/nfse/nfse-readiness";
+import { NFSE_DRAFT_ERROR_LABELS } from "@/lib/services/nfse/nfse-validation";
 import { buildChargeReminderDraftInput } from "@/lib/services/outbound/outbound-draft-builder";
 
 type ChargeFormValues = {
@@ -135,6 +138,9 @@ export function ChargesManager() {
     getDefaultFormValues([])
   );
   const [saveState, setSaveState] = useState<SaveState>("idle");
+  const [nfseFeedbackByChargeId, setNfseFeedbackByChargeId] = useState<
+    Record<string, string>
+  >({});
 
   useEffect(() => {
     const storedClients = readClients();
@@ -260,6 +266,29 @@ export function ChargesManager() {
     }
   }
 
+  function handlePrepareNFSe(charge: Charge) {
+    const result = prepareNFSeDraftFromCharge(charge.id);
+    if (!result.ok) {
+      setNfseFeedbackByChargeId((prev) => ({
+        ...prev,
+        [charge.id]: result.errors.map((error) => NFSE_DRAFT_ERROR_LABELS[error]).join(" "),
+      }));
+      return;
+    }
+
+    const missingLabels = result.readiness.missingFields.map(
+      (missingField) => NFSE_READINESS_FIELD_LABELS[missingField]
+    );
+    const feedback = result.readiness.isReady
+      ? "NFSe preparada e pronta para emissão futura."
+      : `NFSe preparada como rascunho. Pendências: ${missingLabels.join(", ")}.`;
+
+    setNfseFeedbackByChargeId((prev) => ({
+      ...prev,
+      [charge.id]: feedback,
+    }));
+  }
+
   return (
     <div className="space-y-6">
       <section className="firmus-panel">
@@ -338,6 +367,27 @@ export function ChargesManager() {
                           }
                         />
                       </div>
+                      {charge.status === "paid" ? (
+                        <div className="mt-3 space-y-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            data-testid={`charge-prepare-nfse-${charge.id}`}
+                            onClick={() => handlePrepareNFSe(charge)}
+                          >
+                            Preparar NFSe
+                          </Button>
+                          {nfseFeedbackByChargeId[charge.id] ? (
+                            <p
+                              className="text-xs text-[#64748B]"
+                              data-testid={`charge-prepare-nfse-feedback-${charge.id}`}
+                            >
+                              {nfseFeedbackByChargeId[charge.id]}
+                            </p>
+                          ) : null}
+                        </div>
+                      ) : null}
                     </div>
                     <div className="flex items-center gap-2 self-center">
                       {charge.status === "pending" ? (

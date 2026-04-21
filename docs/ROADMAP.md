@@ -836,8 +836,19 @@ Implemented and validated:
 - dedicated Cypress coverage plus full regression pass.
 
 ### Block 29 — NFSe Foundation
-**Status:** Pending  
-**Objective:** Prepare the minimum fiscal layer required for service invoice issuance.
+Status: Completed and approved.
+
+Implemented and validated:
+- internal NFSe domain foundation;
+- NFSe storage layer;
+- readiness evaluation for fiscal preparation;
+- NFSe draft creation from eligible operational context;
+- stable business/client/service snapshots;
+- fiscal readiness visibility in Business Profile;
+- internal NFSe page/manager;
+- integration point in Charges via “Preparar NFSe”;
+- fiscal input guardrails for core readiness fields;
+- automated and manual validation completed.
 
 ### Expected scope
 - fiscal profile fields for issuer
@@ -910,58 +921,46 @@ Implemented and validated:
 
 ---
 
-# Current Status — Firmus
+## Current Status — Firmus
 
 ## Official state
-Block 28 — Outbound Channel Abstraction is complete, validated, and approved.
+Block 29 — NFSe Foundation is complete, validated, and approved.
 
 ## What was completed in this block
-- outbound abstraction layer introduced without contaminating feature pages with channel-specific logic;
-- reusable outbound UI added;
-- quote sharing and charge reminder flows now use the outbound layer;
-- fallback and blocked-dispatch behavior are deterministic;
-- helper/runtime mismatches in tests were resolved;
-- Block 27 parser determinism was stabilized through explicit reference-date support in the parser/date layer.
+- internal NFSe preparation layer added;
+- fiscal readiness evaluation added to Business Profile;
+- paid charges can now generate internal NFSe drafts;
+- NFSe records are persisted with stable snapshots;
+- internal NFSe page/manager is operational;
+- fiscal input guardrails were added for core readiness fields;
+- helper-spec and visible-flow validation closed successfully.
 
 ## Validation summary
-- full Cypress suite passed;
-- 26 specs passed;
-- 109 tests passed;
-- no failing specs.
+- full Cypress regression passed;
+- manual validation completed successfully;
+- no open blocker remains for Block 29.
 
 ## Product state after this block
 Firmus now has:
-- stable operational foundation,
-- assisted operations base,
+- stable operational base,
+- assisted input,
+- outbound abstraction,
 - public growth surfaces,
-- security/LGPD baseline,
-- observability/stability baseline,
-- deterministic assisted parsing,
-- outbound channel abstraction.
-
-The product is now better prepared for fiscal and packaging layers because:
-- parsing is safer,
-- outbound intent is abstracted,
-- regression coverage remains healthy,
-- architecture still preserves scope discipline.
+- security & LGPD baseline,
+- observability baseline,
+- deterministic parser foundation,
+- internal fiscal preparation foundation for NFSe.
 
 ## Current quality reading
 - system health: strong;
 - regression confidence: strong;
-- assisted input quality: acceptable but still improvable;
-- outbound behavior: approved and usable;
+- fiscal foundation: approved;
+- issuance readiness: foundation ready, real integration still pending;
 - readiness for next block: approved.
 
-## Next official block
-Block 29 — NFSe Foundation.
+## Strategic meaning of the current state
+Firmus is no longer only operational/commercial.
+It is now structurally prepared to move into real fiscal issuance work without forcing provider complexity into the core too early.
 
-- This roadmap is a living document.
-- Each block should only be marked as completed after QA validation.
-- Scope discipline is mandatory.
-- The product must evolve in layers, not through uncontrolled feature accumulation.
-- The shell work is an intentional technical exception outside the official growth-layer numbering.
-- NFSe is now explicitly inside the MVP roadmap as part of fiscal compliance readiness.
-- DAS is included as a compliance-assistance workflow, not as a native payment rail.
-- Block 23 was validated manually and through the full local Cypress run.
-- The full local Cypress suite is green with 17 specs and 57 passing tests.
-- The project remains aligned with the layered roadmap and strict scope discipline.
+## Next official block
+Block 30 — NFSe Issuance Integration.

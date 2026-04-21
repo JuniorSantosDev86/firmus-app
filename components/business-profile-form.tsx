@@ -3,13 +3,19 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { NFSeReadinessCard } from "@/components/nfse/nfse-readiness-card";
 import { Button } from "@/components/ui/button";
 import type { BusinessProfile } from "@/lib/domain";
 import {
+  BUSINESS_PROFILE_CNPJ_MAX_LENGTH,
+  BUSINESS_PROFILE_MUNICIPAL_REGISTRATION_MAX_LENGTH,
+  BUSINESS_PROFILE_SERVICE_CITY_MAX_LENGTH,
+  normalizeCNPJInput,
   readBusinessProfile,
   writeBusinessProfile,
   type BusinessProfileInput,
 } from "@/lib/business-profile-storage";
+import { evaluateBusinessProfileNFSeReadiness } from "@/lib/services/nfse/nfse-readiness";
 
 const INITIAL_VALUES: BusinessProfileInput = {
   businessName: "",
@@ -18,6 +24,10 @@ const INITIAL_VALUES: BusinessProfileInput = {
   city: "",
   whatsapp: "",
   logoUrl: "",
+  cnpj: "",
+  municipalRegistration: "",
+  serviceCity: "",
+  taxRegime: "",
 };
 
 type SaveState = "idle" | "saved";
@@ -34,6 +44,10 @@ function mapProfileToInput(profile: BusinessProfile): BusinessProfileInput {
     city: profile.city ?? "",
     whatsapp: profile.whatsapp ?? "",
     logoUrl: profile.logoUrl ?? "",
+    cnpj: profile.cnpj ?? "",
+    municipalRegistration: profile.municipalRegistration ?? "",
+    serviceCity: profile.serviceCity ?? "",
+    taxRegime: profile.taxRegime ?? "",
   };
 }
 
@@ -61,6 +75,7 @@ export function BusinessProfileForm() {
   }, []);
 
   const hasProfile = profile !== null;
+  const readiness = evaluateBusinessProfileNFSeReadiness(profile);
 
   function updateField<K extends keyof BusinessProfileInput>(
     key: K,
@@ -93,6 +108,8 @@ export function BusinessProfileForm() {
 
   return (
     <div className="space-y-6">
+      <NFSeReadinessCard readiness={readiness} />
+
       <section className="firmus-panel">
         <div className="mb-5 flex items-start justify-between gap-3">
           <h2 className="text-lg font-semibold tracking-tight text-foreground">Perfil atual</h2>
@@ -150,6 +167,36 @@ export function BusinessProfileForm() {
               <dt className="text-muted-foreground">URL do logo</dt>
               <dd className="mt-1 font-medium text-foreground">
                 {displayValue(profile.logoUrl)}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">CNPJ</dt>
+              <dd className="mt-1 font-medium text-foreground">
+                {displayValue(profile.cnpj)}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">Inscrição municipal</dt>
+              <dd className="mt-1 font-medium text-foreground">
+                {displayValue(profile.municipalRegistration)}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">Cidade de prestação</dt>
+              <dd className="mt-1 font-medium text-foreground">
+                {displayValue(profile.serviceCity)}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">Regime tributário</dt>
+              <dd className="mt-1 font-medium text-foreground">
+                {profile.taxRegime === "mei"
+                  ? "MEI"
+                  : profile.taxRegime === "simples"
+                    ? "Simples Nacional"
+                    : profile.taxRegime === "outro"
+                      ? "Outro"
+                      : "—"}
               </dd>
             </div>
           </dl>
@@ -250,6 +297,74 @@ export function BusinessProfileForm() {
               onChange={(event) => updateField("logoUrl", event.target.value)}
               className="firmus-input"
             />
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-2">
+              <label htmlFor="cnpj" className="text-sm font-medium">
+                CNPJ
+              </label>
+              <input
+                id="cnpj"
+                name="cnpj"
+                maxLength={BUSINESS_PROFILE_CNPJ_MAX_LENGTH}
+                value={formValues.cnpj}
+                onChange={(event) => updateField("cnpj", normalizeCNPJInput(event.target.value) ?? "")}
+                className="firmus-input"
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <label htmlFor="municipalRegistration" className="text-sm font-medium">
+                Inscrição municipal
+              </label>
+              <input
+                id="municipalRegistration"
+                name="municipalRegistration"
+                maxLength={BUSINESS_PROFILE_MUNICIPAL_REGISTRATION_MAX_LENGTH}
+                value={formValues.municipalRegistration}
+                onChange={(event) =>
+                  updateField("municipalRegistration", event.target.value)
+                }
+                className="firmus-input"
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-2">
+              <label htmlFor="serviceCity" className="text-sm font-medium">
+                Cidade de prestação
+              </label>
+              <input
+                id="serviceCity"
+                name="serviceCity"
+                maxLength={BUSINESS_PROFILE_SERVICE_CITY_MAX_LENGTH}
+                value={formValues.serviceCity}
+                onChange={(event) =>
+                  updateField("serviceCity", event.target.value)
+                }
+                className="firmus-input"
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <label htmlFor="taxRegime" className="text-sm font-medium">
+                Regime tributário
+              </label>
+              <select
+                id="taxRegime"
+                name="taxRegime"
+                value={formValues.taxRegime}
+                onChange={(event) => updateField("taxRegime", event.target.value)}
+                className="firmus-input"
+              >
+                <option value="">Selecionar</option>
+                <option value="mei">MEI</option>
+                <option value="simples">Simples Nacional</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
           </div>
 
           <div className="flex items-center gap-3 pt-2">

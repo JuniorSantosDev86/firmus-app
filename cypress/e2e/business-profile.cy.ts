@@ -42,6 +42,37 @@ describe("Business Profile", () => {
     cy.get("#city").should("have.value", "Campinas");
     cy.get("#whatsapp").should("have.value", "+55 11 98888-8888");
   });
+
+  it("applies basic fiscal input guardrails", () => {
+    cy.visit("/");
+    cy.clearFirmusStorage();
+    cy.visit("/business-profile");
+
+    cy.get("#businessName").clear().type("Firmus Studio");
+    cy.get("#professionalName").clear().type("Ana Silva");
+    cy.get("#cnpj").clear().type("12abc345678000190999999");
+    cy.get("#municipalRegistration").clear().type("A".repeat(80));
+    cy.get("#serviceCity").clear().type("B".repeat(120));
+
+    cy.get("#cnpj").should("have.value", "12.345.678/0001-90");
+    cy.get("#municipalRegistration")
+      .invoke("val")
+      .should("have.length", 32);
+    cy.get("#serviceCity")
+      .invoke("val")
+      .should("have.length", 80);
+
+    cy.contains("button", "Salvar perfil").click();
+
+    cy.window().then((win) => {
+      const raw = win.localStorage.getItem("firmus.business-profile");
+      expect(raw).to.not.eq(null);
+      const profile = JSON.parse(raw ?? "{}");
+      expect(profile.cnpj).to.eq("12.345.678/0001-90");
+      expect(profile.municipalRegistration).to.have.length(32);
+      expect(profile.serviceCity).to.have.length(80);
+    });
+  });
 });
 
 export {};

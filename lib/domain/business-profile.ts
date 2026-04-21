@@ -1,4 +1,5 @@
 import type { EntityId, TimestampedEntity } from "@/lib/domain/common";
+import type { NFSeTaxRegime } from "@/lib/domain/nfse";
 
 export interface BusinessProfile extends TimestampedEntity {
   id: EntityId;
@@ -8,4 +9,8 @@ export interface BusinessProfile extends TimestampedEntity {
   city: string | null;
   whatsapp: string | null;
   logoUrl: string | null;
+  cnpj: string | null;
+  municipalRegistration: string | null;
+  serviceCity: string | null;
+  taxRegime: NFSeTaxRegime | null;
 }
