@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
+import { OutboundActionButton } from "@/components/outbound/outbound-action-button";
 import { Button } from "@/components/ui/button";
 import { readClients } from "@/lib/client-storage";
 import type { Client, Quote, QuoteItem, QuoteStatus, Service } from "@/lib/domain";
@@ -16,6 +17,7 @@ import {
   upsertQuote,
 } from "@/lib/quote-storage";
 import { readServices } from "@/lib/service-storage";
+import { buildQuoteShareDraftInput } from "@/lib/services/outbound/outbound-draft-builder";
 
 type EditableQuoteItem = {
   id?: string;
@@ -116,6 +118,10 @@ function mapQuoteToFormValues(
 
 function getClientName(clients: Client[], clientId: string): string {
   return clients.find((client) => client.id === clientId)?.name ?? "Cliente desconhecido";
+}
+
+function getClientById(clients: Client[], clientId: string): Client | null {
+  return clients.find((client) => client.id === clientId) ?? null;
 }
 
 function getQuoteStatusLabel(status: QuoteStatus): string {
@@ -380,6 +386,7 @@ export function QuotesManager() {
           <ul className="space-y-3">
             {store.quotes.map((quote) => {
               const quoteItems = getQuoteItems(quote, store.items);
+              const quoteClient = getClientById(clients, quote.clientId);
               return (
                 <li
                   key={quote.id}
@@ -420,6 +427,31 @@ export function QuotesManager() {
                         >
                           Abrir PDF premium
                         </Link>
+                      </div>
+                      <div className="mt-3">
+                        <OutboundActionButton
+                          buttonLabel="Compartilhar"
+                          menuTestId={`quote-outbound-channel-${quote.id}`}
+                          buttonTestId={`quote-outbound-send-${quote.id}`}
+                          feedbackTestId={`quote-outbound-feedback-${quote.id}`}
+                          buildDraftInput={(selectedChannel) =>
+                            buildQuoteShareDraftInput(
+                              {
+                                quoteId: quote.id,
+                                clientName: quoteClient?.name ?? "cliente",
+                                totalInCents: quote.totalInCents,
+                                publicUrl: `${window.location.origin}/public/quotes/${quote.id}`,
+                                recipient: {
+                                  clientId: quoteClient?.id,
+                                  name: quoteClient?.name,
+                                  phone: quoteClient?.whatsapp ?? undefined,
+                                  email: quoteClient?.email ?? undefined,
+                                },
+                              },
+                              selectedChannel
+                            )
+                          }
+                        />
                       </div>
                     </div>
                     <div className="flex items-center gap-2">

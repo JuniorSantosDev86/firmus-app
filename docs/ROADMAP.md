@@ -823,8 +823,17 @@ Delivered:
 - no scope drift into chatbot or external-channel behavior
 
 ### Block 28 — Outbound Channel Abstraction
-**Status:** Pending  
-**Objective:** Prepare the system for future external channels.
+Status: Completed and approved.
+
+Implemented and validated:
+- outbound domain contract;
+- outbound draft builder and dispatcher;
+- recipient normalization;
+- adapter layer for WhatsApp, email, and copy;
+- deterministic fallback behavior;
+- reusable outbound UI primitives;
+- visible integration in Quotes and Charges;
+- dedicated Cypress coverage plus full regression pass.
 
 ### Block 29 — NFSe Foundation
 **Status:** Pending  
@@ -901,36 +910,50 @@ Delivered:
 
 ---
 
-## Current Status
+# Current Status — Firmus
 
-Firmus has completed and approved Block 27 — Improved Text Parsing.
+## Official state
+Block 28 — Outbound Channel Abstraction is complete, validated, and approved.
 
-The product now includes:
-- stabilized desktop sidebar navigation
-- stabilized mobile drawer/topbar navigation
-- protected server-side activity logs
-- protected observability/stability baseline
-- improved deterministic PT-BR assisted-input parsing
-- explicit missing-field and warning shaping in assisted interpretation
-- parser integration coverage plus visible assisted-input regression coverage
+## What was completed in this block
+- outbound abstraction layer introduced without contaminating feature pages with channel-specific logic;
+- reusable outbound UI added;
+- quote sharing and charge reminder flows now use the outbound layer;
+- fallback and blocked-dispatch behavior are deterministic;
+- helper/runtime mismatches in tests were resolved;
+- Block 27 parser determinism was stabilized through explicit reference-date support in the parser/date layer.
 
-The current official next step is:
-- Block 28 — Outbound Channel Abstraction
+## Validation summary
+- full Cypress suite passed;
+- 26 specs passed;
+- 109 tests passed;
+- no failing specs.
 
-Execution state:
-- Block 27 is complete, validated, and approved
-- the assisted-input layer is stronger and safer than before
-- confirmation-before-creation remains preserved
-- regression validation passed
-- scope discipline was preserved
-- no unrelated product expansion was introduced
+## Product state after this block
+Firmus now has:
+- stable operational foundation,
+- assisted operations base,
+- public growth surfaces,
+- security/LGPD baseline,
+- observability/stability baseline,
+- deterministic assisted parsing,
+- outbound channel abstraction.
 
-Immediate next focus:
-- abstract outbound channel concerns cleanly
-- keep channel-specific behavior out of core domain logic
-- preserve deterministic internal flows before external expansion
-- continue following the block-by-block testing strategy already defined from Block 24 onward
-# Notes
+The product is now better prepared for fiscal and packaging layers because:
+- parsing is safer,
+- outbound intent is abstracted,
+- regression coverage remains healthy,
+- architecture still preserves scope discipline.
+
+## Current quality reading
+- system health: strong;
+- regression confidence: strong;
+- assisted input quality: acceptable but still improvable;
+- outbound behavior: approved and usable;
+- readiness for next block: approved.
+
+## Next official block
+Block 29 — NFSe Foundation.
 
 - This roadmap is a living document.
 - Each block should only be marked as completed after QA validation.

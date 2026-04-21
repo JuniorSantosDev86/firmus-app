@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { OutboundActionButton } from "@/components/outbound/outbound-action-button";
 import { Button } from "@/components/ui/button";
 import { getChargeStatus } from "@/lib/charge-status";
 import {
@@ -14,6 +15,7 @@ import {
 import { readClients } from "@/lib/client-storage";
 import type { Charge, ChargeStatus, Client, Quote } from "@/lib/domain";
 import { readQuoteStore } from "@/lib/quote-storage";
+import { buildChargeReminderDraftInput } from "@/lib/services/outbound/outbound-draft-builder";
 
 type ChargeFormValues = {
   clientId: string;
@@ -72,6 +74,10 @@ function parseMoneyInputToCents(value: string): number {
 
 function getClientName(clients: Client[], clientId: string): string {
   return clients.find((client) => client.id === clientId)?.name ?? "Cliente desconhecido";
+}
+
+function getClientById(clients: Client[], clientId: string): Client | null {
+  return clients.find((client) => client.id === clientId) ?? null;
 }
 
 function getChargeStatusLabel(status: "pending" | "paid" | "overdue"): string {
@@ -283,6 +289,7 @@ export function ChargesManager() {
           <ul className="space-y-3">
             {charges.map((charge) => {
               const resolvedStatus = getChargeStatus(charge);
+              const chargeClient = getClientById(clients, charge.clientId);
               return (
                 <li
                   key={charge.id}
@@ -306,6 +313,31 @@ export function ChargesManager() {
                         Vence em {charge.dueDate.slice(0, 10)}
                         {charge.quoteId ? " • Orçamento vinculado" : ""}
                       </p>
+                      <div className="mt-3">
+                        <OutboundActionButton
+                          buttonLabel="Enviar lembrete"
+                          menuTestId={`charge-outbound-channel-${charge.id}`}
+                          buttonTestId={`charge-outbound-send-${charge.id}`}
+                          feedbackTestId={`charge-outbound-feedback-${charge.id}`}
+                          buildDraftInput={(selectedChannel) =>
+                            buildChargeReminderDraftInput(
+                              {
+                                chargeId: charge.id,
+                                clientName: chargeClient?.name ?? "cliente",
+                                amountInCents: charge.amountInCents,
+                                dueDate: charge.dueDate.slice(0, 10),
+                                recipient: {
+                                  clientId: chargeClient?.id,
+                                  name: chargeClient?.name,
+                                  phone: chargeClient?.whatsapp ?? undefined,
+                                  email: chargeClient?.email ?? undefined,
+                                },
+                              },
+                              selectedChannel
+                            )
+                          }
+                        />
+                      </div>
                     </div>
                     <div className="flex items-center gap-2 self-center">
                       {charge.status === "pending" ? (

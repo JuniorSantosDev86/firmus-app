@@ -1,4 +1,4 @@
-import type { DateExtractionResult, NormalizedInput } from "./types";
+import type { DateExtractionOptions, DateExtractionResult, NormalizedInput } from "./types";
 
 const PTBR_MONTHS: Record<string, number> = {
   janeiro: 0,
@@ -26,9 +26,12 @@ function isValidDateParts(year: number, month: number, day: number): boolean {
   return date.getFullYear() === year && date.getMonth() === month && date.getDate() === day;
 }
 
-export function extractDueDate(input: NormalizedInput): DateExtractionResult {
+export function extractDueDate(
+  input: NormalizedInput,
+  options: DateExtractionOptions = {}
+): DateExtractionResult {
   const warnings: string[] = [];
-  const now = new Date();
+  const now = options.referenceDate ? new Date(options.referenceDate) : new Date();
   const text = input.normalized;
 
   if (text.includes("depois de amanha")) {

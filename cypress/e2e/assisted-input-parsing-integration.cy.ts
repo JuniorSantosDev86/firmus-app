@@ -8,9 +8,9 @@ type StoredClient = {
 };
 
 describe("Block 27 - Improved Text Parsing (integration flow)", () => {
-  beforeEach(() => {
-    cy.clock(Date.UTC(2026, 3, 19, 12, 0, 0), ["Date"]);
+  const referenceDate = new Date("2026-04-19T12:00:00.000Z");
 
+  beforeEach(() => {
     window.localStorage.clear();
     window.localStorage.setItem(
       "firmus.clients",
@@ -35,7 +35,8 @@ describe("Block 27 - Improved Text Parsing (integration flow)", () => {
 
   it("builds confirmable charge draft from parser output", () => {
     const parsedIntent = parseTextInputIntent(
-      "Criar cobrança para Ana de R$ 325,90 com vencimento em 2 dias"
+      "Criar cobrança para Ana de R$ 325,90 com vencimento em 2 dias",
+      { referenceDate }
     );
     const clients = JSON.parse(window.localStorage.getItem("firmus.clients") ?? "[]") as StoredClient[];
     const matchedClient = findClientByText(
@@ -61,7 +62,7 @@ describe("Block 27 - Improved Text Parsing (integration flow)", () => {
   });
 
   it("blocks confirmation when required quote fields stay missing", () => {
-    const parsedIntent = parseTextInputIntent("Criar orçamento para Ana");
+    const parsedIntent = parseTextInputIntent("Criar orçamento para Ana", { referenceDate });
     const clients = JSON.parse(window.localStorage.getItem("firmus.clients") ?? "[]") as StoredClient[];
     const matchedClient = findClientByText(
       clients as Parameters<typeof findClientByText>[0],

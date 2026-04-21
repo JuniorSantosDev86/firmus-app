@@ -1,13 +1,12 @@
 import { parseTextInputIntent } from "../../lib/services/text-input-parser";
 
 describe("Block 27 - Improved Text Parsing (unit parser)", () => {
-  beforeEach(() => {
-    cy.clock(Date.UTC(2026, 3, 19, 12, 0, 0), ["Date"]);
-  });
+  const referenceDate = new Date("2026-04-19T12:00:00.000Z");
 
   it("normalizes PT-BR text and detects quote intent with key fields", () => {
     const parsed = parseTextInputIntent(
-      "  CRIAR ORÇAMENTO para João, referente a revisão elétrica de R$ 1.250,90 para 25/04/2026  "
+      "  CRIAR ORÇAMENTO para João, referente a revisão elétrica de R$ 1.250,90 para 25/04/2026  ",
+      { referenceDate }
     );
 
     expect(parsed.intentType).to.eq("create_quote");
@@ -21,7 +20,8 @@ describe("Block 27 - Improved Text Parsing (unit parser)", () => {
 
   it("detects charge intent and parses relative date in days", () => {
     const parsed = parseTextInputIntent(
-      "Criar cobrança para Ana de 500 reais com vencimento em 3 dias"
+      "Criar cobrança para Ana de 500 reais com vencimento em 3 dias",
+      { referenceDate }
     );
 
     expect(parsed.intentType).to.eq("create_charge");
@@ -32,7 +32,9 @@ describe("Block 27 - Improved Text Parsing (unit parser)", () => {
   });
 
   it("detects reminder intent and parses 'depois de amanhã' deterministically", () => {
-    const parsed = parseTextInputIntent("Lembrete de follow-up com Bruno depois de amanhã");
+    const parsed = parseTextInputIntent("Lembrete de follow-up com Bruno depois de amanhã", {
+      referenceDate,
+    });
 
     expect(parsed.intentType).to.eq("create_reminder");
     expect(parsed.extractedFields.clientNameCandidate).to.eq("Bruno");
@@ -43,7 +45,8 @@ describe("Block 27 - Improved Text Parsing (unit parser)", () => {
 
   it("returns unknown intent with explicit ambiguity warning", () => {
     const parsed = parseTextInputIntent(
-      "Criar cobrança e lembrete para Ana com vencimento amanhã"
+      "Criar cobrança e lembrete para Ana com vencimento amanhã",
+      { referenceDate }
     );
 
     expect(parsed.intentType).to.eq("unknown");
@@ -52,7 +55,7 @@ describe("Block 27 - Improved Text Parsing (unit parser)", () => {
   });
 
   it("surfaces explicit missing fields for incomplete charge", () => {
-    const parsed = parseTextInputIntent("Criar cobrança para Carlos");
+    const parsed = parseTextInputIntent("Criar cobrança para Carlos", { referenceDate });
 
     expect(parsed.intentType).to.eq("create_charge");
     expect(parsed.missingFields).to.include("valor");
@@ -61,28 +64,33 @@ describe("Block 27 - Improved Text Parsing (unit parser)", () => {
   });
 
   it("keeps amount undefined when number likely represents date-only context", () => {
-    const parsed = parseTextInputIntent("Lembrete com Bruno dia 25");
+    const parsed = parseTextInputIntent("Lembrete com Bruno dia 25", { referenceDate });
 
     expect(parsed.extractedFields.amountInCents).to.eq(undefined);
     expect(parsed.extractedFields.dueDate).to.eq("2026-04-25");
   });
 
   it("parses month-name dates in PT-BR", () => {
-    const parsed = parseTextInputIntent("Criar cobrança para Ana de R$ 300 com vencimento 5 de maio");
+    const parsed = parseTextInputIntent(
+      "Criar cobrança para Ana de R$ 300 com vencimento 5 de maio",
+      { referenceDate }
+    );
 
     expect(parsed.intentType).to.eq("create_charge");
     expect(parsed.extractedFields.dueDate).to.eq("2026-05-05");
   });
 
   it("flags multiple detected values to enforce manual review", () => {
-    const parsed = parseTextInputIntent("Criar cobrança para Ana de R$ 100 ou R$ 120 amanhã");
+    const parsed = parseTextInputIntent("Criar cobrança para Ana de R$ 100 ou R$ 120 amanhã", {
+      referenceDate,
+    });
 
     expect(parsed.intentType).to.eq("create_charge");
     expect(parsed.warnings.some((warning) => warning.includes("Mais de um valor"))).to.eq(true);
   });
 
   it("handles very short text safely", () => {
-    const parsed = parseTextInputIntent("oi");
+    const parsed = parseTextInputIntent("oi", { referenceDate });
 
     expect(parsed.intentType).to.eq("unknown");
     expect(parsed.missingFields).to.deep.eq(["instrução"]);

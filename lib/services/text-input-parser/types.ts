@@ -23,6 +23,10 @@ export type DateExtractionResult = {
   warnings: string[];
 };
 
+export type DateExtractionOptions = {
+  referenceDate?: Date;
+};
+
 export type TextFieldExtractionResult = {
   clientNameCandidate?: string;
   titleCandidate?: string;
@@ -30,3 +34,7 @@ export type TextFieldExtractionResult = {
 };
 
 export type ParserFieldSet = ParsedAssistedIntent["extractedFields"];
+
+export type ParseTextInputIntentOptions = {
+  referenceDate?: Date;
+};

@@ -2747,6 +2747,105 @@ Files added or modified:
 Verdict:
 Approved
 
+## Block 28 — Outbound Channel Abstraction
+
+### Status
+Approved.
+
+### Goal of the block
+Introduce a minimal outbound abstraction layer so Firmus can represent outbound intent without hardcoding channel behavior directly inside feature pages.
+
+### Scope delivered
+- Introduced outbound domain contracts for channels, recipient, draft, dispatch result, and message kinds.
+- Added outbound service layer with:
+  - draft builder,
+  - recipient normalization,
+  - availability checks,
+  - fallback resolution,
+  - dispatcher orchestration.
+- Added dedicated outbound adapters for:
+  - WhatsApp deep link,
+  - email via `mailto:`,
+  - copy-to-clipboard fallback.
+- Added reusable outbound UI primitives:
+  - channel selector,
+  - outbound action button,
+  - dispatch feedback state.
+- Wired real visible integrations in:
+  - Quotes: share action,
+  - Charges: reminder action.
+
+### Files introduced / touched
+- `lib/domain/outbound.ts`
+- `lib/domain/index.ts`
+- `lib/services/outbound/outbound-draft-builder.ts`
+- `lib/services/outbound/outbound-target-resolver.ts`
+- `lib/services/outbound/outbound-dispatcher.ts`
+- `lib/services/outbound/outbound-fallback.ts`
+- `lib/services/outbound/outbound-availability.ts`
+- `lib/services/outbound/adapters/whatsapp-link-adapter.ts`
+- `lib/services/outbound/adapters/email-mailto-adapter.ts`
+- `lib/services/outbound/adapters/clipboard-adapter.ts`
+- `components/outbound/outbound-channel-menu.tsx`
+- `components/outbound/outbound-action-button.tsx`
+- `components/quotes-manager.tsx`
+- `components/charges-manager.tsx`
+- `cypress/e2e/outbound-channel-abstraction.cy.ts`
+
+### Functional validation
+Validated successfully:
+- outbound channel selection works in visible UI;
+- quote share flow supports channel abstraction;
+- charge reminder flow supports channel abstraction;
+- deterministic fallback to copy happens when required recipient data is missing;
+- blocked dispatch happens when message body is invalid/empty;
+- mailto URL generation is valid;
+- WhatsApp deep link generation is valid;
+- copy fallback works in helper/runtime context;
+- visible feedback is shown to the user after dispatch, block, or fallback.
+
+### Automated validation
+Full Cypress run completed successfully.
+
+Evidence:
+- all specs passed;
+- 26 specs executed;
+- 109 tests passed;
+- 0 failing. 
+
+### Manual QA performed
+- quote outbound action checked in real UI;
+- charge outbound action checked in real UI;
+- fallback behavior checked visually;
+- assisted input smoke-checked after parser determinism fix;
+- no visible regression detected in core routes.
+
+### Risks / reservations
+- Assisted input is still functionally useful but not yet highly polished in natural-language quality.
+- This is acceptable at the current stage because the parsing layer is now deterministic enough to iterate safely.
+
+### Acceptance verdict
+Approved.
+
+### Why this block matters
+This block creates the correct boundary between:
+- message intent/content,
+- channel-specific dispatch behavior.
+
+That keeps future growth safer for:
+- assisted actions,
+- templates,
+- collection flows,
+- public/share flows,
+- future external channel expansion.
+
+### Follow-up reminder for next block
+Before approving the next block, preserve the same QA discipline:
+- Cypress stays as regression guard,
+- unit tests protect pure logic,
+- integration tests protect server/service boundaries,
+- manual QA checks UX, wording, and operational clarity.
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:

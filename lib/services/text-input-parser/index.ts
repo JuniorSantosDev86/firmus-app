@@ -8,8 +8,12 @@ import {
   computeConfidence,
   shapeWarningsAndMissingFields,
 } from "./warning-shaping";
+import type { ParseTextInputIntentOptions } from "./types";
 
-export function parseTextInputIntent(rawText: string): ParsedAssistedIntent {
+export function parseTextInputIntent(
+  rawText: string,
+  options: ParseTextInputIntentOptions = {}
+): ParsedAssistedIntent {
   const input = normalizeInput(rawText);
 
   if (input.trimmed.length < 3) {
@@ -25,7 +29,7 @@ export function parseTextInputIntent(rawText: string): ParsedAssistedIntent {
 
   const detectedIntent = detectIntent(input);
   const amountExtraction = extractAmount(input);
-  const dateExtraction = extractDueDate(input);
+  const dateExtraction = extractDueDate(input, { referenceDate: options.referenceDate });
   const clientNameCandidate = extractClient(input);
   const textFields = extractTitleAndDescription(input, detectedIntent.intentType);
 
