@@ -868,22 +868,10 @@ Implemented and validated:
 
 ---
 
-### Block 30 — NFSe Issuance Integration
-**Status:** Pending  
-**Objective:** Emit NFS-e through the selected official-compatible integration path.
+#### Block 30 — NFSe Issuance Integration
+Status: Completed and approved.
 
-### Expected scope
-- integration adapter for the chosen NFS-e path/provider
-- issuance request flow
-- response/status persistence
-- protocol / receipt / invoice identifiers
-- error handling and retry-safe states
-- basic issuance history visibility
-
-### Out of scope
-- broad fiscal BI
-- complex reconciliation workflows
-- municipality-specific deep customizations outside the chosen MVP strategy
+Connected the existing NFSe foundation to a controlled issuance flow through an isolated provider boundary. Added a central issuance orchestration service, normalized provider outcomes into Firmus-owned internal statuses, persisted operational issuance result fields, exposed issuance outcome in the UI, and validated both happy path and main failure path through automated and manual checks.
 
 ---
 
@@ -921,46 +909,38 @@ Implemented and validated:
 
 ---
 
-## Current Status — Firmus
+## Current Status
 
-## Official state
-Block 29 — NFSe Foundation is complete, validated, and approved.
+Firmus has completed and validated the following blocks:
 
-## What was completed in this block
-- internal NFSe preparation layer added;
-- fiscal readiness evaluation added to Business Profile;
-- paid charges can now generate internal NFSe drafts;
-- NFSe records are persisted with stable snapshots;
-- internal NFSe page/manager is operational;
-- fiscal input guardrails were added for core readiness fields;
-- helper-spec and visible-flow validation closed successfully.
+- Block 24 — Security & LGPD Foundation
+- Block 25 — Activity Logs
+- Block 26 — Observability and Stability
+- Block 27 — Improved Text Parsing
+- Block 28 — Outbound Channel Abstraction
+- Block 29 — NFSe Foundation
+- Block 30 — NFSe Issuance Integration
 
-## Validation summary
-- full Cypress regression passed;
-- manual validation completed successfully;
-- no open blocker remains for Block 29.
+### Current product state
+The product now supports:
+- protected internal shell and access control
+- security-sensitive audit trail
+- server-side activity logs
+- observability and controlled backup/restore foundations
+- stronger PT-BR text parsing for assisted flows
+- outbound channel abstraction for operational communication
+- NFSe readiness evaluation and draft preparation
+- controlled NFSe issuance flow with success/failure handling
+- operator-visible issuance results in the UI
 
-## Product state after this block
-Firmus now has:
-- stable operational base,
-- assisted input,
-- outbound abstraction,
-- public growth surfaces,
-- security & LGPD baseline,
-- observability baseline,
-- deterministic parser foundation,
-- internal fiscal preparation foundation for NFSe.
+### Current QA state
+- lint passing
+- full Cypress suite passing
+- 30 specs passing
+- 118 tests passing
+- manual validation completed for Block 30 issuance behavior and visual integrity
 
-## Current quality reading
-- system health: strong;
-- regression confidence: strong;
-- fiscal foundation: approved;
-- issuance readiness: foundation ready, real integration still pending;
-- readiness for next block: approved.
+### Current roadmap position
+The current official next block is:
 
-## Strategic meaning of the current state
-Firmus is no longer only operational/commercial.
-It is now structurally prepared to move into real fiscal issuance work without forcing provider complexity into the core too early.
-
-## Next official block
-Block 30 — NFSe Issuance Integration.
+- Block 31 — DAS Companion and Official Channel Handoff

@@ -65,7 +65,9 @@ export function mapServiceSnapshot(input: {
   };
 }
 
-export function getNFSeIssueStatusLabel(status: "draft" | "ready" | "issued" | "failed"): string {
+export function getNFSeIssueStatusLabel(
+  status: "draft" | "ready" | "issuing" | "issued" | "failed"
+): string {
   if (status === "draft") {
     return "Rascunho";
   }
@@ -78,5 +80,9 @@ export function getNFSeIssueStatusLabel(status: "draft" | "ready" | "issued" | "
     return "Emitida";
   }
 
-  return "Falha";
+  if (status === "issuing") {
+    return "Emitindo";
+  }
+
+  return "Falha na emissão";
 }

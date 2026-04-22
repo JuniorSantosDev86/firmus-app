@@ -84,7 +84,9 @@ export function prepareNFSeDraftFromCharge(chargeId: string): PrepareNFSeDraftRe
   const now = new Date().toISOString();
 
   const issueStatus =
-    existing?.issueStatus === "issued" || existing?.issueStatus === "failed"
+    existing?.issueStatus === "issued" ||
+    existing?.issueStatus === "failed" ||
+    existing?.issueStatus === "issuing"
       ? existing.issueStatus
       : readiness.isReady
         ? "ready"
@@ -109,6 +111,8 @@ export function prepareNFSeDraftFromCharge(chargeId: string): PrepareNFSeDraftRe
     businessSnapshot: mapBusinessSnapshot(businessProfile),
     documentNumber: existing?.documentNumber,
     providerReference: existing?.providerReference,
+    issuedAt: existing?.issuedAt,
+    lastError: existing?.lastError,
     createdAt: existing?.createdAt ?? now,
     updatedAt: now,
   };

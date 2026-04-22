@@ -5,7 +5,7 @@ import type {
   TimestampedEntity,
 } from "@/lib/domain/common";
 
-export type NFSeIssueStatus = "draft" | "ready" | "issued" | "failed";
+export type NFSeIssueStatus = "draft" | "ready" | "issuing" | "issued" | "failed";
 
 export type NFSeTaxRegime = "mei" | "simples" | "outro";
 
@@ -45,6 +45,8 @@ export interface NFSeRecord extends TimestampedEntity {
   businessSnapshot: NFSeBusinessSnapshot;
   documentNumber?: string;
   providerReference?: string;
+  issuedAt?: string;
+  lastError?: string;
 }
 
 export type NFSeReadinessMissingFieldCode =

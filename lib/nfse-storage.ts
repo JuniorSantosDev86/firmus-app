@@ -42,7 +42,7 @@ function asNonNegativeInteger(value: unknown): number {
 }
 
 function asIssueStatus(value: unknown): NFSeRecord["issueStatus"] {
-  if (value === "ready" || value === "issued" || value === "failed") {
+  if (value === "ready" || value === "issuing" || value === "issued" || value === "failed") {
     return value;
   }
 
@@ -117,6 +117,8 @@ function normalizeRecord(raw: unknown): NFSeRecord | null {
     },
     documentNumber: asNonEmptyString(data.documentNumber) ?? undefined,
     providerReference: asNonEmptyString(data.providerReference) ?? undefined,
+    issuedAt: asNonEmptyString(data.issuedAt) ?? undefined,
+    lastError: asNonEmptyString(data.lastError) ?? undefined,
     createdAt: asIsoDate(data.createdAt),
     updatedAt: asIsoDate(data.updatedAt),
   };

@@ -2956,6 +2956,84 @@ Block 30 must keep the same discipline:
 - safe failure handling,
 - manual validation of operational clarity.
 
+## Block 30 — NFSe Issuance Integration
+
+### Goal
+Connect the existing NFSe foundation to a controlled issuance flow, keeping provider behavior isolated, normalizing issuance outcomes into Firmus-owned internal states, and exposing a clear operational result in the UI.
+
+### Scope implemented
+- Added a dedicated NFSe provider contract
+- Added deterministic mock provider for issuance success/failure
+- Added central issuance orchestration service
+- Added provider-result-to-internal-status mapper
+- Extended NFSe persistence with issuance operational fields
+- Integrated issuance action into the existing NFSe manager UI
+- Added automated coverage for issuance success and failure flows
+- Preserved Block 29 foundation behavior and restored selector compatibility in the NFSe screen
+
+### Architecture checkpoints
+- Provider logic is isolated from UI
+- Issuance goes through a central orchestration service
+- Raw provider result is not used as canonical app state
+- Internal issuance semantics remain app-owned
+- Persistence stores only operationally relevant issuance result fields
+- Existing Block 29 draft-preparation flow remains intact
+
+### Domain and persistence checkpoints
+- NFSe issue status now supports:
+  - `draft`
+  - `ready`
+  - `issuing`
+  - `issued`
+  - `failed`
+- NFSe records now support operational issuance fields:
+  - `issuedAt`
+  - `lastError`
+  - `providerReference`
+  - `documentNumber`
+- Storage normalization remains backward-compatible with older NFSe records
+
+### UI checkpoints
+- Existing NFSe screen remains the single operator-facing flow
+- Each NFSe record renders exactly once
+- Issuance button appears only for issuable records
+- Success result shows:
+  - issued status
+  - NFSe number
+  - protocol/reference
+  - success feedback
+- Failure result shows:
+  - failed status
+  - readable operational error
+  - failure feedback
+- No duplicated card/selectors remain in the NFSe list
+
+### Automated validation
+- `nfse-foundation.cy.ts` passing
+- `nfse-issuance-helpers.cy.ts` passing
+- `nfse-issuance.cy.ts` passing
+- Full Cypress suite passing:
+  - 30 specs
+  - 118 tests
+  - 118 passing
+  - 0 failing
+
+### Manual validation performed
+- Confirmed a single card per NFSe record in the UI
+- Confirmed no duplicated status or duplicated informational rows
+- Confirmed successful issuance visual flow
+- Confirmed controlled failure visual flow
+- Confirmed persistence after reload
+- Confirmed no regression in the existing NFSe foundation experience
+
+### Approval verdict
+Approved.
+
+### Notes for next block
+- Block 30 is complete as an issuance integration layer, not as a full fiscal operations engine
+- Cancellation, retry orchestration, reconciliation, and provider expansion remain out of scope
+- Future NFSe evolution should continue using the provider-boundary pattern introduced here
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:

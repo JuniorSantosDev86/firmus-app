@@ -5,7 +5,7 @@ import { NFSeManager } from "@/components/nfse/nfse-manager";
 
 export const metadata: Metadata = {
   title: "NFSe",
-  description: "Prepare e acompanhe os registros internos de NFSe.",
+  description: "Prepare, emita e acompanhe os registros internos de NFSe.",
 };
 
 export default function NFSePage() {
@@ -13,7 +13,7 @@ export default function NFSePage() {
     <main className="mx-auto w-full max-w-[1120px] space-y-8">
       <PageHeader
         title="NFSe"
-        description="Camada interna de preparo fiscal. Aqui você acompanha rascunhos e prontidão para emissão futura."
+        description="Camada interna fiscal. Aqui você acompanha preparo, emissão e resultado operacional da NFSe."
       />
       <NFSeManager />
     </main>

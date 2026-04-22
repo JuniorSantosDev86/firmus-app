@@ -4,6 +4,7 @@ import { getNFSeIssueStatusLabel } from "@/lib/services/nfse/nfse-mappers";
 const STATUS_CLASSNAMES: Record<NFSeIssueStatus, string> = {
   draft: "firmus-chip-info",
   ready: "firmus-chip-success",
+  issuing: "firmus-chip-info",
   issued: "firmus-chip-success",
   failed: "firmus-chip-warning",
 };
