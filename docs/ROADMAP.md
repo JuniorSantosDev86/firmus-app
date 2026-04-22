@@ -876,22 +876,9 @@ Connected the existing NFSe foundation to a controlled issuance flow through an 
 ---
 
 ### Block 31 — DAS Companion and Official Channel Handoff
-**Status:** Pending  
-**Objective:** Help the MEI stay compliant with DAS obligations without pretending to replace the official payment channels.
+Status: Completed and approved.
 
-### Expected scope
-- monthly DAS reminder/status layer
-- due-date visibility inside Firmus
-- guidance for official payment flow
-- handoff/deep-link strategy to official channels where applicable
-- support content for PIX / debit automatic / consolidated DAS usage
-- manual payment confirmation / bookkeeping marker inside the product
-
-### Out of scope
-- native DAS payment processing inside Firmus
-- unofficial scraping-based automation
-- dependency on brittle browser automation against government portals
-- pretending there is a stable public payment API if none is adopted in the MVP strategy
+Implemented a minimal DAS operational companion layer with protected internal access, safe persistence, derived overdue behavior, explicit official-channel handoff, and manual external-payment confirmation. The block preserved a clean separation between operational guidance and real payment execution, keeping payment outside Firmus while giving the operator a trustworthy follow-up surface.
 
 ---
 
@@ -911,7 +898,7 @@ Connected the existing NFSe foundation to a controlled issuance flow through an 
 
 ## Current Status
 
-Firmus has completed and validated the following blocks:
+Firmus current validated state now includes:
 
 - Block 24 — Security & LGPD Foundation
 - Block 25 — Activity Logs
@@ -920,27 +907,25 @@ Firmus has completed and validated the following blocks:
 - Block 28 — Outbound Channel Abstraction
 - Block 29 — NFSe Foundation
 - Block 30 — NFSe Issuance Integration
+- Block 31 — DAS Companion and Official Channel Handoff
 
 ### Current product state
 The product now supports:
-- protected internal shell and access control
-- security-sensitive audit trail
-- server-side activity logs
-- observability and controlled backup/restore foundations
-- stronger PT-BR text parsing for assisted flows
-- outbound channel abstraction for operational communication
-- NFSe readiness evaluation and draft preparation
-- controlled NFSe issuance flow with success/failure handling
-- operator-visible issuance results in the UI
+- protected internal shell and auth boundaries
+- security-sensitive audit and activity visibility
+- observability and controlled restore/health flows
+- stronger PT-BR assisted parsing
+- outbound operational actions
+- NFSe readiness and issuance flow
+- DAS operational companion and official-channel handoff
 
 ### Current QA state
 - lint passing
 - full Cypress suite passing
-- 30 specs passing
-- 118 tests passing
-- manual validation completed for Block 30 issuance behavior and visual integrity
+- 32 specs passing
+- 123 tests passing
+- manual validation completed for Block 31
 
 ### Current roadmap position
-The current official next block is:
-
-- Block 31 — DAS Companion and Official Channel Handoff
+Next official implementation target:
+- Block 32 — Feature Flags and Plan Limits

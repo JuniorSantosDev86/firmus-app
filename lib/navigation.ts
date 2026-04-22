@@ -80,6 +80,14 @@ export const PRIMARY_NAVIGATION: NavigationItem[] = [
     testId: "nav-charges",
   },
   {
+    id: "das",
+    label: "DAS",
+    href: "/das",
+    icon: ReceiptText,
+    group: "operacao",
+    testId: "nav-das",
+  },
+  {
     id: "nfse",
     label: "NFSe",
     href: "/nfse",

@@ -3034,6 +3034,95 @@ Approved.
 - Cancellation, retry orchestration, reconciliation, and provider expansion remain out of scope
 - Future NFSe evolution should continue using the provider-boundary pattern introduced here
 
+## Block 31 — DAS Companion and Official Channel Handoff
+
+### Goal
+Introduce a minimal operational DAS companion flow that helps the operator track the monthly DAS context, understand due timing and status, and hand off safely to the official payment channel without pretending that Firmus processes the payment internally.
+
+### Scope implemented
+- Added a dedicated DAS domain model
+- Added dedicated DAS local persistence with safe normalization
+- Added DAS deadline/status derivation helpers
+- Added DAS companion service for operational snapshot and simple state updates
+- Added DAS official handoff service with official destination resolution
+- Added a protected `/das` route
+- Added DAS manager UI and DAS status badge
+- Added DAS entry points in the app navigation
+- Added Cypress helper coverage and visible-flow coverage for Block 31
+
+### Architecture checkpoints
+- Route remains thin and page-level only
+- UI logic stays inside `components/das/*`
+- DAS domain is isolated in `lib/domain/das.ts`
+- DAS persistence is isolated in `lib/das-storage.ts`
+- Companion logic is handled by `das-companion-service.ts`
+- Official-channel handoff logic is handled by `das-handoff-service.ts`
+- Overdue is derived, not persisted
+- Payment is explicitly kept outside Firmus
+
+### Domain and persistence checkpoints
+- DAS entity introduced with:
+  - `id`
+  - `competence`
+  - `dueDate`
+  - `status`
+  - `amountInCents?`
+  - `officialUrl?`
+  - `createdAt`
+  - `updatedAt`
+- Internal persisted statuses:
+  - `pending`
+  - `guided`
+  - `handed_off`
+  - `paid_externally`
+- Derived display state:
+  - `overdue`
+- Storage key:
+  - `firmus.das-records`
+- Storage parser safely handles invalid JSON and falls back to `[]`
+
+### UI checkpoints
+- `/das` route renders safely
+- Empty state is safe and honest
+- UI clearly states that DAS payment happens in the official channel
+- Current record view shows:
+  - competence
+  - due date
+  - status
+  - amount when available
+- Operator actions available:
+  - register guidance
+  - hand off to official channel
+  - mark as paid externally
+- Visual status feedback remains coherent after updates
+- Navigation entry for DAS is available in the internal shell
+
+### Automated validation
+- `das-companion-helpers.cy.ts` passing
+- `das-companion.cy.ts` passing
+- Full Cypress suite passing:
+  - 32 specs
+  - 123 tests
+  - 123 passing
+  - 0 failing
+
+### Manual validation checklist
+- Confirm `/das` appears correctly in navigation
+- Confirm empty state is clear and non-misleading
+- Confirm competence/due date/status readability
+- Confirm “official channel” wording is explicit
+- Confirm official handoff opens the expected destination
+- Confirm guidance and paid externally actions update UI safely
+- Confirm no part of the UI implies that Firmus processed the payment
+
+### Approval verdict
+Approved.
+
+### Notes for next block
+- Block 31 is a companion and handoff layer only
+- It is not a payment gateway, tax engine, or official collection channel
+- Future fiscal/payment-adjacent evolution must preserve this boundary
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:
