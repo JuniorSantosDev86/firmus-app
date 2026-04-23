@@ -3034,68 +3034,53 @@ Approved.
 - Cancellation, retry orchestration, reconciliation, and provider expansion remain out of scope
 - Future NFSe evolution should continue using the provider-boundary pattern introduced here
 
-## Block 31 — DAS Companion and Official Channel Handoff
-
-### Goal
-Introduce a minimal operational DAS companion flow that helps the operator track the monthly DAS context, understand due timing and status, and hand off safely to the official payment channel without pretending that Firmus processes the payment internally.
-
-### Scope implemented
-- Added a dedicated DAS domain model
-- Added dedicated DAS local persistence with safe normalization
-- Added DAS deadline/status derivation helpers
-- Added DAS companion service for operational snapshot and simple state updates
-- Added DAS official handoff service with official destination resolution
-- Added a protected `/das` route
-- Added DAS manager UI and DAS status badge
-- Added DAS entry points in the app navigation
-- Added Cypress helper coverage and visible-flow coverage for Block 31
+### Block 31 — DAS Companion and Official Channel Handoff
+Status: Completed and approved.
 
 ### Architecture checkpoints
 - Route remains thin and page-level only
 - UI logic stays inside `components/das/*`
 - DAS domain is isolated in `lib/domain/das.ts`
-- DAS persistence is isolated in `lib/das-storage.ts`
+- DAS persistence is isolated in `lib/storage/das-records.ts` and re-exported through `lib/das-storage.ts`
 - Companion logic is handled by `das-companion-service.ts`
 - Official-channel handoff logic is handled by `das-handoff-service.ts`
 - Overdue is derived, not persisted
 - Payment is explicitly kept outside Firmus
+- Event emission remains append-only and limited to meaningful successful actions
 
 ### Domain and persistence checkpoints
-- DAS entity introduced with:
+- DAS entity finalized with:
   - `id`
-  - `competence`
-  - `dueDate`
+  - `competenceMonth`
   - `status`
-  - `amountInCents?`
-  - `officialUrl?`
+  - `paidAt?`
   - `createdAt`
   - `updatedAt`
 - Internal persisted statuses:
   - `pending`
-  - `guided`
-  - `handed_off`
-  - `paid_externally`
+  - `paid`
 - Derived display state:
   - `overdue`
 - Storage key:
   - `firmus.das-records`
 - Storage parser safely handles invalid JSON and falls back to `[]`
+- Legacy DAS shapes are normalized safely during read
+- `paidAt` is only stored when the record is marked as paid
 
 ### UI checkpoints
 - `/das` route renders safely
 - Empty state is safe and honest
-- UI clearly states that DAS payment happens in the official channel
-- Current record view shows:
-  - competence
-  - due date
+- UI clearly states that DAS issuance/payment happens in the official channel
+- Record list shows:
+  - competência
   - status
-  - amount when available
+  - estimated due date
+  - updatedAt / paidAt
 - Operator actions available:
-  - register guidance
-  - hand off to official channel
-  - mark as paid externally
+  - open official channel
+  - mark as paid
 - Visual status feedback remains coherent after updates
-- Navigation entry for DAS is available in the internal shell
+- Navigation entry for DAS remains available in the internal shell
 
 ### Automated validation
 - `das-companion-helpers.cy.ts` passing
@@ -3105,15 +3090,18 @@ Introduce a minimal operational DAS companion flow that helps the operator track
   - 123 tests
   - 123 passing
   - 0 failing
+- `npm run lint` passed
+- relevant block validation completed without regression in prior slices
 
 ### Manual validation checklist
 - Confirm `/das` appears correctly in navigation
 - Confirm empty state is clear and non-misleading
-- Confirm competence/due date/status readability
+- Confirm competência / due date / status readability
 - Confirm “official channel” wording is explicit
 - Confirm official handoff opens the expected destination
-- Confirm guidance and paid externally actions update UI safely
+- Confirm mark-as-paid updates UI safely
 - Confirm no part of the UI implies that Firmus processed the payment
+- Confirm PT-BR wording remains consistent
 
 ### Approval verdict
 Approved.
@@ -3122,6 +3110,45 @@ Approved.
 - Block 31 is a companion and handoff layer only
 - It is not a payment gateway, tax engine, or official collection channel
 - Future fiscal/payment-adjacent evolution must preserve this boundary
+
+### Block 32 — Feature Flags and Plan Limits
+Status: Completed and approved.
+
+Delivered:
+- minimal plan entitlement domain
+- canonical Free / Plus / Pro entitlement map
+- local plan-state persistence
+- central entitlement service for:
+  - current plan resolution
+  - feature gating
+  - limit evaluation
+  - upgrade-safe feedback
+- internal `/plan` route
+- plan visibility and local plan switching for MVP control
+- visible gating in:
+  - NFSe
+  - DAS
+  - Automation Rules
+- quantitative limit enforcement for Templates
+- navigation entry for `/plan`
+- dedicated Cypress coverage for plan-aware behavior
+
+Validation:
+- `npm run lint` passed
+- `npm run build` passed
+- dedicated Block 32 Cypress coverage passed
+- full local Cypress regression run passed with all specs green:
+  - 33 specs
+  - 128 tests
+  - 128 passing
+  - 0 failing
+
+Notes:
+- Block 32 introduced the first central entitlement layer without adding billing complexity.
+- The initial restrictive fallback caused regressions in previously approved flows and was corrected before final approval.
+- The final validated behavior preserves the entitlement architecture while keeping the default local MVP baseline compatible with prior approved routes.
+- A hydration mismatch in Templates was corrected by deferring storage-derived limit rendering until after hydration.
+- No checkout, subscription, webhook, backend, DB, or payment provider integration was introduced.
 
 ## QA Template for Future Blocks
 

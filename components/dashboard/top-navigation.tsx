@@ -16,6 +16,7 @@ const mainNavItems: MainNavItem[] = [
   { href: "/", label: "Dashboard", testId: "nav-dashboard" },
   { href: "/business-profile", label: "Perfil da Empresa", testId: "nav-business-profile" },
   { href: "/clients", label: "Clientes", testId: "nav-clients" },
+  { href: "/plan", label: "Plano", testId: "nav-plan" },
   { href: "/services", label: "Serviços", testId: "nav-services" },
   { href: "/quotes", label: "Orçamentos", testId: "nav-quotes" },
 ];

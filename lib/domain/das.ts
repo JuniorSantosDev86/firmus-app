@@ -1,17 +1,10 @@
-import type {
-  CurrencyInCents,
-  EntityId,
-  ISODate,
-  TimestampedEntity,
-} from "@/lib/domain/common";
+import type { EntityId, TimestampedEntity } from "@/lib/domain/common";
 
-export type DASCompanionStatus = "pending" | "guided" | "handed_off" | "paid_externally";
+export type DASRecordStatus = "pending" | "paid";
 
 export interface DASRecord extends TimestampedEntity {
   id: EntityId;
-  competence: string;
-  dueDate: ISODate;
-  status: DASCompanionStatus;
-  amountInCents?: CurrencyInCents;
-  officialUrl?: string;
+  competenceMonth: string;
+  status: DASRecordStatus;
+  paidAt?: string;
 }

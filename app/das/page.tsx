@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 
 import { DASManager } from "@/components/das/das-manager";
 import { PageHeader } from "@/components/layout/page-header";
+import { PlanFeatureGuard } from "@/components/plan/plan-feature-guard";
 
 export const metadata: Metadata = {
   title: "DAS",
-  description: "Acompanhe o DAS mensal e faça o encaminhamento para o canal oficial de pagamento.",
+  description: "Acompanhe competências de DAS e faça o encaminhamento seguro ao canal oficial.",
 };
 
 export default function DASPage() {
@@ -13,9 +14,11 @@ export default function DASPage() {
     <main className="mx-auto w-full max-w-[1120px] space-y-8">
       <PageHeader
         title="DAS"
-        description="Camada de acompanhamento operacional do DAS com encaminhamento para o canal oficial."
+        description="Acompanhe competências mensais de DAS. A emissão e o pagamento oficial acontecem fora do Firmus."
       />
-      <DASManager />
+      <PlanFeatureGuard feature="das_access" blockedTestId="das-plan-blocked">
+        <DASManager />
+      </PlanFeatureGuard>
     </main>
   );
 }

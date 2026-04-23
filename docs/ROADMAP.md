@@ -878,13 +878,27 @@ Connected the existing NFSe foundation to a controlled issuance flow through an 
 ### Block 31 — DAS Companion and Official Channel Handoff
 Status: Completed and approved.
 
-Implemented a minimal DAS operational companion layer with protected internal access, safe persistence, derived overdue behavior, explicit official-channel handoff, and manual external-payment confirmation. The block preserved a clean separation between operational guidance and real payment execution, keeping payment outside Firmus while giving the operator a trustworthy follow-up surface.
-
+Implemented and validated:
+- minimal DAS domain model;
+- dedicated DAS storage layer with safe normalization;
+- derived overdue behavior from competence month;
+- DAS companion orchestration service;
+- explicit official-channel handoff flow;
+- manual mark-as-paid action after external completion;
+- meaningful timeline event emission for:
+  - `das_record_created`
+  - `das_official_channel_opened`
+  - `das_marked_paid`
+- focused internal DAS page/manager;
+- safe empty state and clear PT-BR guidance copy;
+- dedicated Cypress coverage plus full regression pass.
 ---
 
 ### Block 32 — Feature Flags and Plan Limits
-**Status:** Pending  
-**Objective:** Prepare technical support for Free / Plus / Pro plans.
+Status: Completed and approved.
+
+Implemented and validated a minimal entitlement foundation for Free / Plus / Pro plans through a canonical plan map, local plan-state persistence, a central plan-entitlements service, a dedicated internal `/plan` route, visible feature gating in premium operational slices, and quantitative limit enforcement for Templates. The block preserved architecture discipline, avoided billing expansion, and finished with the full local Cypress suite green again after the compatibility correction pass.
+
 
 ### Block 33 — Improved Onboarding
 **Status:** Pending  
@@ -908,6 +922,7 @@ Firmus current validated state now includes:
 - Block 29 — NFSe Foundation
 - Block 30 — NFSe Issuance Integration
 - Block 31 — DAS Companion and Official Channel Handoff
+- Block 32 — Feature Flags and Plan Limits
 
 ### Current product state
 The product now supports:
@@ -918,14 +933,19 @@ The product now supports:
 - outbound operational actions
 - NFSe readiness and issuance flow
 - DAS operational companion and official-channel handoff
+- central Free / Plus / Pro entitlement control
+- visible premium feature gating
+- quantitative plan-limit enforcement for Templates
+- internal plan visibility and local MVP plan control
 
 ### Current QA state
-- lint passing
+- `npm run lint` passing
+- `npm run build` passing
 - full Cypress suite passing
-- 32 specs passing
-- 123 tests passing
-- manual validation completed for Block 31
+- 33 specs passing
+- 128 tests passing
+- manual and regression validation completed for Block 32
 
 ### Current roadmap position
 Next official implementation target:
-- Block 32 — Feature Flags and Plan Limits
+- Block 33 — Improved Onboarding

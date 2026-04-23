@@ -3,9 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { PLAN_LABELS } from "@/lib/domain/plan";
+import { PLAN_STATE_UPDATED_EVENT } from "@/lib/storage/plan-state";
 import type { Template, TemplateCategory } from "@/lib/domain/template";
 import {
-  createTemplate,
+  createTemplateWithPlanCheck,
+  getTemplatePlanLimitState,
   getTemplateGroups,
   getTemplatePreview,
   getTemplates,
@@ -14,6 +17,7 @@ import {
   toggleTemplateActive,
   updateTemplate,
 } from "@/lib/services/templates";
+import type { LimitAccessState } from "@/lib/services/plan-entitlements";
 
 type TemplateFormValues = {
   name: string;
@@ -40,15 +44,32 @@ export function TemplatesManager() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formValues, setFormValues] = useState<TemplateFormValues>(INITIAL_FORM_VALUES);
   const [categoryFilter, setCategoryFilter] = useState<"all" | TemplateCategory>("all");
+  const [templateLimit, setTemplateLimit] = useState<LimitAccessState | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [limitFeedback, setLimitFeedback] = useState<string | null>(null);
 
   function refreshTemplates() {
     setTemplates(getTemplates());
+    setTemplateLimit(getTemplatePlanLimitState());
   }
 
   useEffect(() => {
     queueMicrotask(() => {
       refreshTemplates();
+      setIsHydrated(true);
     });
+
+    function handlePlanUpdate() {
+      refreshTemplates();
+    }
+
+    window.addEventListener(PLAN_STATE_UPDATED_EVENT, handlePlanUpdate);
+    window.addEventListener("storage", handlePlanUpdate);
+
+    return () => {
+      window.removeEventListener(PLAN_STATE_UPDATED_EVENT, handlePlanUpdate);
+      window.removeEventListener("storage", handlePlanUpdate);
+    };
   }, []);
 
   function updateField<K extends keyof TemplateFormValues>(
@@ -61,10 +82,15 @@ export function TemplatesManager() {
   function resetForm() {
     setEditingId(null);
     setFormValues(INITIAL_FORM_VALUES);
+    setLimitFeedback(null);
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (templateLimit === null) {
+      return;
+    }
 
     if (editingId) {
       const updated = updateTemplate(editingId, {
@@ -79,17 +105,20 @@ export function TemplatesManager() {
 
       refreshTemplates();
       setFormValues(mapTemplateToFormValues(updated));
+      setLimitFeedback(null);
       return;
     }
 
-    const created = createTemplate({
+    const created = createTemplateWithPlanCheck({
       name: formValues.name,
       category: formValues.category,
       content: formValues.content,
       isActive: true,
     });
 
-    if (!created) {
+    if (!created.ok) {
+      setTemplateLimit(created.limit);
+      setLimitFeedback(created.message);
       return;
     }
 
@@ -132,6 +161,38 @@ export function TemplatesManager() {
               Cancelar edição
             </Button>
           ) : null}
+        </div>
+
+        <div
+          className="mt-4 rounded-xl border border-[#DCE5EF] bg-[#F8FBFF] px-4 py-3"
+          data-testid="template-plan-limit"
+        >
+          {isHydrated && templateLimit !== null ? (
+            <>
+              <p className="text-sm font-medium text-foreground">
+                Plano atual: {PLAN_LABELS[templateLimit.currentPlan]}
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Limite de modelos:{" "}
+                {templateLimit.limit === null
+                  ? "Sem limite"
+                  : `${templateLimit.currentUsage}/${templateLimit.limit}`}
+              </p>
+              {templateLimit.reason ? (
+                <p className="mt-2 text-sm text-[#9F1239]" data-testid="template-limit-feedback">
+                  {limitFeedback ?? templateLimit.reason}
+                </p>
+              ) : (
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Faça upgrade para ampliar a biblioteca interna de modelos quando necessário.
+                </p>
+              )}
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Carregando limites do plano...
+            </p>
+          )}
         </div>
 
         <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
@@ -186,7 +247,16 @@ export function TemplatesManager() {
             </div>
           </div>
 
-          <Button type="submit">{editingId ? "Atualizar modelo" : "Salvar modelo"}</Button>
+          <Button
+            type="submit"
+            disabled={editingId === null && (!isHydrated || templateLimit?.blocked === true)}
+          >
+            {editingId
+              ? "Atualizar modelo"
+              : templateLimit?.blocked
+                ? "Limite atingido"
+                : "Salvar modelo"}
+          </Button>
         </form>
       </section>
 

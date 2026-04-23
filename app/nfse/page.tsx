@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { PageHeader } from "@/components/layout/page-header";
 import { NFSeManager } from "@/components/nfse/nfse-manager";
+import { PlanFeatureGuard } from "@/components/plan/plan-feature-guard";
 
 export const metadata: Metadata = {
   title: "NFSe",
@@ -15,7 +16,9 @@ export default function NFSePage() {
         title="NFSe"
         description="Camada interna fiscal. Aqui você acompanha preparo, emissão e resultado operacional da NFSe."
       />
-      <NFSeManager />
+      <PlanFeatureGuard feature="nfse_access" blockedTestId="nfse-plan-blocked">
+        <NFSeManager />
+      </PlanFeatureGuard>
     </main>
   );
 }

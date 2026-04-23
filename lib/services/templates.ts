@@ -9,6 +9,10 @@ import {
   type CreateTemplateInput,
   type UpdateTemplatePatch,
 } from "@/lib/template-storage";
+import {
+  getTemplateCreationAccessState,
+  type LimitAccessState,
+} from "@/lib/services/plan-entitlements";
 
 export const TEMPLATE_CATEGORY_ORDER: TemplateCategory[] = [
   "quote_followup",
@@ -24,12 +28,63 @@ export const TEMPLATE_CATEGORY_LABELS: Record<TemplateCategory, string> = {
   general: "Geral",
 };
 
+export type CreateTemplateWithPlanResult =
+  | {
+      ok: true;
+      template: Template;
+      limit: LimitAccessState;
+      message: null;
+    }
+  | {
+      ok: false;
+      template: null;
+      limit: LimitAccessState;
+      message: string;
+    };
+
 export function getTemplates(): Template[] {
   return getTemplatesFromStorage();
 }
 
 export function createTemplate(input: CreateTemplateInput): Template | null {
   return createTemplateInStorage(input);
+}
+
+export function getTemplatePlanLimitState(): LimitAccessState {
+  return getTemplateCreationAccessState();
+}
+
+export function createTemplateWithPlanCheck(
+  input: CreateTemplateInput
+): CreateTemplateWithPlanResult {
+  const limit = getTemplateCreationAccessState();
+
+  if (limit.blocked) {
+    return {
+      ok: false,
+      template: null,
+      limit,
+      message: limit.reason ?? "Você atingiu o limite do seu plano atual.",
+    };
+  }
+
+  const template = createTemplateInStorage(input);
+
+  if (template === null) {
+    return {
+      ok: false,
+      template: null,
+      limit: getTemplateCreationAccessState(),
+      message: "Não foi possível salvar o modelo.",
+    };
+  }
+
+  return {
+    ok: true,
+    template,
+    limit: getTemplateCreationAccessState(),
+    message: null,
+  };
 }
 
 export function updateTemplate(id: string, patch: UpdateTemplatePatch): Template | null {

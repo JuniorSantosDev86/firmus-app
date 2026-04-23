@@ -1,50 +1,51 @@
 import type { DASRecord } from "@/lib/domain";
 
-import { readDASRecords, upsertDASRecord } from "@/lib/das-storage";
+import {
+  createDASRecordIfAbsent,
+  markDASRecordAsPaid,
+  readDASRecords,
+} from "@/lib/storage/das-records";
+import { createTimelineEvent } from "@/lib/services/timeline";
+import { getDASDueDateFromCompetenceMonth } from "@/lib/services/das/das-deadlines";
 import {
   getDASDisplayStatus,
   getDASDisplayStatusLabel,
-  isDASRecordOverdue,
   type DASCompanionDisplayStatus,
 } from "@/lib/services/das/das-status-mapper";
 
-export type DASCompanionSnapshot = {
-  record: DASRecord | null;
-  displayStatus: DASCompanionDisplayStatus | null;
-  displayStatusLabel: string | null;
-  isOverdue: boolean;
+const DAS_OFFICIAL_CHANNEL_URL =
+  "https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/PGMEI.app/Identificacao";
+
+export type DASCompanionRecordView = {
+  record: DASRecord;
+  displayStatus: DASCompanionDisplayStatus;
+  displayStatusLabel: string;
+  dueDate: string | null;
 };
 
-function getLatestDASRecord(): DASRecord | null {
-  return readDASRecords()[0] ?? null;
+export function getDASOfficialChannelUrl(): string {
+  return DAS_OFFICIAL_CHANNEL_URL;
 }
 
-export function getDASCompanionSnapshot(referenceDate: Date = new Date()): DASCompanionSnapshot {
-  const record = getLatestDASRecord();
+export function listDASCompanionRecords(referenceDate: Date = new Date()): DASCompanionRecordView[] {
+  return readDASRecords().map((record) => {
+    const displayStatus = getDASDisplayStatus(record, referenceDate);
+    const dueDate = getDASDueDateFromCompetenceMonth(record.competenceMonth);
 
-  if (!record) {
     return {
-      record: null,
-      displayStatus: null,
-      displayStatusLabel: null,
-      isOverdue: false,
+      record,
+      displayStatus,
+      displayStatusLabel: getDASDisplayStatusLabel(displayStatus),
+      dueDate: dueDate ? dueDate.toISOString() : null,
     };
-  }
-
-  const displayStatus = getDASDisplayStatus(record, referenceDate);
-
-  return {
-    record,
-    displayStatus,
-    displayStatusLabel: getDASDisplayStatusLabel(displayStatus),
-    isOverdue: isDASRecordOverdue(record, referenceDate),
-  };
+  });
 }
 
 export type DASCompanionUpdateResult =
   | {
       ok: true;
       record: DASRecord;
+      didChange: boolean;
     }
   | {
       ok: false;
@@ -52,9 +53,8 @@ export type DASCompanionUpdateResult =
       message: string;
     };
 
-function updateRecordStatus(recordId: string, status: DASRecord["status"]): DASCompanionUpdateResult {
-  const current = readDASRecords().find((item) => item.id === recordId) ?? null;
-
+export function markDASAsPaid(recordId: string): DASCompanionUpdateResult {
+  const current = readDASRecords().find((item) => item.id === recordId);
   if (!current) {
     return {
       ok: false,
@@ -63,31 +63,79 @@ function updateRecordStatus(recordId: string, status: DASRecord["status"]): DASC
     };
   }
 
-  if (current.status === status) {
+  const updated = markDASRecordAsPaid(recordId);
+  if (!updated) {
     return {
-      ok: true,
-      record: current,
+      ok: false,
+      errorCode: "das_not_found",
+      message: "Registro de DAS não encontrado.",
     };
   }
 
-  const updatedRecord: DASRecord = {
-    ...current,
-    status,
-    updatedAt: new Date().toISOString(),
-  };
-
-  upsertDASRecord(updatedRecord);
+  const didChange = current.status !== updated.status;
+  if (didChange) {
+    createTimelineEvent({
+      type: "das_marked_paid",
+      entityId: updated.id,
+      entityType: "reminder",
+      metadata: {
+        module: "das",
+        competenceMonth: updated.competenceMonth,
+        paidAt: updated.paidAt,
+      },
+    });
+  }
 
   return {
     ok: true,
-    record: updatedRecord,
+    record: updated,
+    didChange,
   };
 }
 
-export function markDASAsGuided(recordId: string): DASCompanionUpdateResult {
-  return updateRecordStatus(recordId, "guided");
+export function createDASRecordForCompetenceMonth(
+  competenceMonth: string
+): { record: DASRecord; created: boolean } {
+  const result = createDASRecordIfAbsent(competenceMonth);
+  if (result.created) {
+    createTimelineEvent({
+      type: "das_record_created",
+      entityId: result.record.id,
+      entityType: "reminder",
+      metadata: {
+        module: "das",
+        competenceMonth: result.record.competenceMonth,
+      },
+    });
+  }
+
+  return result;
 }
 
-export function markDASAsPaidExternally(recordId: string): DASCompanionUpdateResult {
-  return updateRecordStatus(recordId, "paid_externally");
+export function recordDASOfficialChannelOpened(recordId: string): DASCompanionUpdateResult {
+  const record = readDASRecords().find((item) => item.id === recordId);
+  if (!record) {
+    return {
+      ok: false,
+      errorCode: "das_not_found",
+      message: "Registro de DAS não encontrado.",
+    };
+  }
+
+  createTimelineEvent({
+    type: "das_official_channel_opened",
+    entityId: record.id,
+    entityType: "reminder",
+    metadata: {
+      module: "das",
+      competenceMonth: record.competenceMonth,
+      destination: DAS_OFFICIAL_CHANNEL_URL,
+    },
+  });
+
+  return {
+    ok: true,
+    record,
+    didChange: false,
+  };
 }

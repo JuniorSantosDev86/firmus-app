@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { AutomationRulesManager } from "@/components/automation-rules-manager";
 import { PageHeader } from "@/components/layout/page-header";
+import { PlanFeatureGuard } from "@/components/plan/plan-feature-guard";
 
 export const metadata: Metadata = {
   title: "Regras de automação",
@@ -16,7 +17,12 @@ export default function AutomationRulesPage() {
         title="Regras de automação"
         description="Crie regras determinísticas, ative ou desative quando necessário e avalie correspondências de forma inspecionável."
       />
-      <AutomationRulesManager />
+      <PlanFeatureGuard
+        feature="automation_rules_access"
+        blockedTestId="automation-rules-plan-blocked"
+      >
+        <AutomationRulesManager />
+      </PlanFeatureGuard>
     </main>
   );
 }

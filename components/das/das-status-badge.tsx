@@ -4,9 +4,7 @@ import { getDASDisplayStatusLabel } from "@/lib/services/das/das-status-mapper";
 const STATUS_CLASSNAMES: Record<DASCompanionDisplayStatus, string> = {
   pending: "firmus-chip-info",
   overdue: "firmus-chip-warning",
-  guided: "firmus-chip-info",
-  handed_off: "firmus-chip-success",
-  paid_externally: "firmus-chip-success",
+  paid: "firmus-chip-success",
 };
 
 export function DASStatusBadge({ status }: { status: DASCompanionDisplayStatus }) {

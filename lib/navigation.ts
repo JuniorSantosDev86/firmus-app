@@ -13,6 +13,7 @@ import {
   MessageSquareText,
   ReceiptText,
   ScrollText,
+  SlidersHorizontal,
   Target,
   Users,
 } from "lucide-react";
@@ -54,6 +55,14 @@ export const PRIMARY_NAVIGATION: NavigationItem[] = [
     icon: Users,
     group: "principal",
     testId: "nav-clients",
+  },
+  {
+    id: "plan",
+    label: "Plano",
+    href: "/plan",
+    icon: SlidersHorizontal,
+    group: "principal",
+    testId: "nav-plan",
   },
   {
     id: "services",

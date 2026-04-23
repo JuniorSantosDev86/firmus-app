@@ -18,3 +18,4 @@ export * from "@/lib/domain/activity-log";
 export * from "@/lib/domain/outbound";
 export * from "@/lib/domain/nfse";
 export * from "@/lib/domain/das";
+export * from "@/lib/domain/plan";
