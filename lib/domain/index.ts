@@ -19,3 +19,4 @@ export * from "@/lib/domain/outbound";
 export * from "@/lib/domain/nfse";
 export * from "@/lib/domain/das";
 export * from "@/lib/domain/plan";
+export * from "@/lib/domain/onboarding";

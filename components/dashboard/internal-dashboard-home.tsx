@@ -16,6 +16,7 @@ import { getRecentTimelineEvents } from "@/lib/storage/timeline-events";
 
 import { ActivitySection } from "@/components/dashboard/activity-section";
 import { DashboardHero } from "@/components/dashboard/dashboard-hero";
+import { OnboardingCard } from "@/components/onboarding/onboarding-card";
 import { QuickAccessCard } from "@/components/dashboard/quick-access-card";
 
 type NextActionItem = {
@@ -204,6 +205,7 @@ export function InternalDashboardHome() {
   return (
     <main className="space-y-9 sm:space-y-11" data-testid="dashboard-home">
       <DashboardHero hasBusinessProfile={snapshot.hasBusinessProfile} />
+      <OnboardingCard />
 
       <section className="space-y-4" aria-label="Resumo operacional" data-testid="dashboard-operational-summary">
         <header>

@@ -3150,6 +3150,47 @@ Notes:
 - A hydration mismatch in Templates was corrected by deferring storage-derived limit rendering until after hydration.
 - No checkout, subscription, webhook, backend, DB, or payment provider integration was introduced.
 
+### Block 33 — Improved Onboarding
+Status: Completed and approved.
+
+Delivered:
+- minimal onboarding domain
+- onboarding-only preference storage
+- central onboarding service derived from real product state
+- dashboard onboarding card
+- dedicated `/onboarding` route
+- progress summary and next recommended step
+- deep links into real internal product flows
+- dismiss / reopen onboarding behavior
+- optional skip / restore behavior for onboarding-only steps
+- plan-aware onboarding behavior for advanced/premium steps
+- dedicated Cypress coverage for onboarding helpers and visible flow
+
+Validation:
+- `npm run lint` passed
+- `npm run build` passed
+- dedicated onboarding Cypress coverage passed:
+  - `onboarding-helpers.cy.ts`
+  - `onboarding.cy.ts`
+- full local Cypress regression run passed with all specs green:
+  - 35 specs
+  - 135 tests
+  - 135 passing
+  - 0 failing
+
+Notes:
+- Block 33 was implemented as a lightweight guidance layer, not as a forced wizard.
+- Existing slices remain the source of truth for operational progress.
+- Onboarding persistence was limited to onboarding-only preferences:
+  - dismissed state
+  - dashboard visibility
+  - skipped optional steps
+  - completion marker
+- The final corrective patch was applied in the correct layer: the failing onboarding spec became deterministic by explicitly seeding the intended plan state, while preserving the product’s plan-aware onboarding behavior.
+- No unrelated operational modules were refactored or expanded.
+
+
+
 ## QA Template for Future Blocks
 
 Use this structure for the next checkpoints:

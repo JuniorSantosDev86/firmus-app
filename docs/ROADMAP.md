@@ -901,8 +901,10 @@ Implemented and validated a minimal entitlement foundation for Free / Plus / Pro
 
 
 ### Block 33 — Improved Onboarding
-**Status:** Pending  
-**Objective:** Make the first user experience faster and more guided.
+Status: Completed and approved.
+
+Implemented and validated a lightweight onboarding layer derived from real workspace state through a central onboarding service, onboarding-only preference storage, a dashboard onboarding card, and a dedicated `/onboarding` route. The block preserved architecture discipline, kept existing slices as the source of truth, respected plan-aware progression, and finished with the full local Cypress suite green.
+
 
 ### Block 34 — MVP Hardening
 **Status:** Pending  
@@ -923,6 +925,7 @@ Firmus current validated state now includes:
 - Block 30 — NFSe Issuance Integration
 - Block 31 — DAS Companion and Official Channel Handoff
 - Block 32 — Feature Flags and Plan Limits
+- Block 33 — Improved Onboarding
 
 ### Current product state
 The product now supports:
@@ -937,15 +940,18 @@ The product now supports:
 - visible premium feature gating
 - quantitative plan-limit enforcement for Templates
 - internal plan visibility and local MVP plan control
+- guided onboarding derived from real workspace state
+- dashboard onboarding surface plus dedicated onboarding route
+- onboarding-only dismiss / reopen / optional skip behavior
 
 ### Current QA state
 - `npm run lint` passing
 - `npm run build` passing
 - full Cypress suite passing
-- 33 specs passing
-- 128 tests passing
-- manual and regression validation completed for Block 32
+- 35 specs passing
+- 135 tests passing
+- manual and regression validation completed for Block 33
 
 ### Current roadmap position
 Next official implementation target:
-- Block 33 — Improved Onboarding
+- Block 34 — MVP Hardening
