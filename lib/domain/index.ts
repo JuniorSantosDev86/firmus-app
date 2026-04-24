@@ -20,3 +20,4 @@ export * from "@/lib/domain/nfse";
 export * from "@/lib/domain/das";
 export * from "@/lib/domain/plan";
 export * from "@/lib/domain/onboarding";
+export * from "@/lib/domain/mvp-hardening";

@@ -3189,7 +3189,44 @@ Notes:
 - The final corrective patch was applied in the correct layer: the failing onboarding spec became deterministic by explicitly seeding the intended plan state, while preserving the product’s plan-aware onboarding behavior.
 - No unrelated operational modules were refactored or expanded.
 
+### Block 34 — MVP Hardening
+Status: Completed and approved.
 
+Delivered:
+- minimal MVP readiness domain
+- central MVP hardening/readiness service derived from existing slices
+- dedicated internal `/mvp-readiness` route
+- grouped readiness UI in PT-BR
+- explicit blocked / warning / ready states
+- concise readiness summary with counts
+- direct links to relevant modules from readiness items
+- minimal internal navigation entry for MVP readiness
+- dedicated Cypress coverage for MVP readiness route and derived snapshot behavior
+
+Validation:
+- `npm run lint` passed
+- `npm run build` passed
+- dedicated MVP readiness Cypress coverage passed:
+  - `mvp-readiness.cy.ts`
+- full local Cypress regression run passed with all specs green:
+  - 36 specs
+  - 137 tests
+  - 137 passing
+  - 0 failing
+
+Notes:
+- Block 34 was implemented as a transversal hardening layer, not as a new business feature slice.
+- Readiness remains derived from real product state and does not create a second source of truth.
+- Existing slices remained the source of truth for:
+  - auth and boundaries
+  - onboarding
+  - core operations
+  - fiscal flows
+  - public surfaces
+  - reliability and recovery
+  - consistency/usability signals
+- The final correction was applied in the correct layer: the remaining readiness spec mismatch was resolved without changing product semantics outside the hardening scope.
+- No billing, backend migration, major redesign, or unrelated refactor was introduced.
 
 ## QA Template for Future Blocks
 

@@ -907,8 +907,10 @@ Implemented and validated a lightweight onboarding layer derived from real works
 
 
 ### Block 34 — MVP Hardening
-**Status:** Pending  
-**Objective:** Stabilize the expanded MVP before beta usage.
+Status: Completed and approved.
+
+Implemented and validated a transversal MVP hardening layer through a derived readiness domain, a central hardening service, and a dedicated internal `/mvp-readiness` route with grouped blocked / warning / ready states and direct remediation links. The block preserved architecture discipline, avoided scope creep, and finished with the full local Cypress suite green.
+
 
 ---
 
@@ -926,6 +928,7 @@ Firmus current validated state now includes:
 - Block 31 — DAS Companion and Official Channel Handoff
 - Block 32 — Feature Flags and Plan Limits
 - Block 33 — Improved Onboarding
+- Block 34 — MVP Hardening
 
 ### Current product state
 The product now supports:
@@ -943,15 +946,17 @@ The product now supports:
 - guided onboarding derived from real workspace state
 - dashboard onboarding surface plus dedicated onboarding route
 - onboarding-only dismiss / reopen / optional skip behavior
+- transversal MVP readiness review through derived blocked / warning / ready signals
+- dedicated internal readiness surface for beta hardening review
 
 ### Current QA state
 - `npm run lint` passing
 - `npm run build` passing
 - full Cypress suite passing
-- 35 specs passing
-- 135 tests passing
-- manual and regression validation completed for Block 33
+- 36 specs passing
+- 137 tests passing
+- manual and regression validation completed for Block 34
 
 ### Current roadmap position
 Next official implementation target:
-- Block 34 — MVP Hardening
+- Block 35 — Beta Ops / Launch Readiness

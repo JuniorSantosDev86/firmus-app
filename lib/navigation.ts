@@ -10,6 +10,7 @@ import {
   HandCoins,
   LayoutDashboard,
   Lightbulb,
+  ShieldCheck,
   MessageSquareText,
   ReceiptText,
   ScrollText,
@@ -63,6 +64,14 @@ export const PRIMARY_NAVIGATION: NavigationItem[] = [
     icon: SlidersHorizontal,
     group: "principal",
     testId: "nav-plan",
+  },
+  {
+    id: "mvp-readiness",
+    label: "Prontidão do MVP",
+    href: "/mvp-readiness",
+    icon: ShieldCheck,
+    group: "principal",
+    testId: "nav-mvp-readiness",
   },
   {
     id: "services",
